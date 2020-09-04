@@ -1,0 +1,15 @@
+2020-09-03 20:58:38.491 [main] INFO  com.shaoxing.lixing.LixingApplication - Starting LixingApplication on DESKTOP-NEGHJBV with PID 4328 (D:\workspaces\myself\lixing\target\classes started by asheng in D:\workspaces\myself\lixing)
+2020-09-03 20:58:38.494 [main] INFO  com.shaoxing.lixing.LixingApplication - No active profile set, falling back to default profiles: default
+2020-09-03 20:58:39.117 [main] WARN  org.mybatis.spring.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.shaoxing.lixing]' package. Please check your configuration.
+2020-09-03 20:58:39.434 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 9091 (http)
+2020-09-03 20:58:39.441 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9091"]
+2020-09-03 20:58:39.442 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2020-09-03 20:58:39.442 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.37]
+2020-09-03 20:58:39.535 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2020-09-03 20:58:39.535 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 998 ms
+2020-09-03 20:58:39.693 [main] INFO  o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2020-09-03 20:58:39.794 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2020-09-03 20:58:41.309 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2020-09-03 20:58:41.460 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9091"]
+2020-09-03 20:58:41.476 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 9091 (http) with context path ''
+2020-09-03 20:58:41.483 [main] INFO  com.shaoxing.lixing.LixingApplication - Started LixingApplication in 3.325 seconds (JVM running for 5.475)
