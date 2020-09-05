@@ -2,7 +2,8 @@
 <configuration debug="false">
 
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-    <property name="LOG_HOME" value="D:\workspaces\vue_workspaces\logs" />
+    <property resource="application.properties"/>
+    <springProperty scope="context" name="LOG_HOME" source="logback.log.home"/>
     <property name="PROJECT_NAME" value="adminServer" />
 
     <!--控制台日志， 控制台输出 -->
