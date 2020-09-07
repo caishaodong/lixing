@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaoxing.lixing.mapper.FCompanyBillMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.shaoxing.lixing.domain.entity.FCompanyBill">
+        <id column="id" property="id" />
+        <result column="fee_category_name" property="feeCategoryName" />
+        <result column="fee_subject_name" property="feeSubjectName" />
+        <result column="area_code" property="areaCode" />
+        <result column="area_name" property="areaName" />
+        <result column="adress" property="adress" />
+        <result column="bill_date" property="billDate" />
+        <result column="price" property="price" />
+        <result column="num" property="num" />
+        <result column="weight" property="weight" />
+        <result column="total_price" property="totalPrice" />
+        <result column="entered_user_name" property="enteredUserName" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, fee_category_name, fee_subject_name, area_code, area_name, adress, bill_date, price, num, weight, total_price, entered_user_name, remark, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

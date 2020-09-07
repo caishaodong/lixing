@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaoxing.lixing.mapper.MCustomerPriceCategoryRelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.shaoxing.lixing.domain.entity.MCustomerPriceCategoryRel">
+        <id column="id" property="id" />
+        <result column="customer_id" property="customerId" />
+        <result column="price_category_id" property="priceCategoryId" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, customer_id, price_category_id, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaoxing.lixing.mapper.MDistributionCompanyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.shaoxing.lixing.domain.entity.MDistributionCompany">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="need_invoice" property="needInvoice" />
+        <result column="settlement_deduction_rate" property="settlementDeductionRate" />
+        <result column="area_code" property="areaCode" />
+        <result column="area_name" property="areaName" />
+        <result column="address" property="address" />
+        <result column="contact_user_name" property="contactUserName" />
+        <result column="contact_user_mobile" property="contactUserMobile" />
+        <result column="order_manager_name" property="orderManagerName" />
+        <result column="order_manager_mobile" property="orderManagerMobile" />
+        <result column="financial_contact_name" property="financialContactName" />
+        <result column="financial_contact_mobile" property="financialContactMobile" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, need_invoice, settlement_deduction_rate, area_code, area_name, address, contact_user_name, contact_user_mobile, order_manager_name, order_manager_mobile, financial_contact_name, financial_contact_mobile, remark, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

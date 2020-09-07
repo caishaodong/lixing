@@ -20,7 +20,8 @@ import java.util.List;
  **/
 public class MysqlGenerator {
 
-    private static final String TABLE_NAME = "sys_user";
+    private static final String[] TABLE_NAME = {"f_company_bill", "m_customer_distribution_company_rel", "m_distribution_company",
+            "m_order_check_detail", "m_order_info", "m_price_category", "m_varieties_price_info"};
 
     public static void main(String[] args) {
         // 代码生成器
@@ -52,15 +53,15 @@ public class MysqlGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true");
+        dsc.setUrl("jdbc:mysql://119.45.238.208:3306/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setPassword("Lixing@123");
         autoGenerator.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.vue.adminserver");
+        pc.setParent("com.shaoxing.lixing");
         pc.setEntity("domain.entity");
         pc.setService("service");
         pc.setServiceImpl("service.impl");

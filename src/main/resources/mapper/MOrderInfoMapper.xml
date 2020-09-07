@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaoxing.lixing.mapper.MOrderInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.shaoxing.lixing.domain.entity.MOrderInfo">
+        <id column="id" property="id" />
+        <result column="order_sn" property="orderSn" />
+        <result column="order_date" property="orderDate" />
+        <result column="distribution_company_id" property="distributionCompanyId" />
+        <result column="distribution_company_name" property="distributionCompanyName" />
+        <result column="customer_id" property="customerId" />
+        <result column="customer_name" property="customerName" />
+        <result column="varieties_name" property="varietiesName" />
+        <result column="unit" property="unit" />
+        <result column="num" property="num" />
+        <result column="price" property="price" />
+        <result column="total_price" property="totalPrice" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_sn, order_date, distribution_company_id, distribution_company_name, customer_id, customer_name, varieties_name, unit, num, price, total_price, remark, is_deleted, gmt_create, gmt_modified
+    </sql>
+
+</mapper>
