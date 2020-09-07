@@ -1,35 +1,20 @@
-package com.shaoxing.lixing.domain.entity;
+package com.shaoxing.lixing.domain.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
- * <p>
- * 配送公司信息表
- * </p>
- *
- * @author caishaodong
- * @since 2020-09-07
- */
+ * @Author caishaodong
+ * @Date 2020-09-07 19:29
+ * @Description
+ **/
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class MDistributionCompany extends Model<MDistributionCompany> {
-
-    private static final long serialVersionUID = 1L;
+public class DistributionCompanyDTO {
 
     /**
-     * id
+     * 配送公司id（修改时传入）
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -96,26 +81,4 @@ public class MDistributionCompany extends Model<MDistributionCompany> {
      * 备注
      */
     private String remark;
-
-    /**
-     * 是否删除（0：未删除，1：删除）
-     */
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime gmtCreate;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime gmtModified;
-
-
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
-
 }

@@ -3,7 +3,7 @@ package com.shaoxing.lixing.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
-import com.shaoxing.lixing.domain.dto.MVarietiesPriceInfoSearchDTO;
+import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 
@@ -25,7 +25,7 @@ public interface MVarietiesPriceInfoService extends IService<MVarietiesPriceInfo
      * @param dto
      * @return
      */
-    IPage<MVarietiesPriceInfo> getListPage(MVarietiesPriceInfoSearchDTO dto);
+    IPage<MVarietiesPriceInfo> getListPage(VarietiesPriceInfoSearchDTO dto);
 
     /**
      * 客户绑定价目

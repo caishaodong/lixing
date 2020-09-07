@@ -9,7 +9,7 @@ import lombok.Data;
  * @Description
  **/
 @Data
-public class MVarietiesPriceInfoSearchDTO extends PageUtil {
+public class VarietiesPriceInfoSearchDTO extends PageUtil {
 
     /**
      * 价目id

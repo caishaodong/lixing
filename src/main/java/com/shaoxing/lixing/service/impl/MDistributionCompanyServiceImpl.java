@@ -1,10 +1,26 @@
 package com.shaoxing.lixing.service.impl;
 
-import com.shaoxing.lixing.domain.entity.MDistributionCompany;
-import com.shaoxing.lixing.mapper.MDistributionCompanyMapper;
-import com.shaoxing.lixing.service.MDistributionCompanyService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
+import com.shaoxing.lixing.domain.entity.*;
+import com.shaoxing.lixing.domain.vo.CustomerInfoVO;
+import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
+import com.shaoxing.lixing.domain.vo.PriceCategoryVO;
+import com.shaoxing.lixing.domain.vo.VarietiesPriceInfoVO;
+import com.shaoxing.lixing.global.enums.YesNoEnum;
+import com.shaoxing.lixing.global.util.PageUtil;
+import com.shaoxing.lixing.mapper.MDistributionCompanyMapper;
+import com.shaoxing.lixing.service.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -17,4 +33,129 @@ import org.springframework.stereotype.Service;
 @Service
 public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCompanyMapper, MDistributionCompany> implements MDistributionCompanyService {
 
+    @Autowired
+    private MCustomerDistributionCompanyRelService customerDistributionCompanyRelService;
+    @Autowired
+    private MCustomerInfoService customerInfoService;
+    @Autowired
+    private MCustomerPriceCategoryRelService customerPriceCategoryRelService;
+    @Autowired
+    private MPriceCategoryService priceCategoryService;
+    @Autowired
+    private MVarietiesPriceInfoService varietiesPriceInfoService;
+
+    /**
+     * 获取配送公司列表 分页
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public IPage<DistributionCompanyVO> getListPage(DistributionCompanySearchDTO dto) {
+        PageUtil<MDistributionCompany> pageUtil = new PageUtil<>();
+        pageUtil.setCurrent(dto.getCurrent());
+        pageUtil.setSize(dto.getSize());
+        IPage<MDistributionCompany> page = this.page(pageUtil, new LambdaQueryWrapper<MDistributionCompany>()
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue()));
+
+        List<MDistributionCompany> records = page.getRecords();
+
+        return null;
+    }
+
+    /**
+     * 保存价目
+     *
+     * @param distributionCompany
+     */
+    @Override
+    public void saveDistributionCompany(MDistributionCompany distributionCompany) {
+
+    }
+
+    /**
+     * 修改价目
+     *
+     * @param distributionCompany
+     */
+    @Override
+    public void updateDistributionCompany(MDistributionCompany distributionCompany) {
+
+    }
+
+    /**
+     * 获取配送管理绑定的用户信息
+     *
+     * @param distributionCompanyList
+     * @return
+     */
+    public List<DistributionCompanyVO> getMDistributionCompanyVOList(List<MDistributionCompany> distributionCompanyList) {
+        List<DistributionCompanyVO> list = new ArrayList<>();
+        if (Objects.isNull(distributionCompanyList) || distributionCompanyList.isEmpty()) {
+            return list;
+        }
+        for (MDistributionCompany distributionCompany : distributionCompanyList) {
+            DistributionCompanyVO distributionCompanyVO = new DistributionCompanyVO();
+            BeanUtils.copyProperties(distributionCompany, distributionCompanyVO);
+            List<CustomerInfoVO> customerInfoVOList = new ArrayList<>();
+            distributionCompanyVO.setCustomerInfoVoList(customerInfoVOList);
+
+
+            // 根据配送公司id，获取绑定的用户列表
+            List<MCustomerDistributionCompanyRel> customerDistributionCompanyRelList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>().eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId())
+                    .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue()));
+            if (Objects.nonNull(customerDistributionCompanyRelList) && !customerDistributionCompanyRelList.isEmpty()) {
+                // 获取客户id
+                List<Long> customerIdList = customerDistributionCompanyRelList.stream().map(MCustomerDistributionCompanyRel::getCustomerId).collect(Collectors.toList());
+                // 获取客户信息
+                List<MCustomerInfo> customerInfoList = customerInfoService.list(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, customerIdList)
+                        .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+                if (Objects.nonNull(customerInfoList) && !customerInfoList.isEmpty()) {
+                    for (MCustomerInfo mCustomerInfo : customerInfoList) {
+                        // 封装客户信息
+                        CustomerInfoVO customerInfoVO = new CustomerInfoVO();
+                        BeanUtils.copyProperties(mCustomerInfo, customerInfoVO);
+                        customerInfoVOList.add(customerInfoVO);
+                        List<PriceCategoryVO> priceCategoryVOList = new ArrayList<>();
+                        customerInfoVO.setPriceCategoryVOList(priceCategoryVOList);
+
+
+                        // 根据客户id，获取绑定的价目列表
+                        List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>().eq(MCustomerPriceCategoryRel::getCustomerId, mCustomerInfo.getId())
+                                .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
+                        if (Objects.nonNull(customerPriceCategoryRelList) && !customerPriceCategoryRelList.isEmpty()) {
+                            // 获取价目id
+                            List<Long> priceCategoryIdList = customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getPriceCategoryId).collect(Collectors.toList());
+                            // 获取价目信息
+                            List<MPriceCategory> priceCategoryList = priceCategoryService.list(new LambdaQueryWrapper<MPriceCategory>().in(MPriceCategory::getId, priceCategoryIdList)
+                                    .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO.getValue()));
+                            if (Objects.nonNull(priceCategoryIdList) && !priceCategoryList.isEmpty()) {
+                                for (MPriceCategory priceCategory : priceCategoryList) {
+                                    // 封装价目信息
+                                    PriceCategoryVO priceCategoryVO = new PriceCategoryVO();
+                                    BeanUtils.copyProperties(priceCategory, priceCategoryVO);
+                                    priceCategoryVOList.add(priceCategoryVO);
+                                    List<VarietiesPriceInfoVO> varietiesPriceInfoVOList = new ArrayList<>();
+
+                                    // 根据价目id， 获取价目下面的价格信息
+                                    List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.list(new LambdaQueryWrapper<MVarietiesPriceInfo>().eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategory.getId())
+                                            .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+                                    if (Objects.nonNull(varietiesPriceInfoList) && !varietiesPriceInfoList.isEmpty()) {
+                                        for (MVarietiesPriceInfo varietiesPriceInfo : varietiesPriceInfoList) {
+                                            // 封装价目下面的价格信息
+                                            VarietiesPriceInfoVO varietiesPriceInfoVO = new VarietiesPriceInfoVO();
+                                            BeanUtils.copyProperties(varietiesPriceInfo, varietiesPriceInfoVO);
+                                            varietiesPriceInfoVOList.add(varietiesPriceInfoVO);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return list;
+    }
 }

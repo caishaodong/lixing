@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
-import com.shaoxing.lixing.domain.dto.MVarietiesPriceInfoSearchDTO;
+import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MCustomerInfo;
 import com.shaoxing.lixing.domain.entity.MCustomerPriceCategoryRel;
 import com.shaoxing.lixing.domain.entity.MPriceCategory;
@@ -56,10 +56,13 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
      * @return
      */
     @Override
-    public IPage<MVarietiesPriceInfo> getListPage(MVarietiesPriceInfoSearchDTO dto) {
+    public IPage<MVarietiesPriceInfo> getListPage(VarietiesPriceInfoSearchDTO dto) {
         PageUtil<MVarietiesPriceInfo> pageUtil = new PageUtil<>();
+        pageUtil.setCurrent(dto.getCurrent());
+        pageUtil.setSize(dto.getSize());
         IPage<MVarietiesPriceInfo> page = this.page(pageUtil, new LambdaQueryWrapper<MVarietiesPriceInfo>()
-                .eq(MVarietiesPriceInfo::getPriceCategoryId, dto.getPriceCategoryId()));
+                .eq(MVarietiesPriceInfo::getPriceCategoryId, dto.getPriceCategoryId())
+                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
         return page;
     }
 

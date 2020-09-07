@@ -3,8 +3,8 @@ package com.shaoxing.lixing.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
-import com.shaoxing.lixing.domain.dto.MVarietiesPriceInfoDTO;
-import com.shaoxing.lixing.domain.dto.MVarietiesPriceInfoSearchDTO;
+import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoDTO;
+import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
@@ -39,21 +39,21 @@ public class MVarietiesPriceInfoController extends BaseController {
      * @return
      */
     @GetMapping("/getListPage")
-    public ResponseResult<PageUtil<MVarietiesPriceInfo>> getListPage(@RequestBody MVarietiesPriceInfoSearchDTO dto) {
+    public ResponseResult<PageUtil<MVarietiesPriceInfo>> getListPage(@RequestBody VarietiesPriceInfoSearchDTO dto) {
         IPage<MVarietiesPriceInfo> page = varietiesPriceInfoService.getListPage(dto);
         return ResponseResult.success(page);
     }
 
 
     /**
-     * 保存价目
+     * 保存（修改）价目
      *
      * @param dto
      * @return
      */
-    @PostMapping("/save")
-    public ResponseResult save(@RequestBody MVarietiesPriceInfoDTO dto) {
-        if (!dto.saveParamCheck()) {
+    @PostMapping("/edit")
+    public ResponseResult edit(@RequestBody VarietiesPriceInfoDTO dto) {
+        if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
         }
 
@@ -61,29 +61,13 @@ public class MVarietiesPriceInfoController extends BaseController {
         BeanUtils.copyProperties(dto, varietiesPriceInfo);
         ReflectUtil.setCreateInfo(varietiesPriceInfo, MVarietiesPriceInfo.class);
 
-        // 保存价目
-        varietiesPriceInfoService.save(varietiesPriceInfo);
-        return success();
-    }
-
-    /**
-     * 修改价目
-     *
-     * @param dto
-     * @return
-     */
-    @PostMapping("/update")
-    public ResponseResult update(@RequestBody MVarietiesPriceInfoDTO dto) {
-        if (!dto.updateParamCheck()) {
-            return error(BusinessEnum.PARAM_ERROR);
+        if (Objects.isNull(dto.getId())) {
+            // 保存价目
+            varietiesPriceInfoService.save(varietiesPriceInfo);
+        } else {
+            // 修改价目
+            varietiesPriceInfoService.updateById(varietiesPriceInfo);
         }
-
-        MVarietiesPriceInfo varietiesPriceInfo = new MVarietiesPriceInfo();
-        BeanUtils.copyProperties(dto, varietiesPriceInfo);
-        ReflectUtil.setCreateInfo(varietiesPriceInfo, MVarietiesPriceInfo.class);
-
-        // 修改价目
-        varietiesPriceInfoService.updateById(varietiesPriceInfo);
         return success();
     }
 

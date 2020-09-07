@@ -12,7 +12,7 @@ import java.util.Objects;
  * @Description
  **/
 @Data
-public class MVarietiesPriceInfoDTO {
+public class VarietiesPriceInfoDTO {
 
     /**
      * id（修改时传入）
@@ -43,13 +43,8 @@ public class MVarietiesPriceInfoDTO {
      */
     private String remark;
 
-    public boolean saveParamCheck() {
+    public boolean paramCheck() {
         return Objects.nonNull(this.priceCategoryId) && StringUtil.isNotBlank(this.name) && StringUtil.isNotBlank(this.unit)
-                && Objects.nonNull(this.price) && (price.compareTo(BigDecimal.ZERO) > 0);
-    }
-
-    public boolean updateParamCheck() {
-        return Objects.nonNull(this.id) && Objects.nonNull(this.priceCategoryId) && StringUtil.isNotBlank(this.name) && StringUtil.isNotBlank(this.unit)
                 && Objects.nonNull(this.price) && (price.compareTo(BigDecimal.ZERO) > 0);
     }
 }
