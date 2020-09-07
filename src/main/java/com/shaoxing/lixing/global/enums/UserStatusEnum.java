@@ -6,9 +6,9 @@ package com.shaoxing.lixing.global.enums;
  * @Description
  **/
 public enum UserStatusEnum {
-    NORMAL(0, "正常"),
-    CANCEL(1, "注销"),
-    FROZEN(2, "冻结");
+    NORMAL(1, "正常"),
+    CANCEL(2, "注销"),
+    FROZEN(3, "冻结");
 
     private Integer status;
     private String desc;
