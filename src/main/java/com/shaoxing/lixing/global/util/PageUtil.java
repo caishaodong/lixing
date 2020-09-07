@@ -12,9 +12,21 @@ import java.util.List;
  **/
 public class PageUtil<T> implements IPage<T> {
 
+    /**
+     * 记录列表
+     */
     private List<T> records;
+    /**
+     * 总数量
+     */
     private long total;
-    private long size = 5;
+    /**
+     * 每页的数量
+     */
+    private long size = 10;
+    /**
+     * 页码
+     */
     private long current = 1;
 
     @Override

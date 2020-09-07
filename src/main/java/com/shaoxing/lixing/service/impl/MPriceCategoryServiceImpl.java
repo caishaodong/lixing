@@ -1,9 +1,11 @@
 package com.shaoxing.lixing.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.entity.MPriceCategory;
+import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.mapper.MPriceCategoryMapper;
 import com.shaoxing.lixing.service.MPriceCategoryService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class MPriceCategoryServiceImpl extends ServiceImpl<MPriceCategoryMapper, MPriceCategory> implements MPriceCategoryService {
 
+    @Override
+    public MPriceCategory getOKById(Long id) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MPriceCategory>().eq(MPriceCategory::getId, id)
+                .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO));
+    }
 }

@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-09-07
  */
 public interface MPriceCategoryService extends IService<MPriceCategory> {
-
+    MPriceCategory getOKById(Long id);
 }

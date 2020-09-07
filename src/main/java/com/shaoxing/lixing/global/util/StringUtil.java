@@ -1,5 +1,9 @@
 package com.shaoxing.lixing.global.util;
 
+import com.alibaba.fastjson.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,5 +25,26 @@ public class StringUtil {
             return false;
         }
         return str1.equals(str2);
+    }
+
+    /**
+     * Long类型的jsonArray转化为Long类型的list
+     *
+     * @param str
+     * @return
+     */
+    public static List<Long> jsonArrayToLongList(String str) {
+        List<Long> list = new ArrayList<>();
+        if (isBlank(str)) {
+            return list;
+        }
+        JSONArray jsonArray = JSONArray.parseArray(str);
+        if (Objects.isNull(jsonArray) || jsonArray.isEmpty()) {
+            return list;
+        }
+        jsonArray.stream().forEach(object -> {
+            list.add((Long) object);
+        });
+        return list;
     }
 }
