@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysUserService extends IService<SysUser> {
 
+    /**
+     * 根据手机号获取用户信息
+     * @param mobile
+     * @return
+     */
+    SysUser getByMobile(String mobile);
 }

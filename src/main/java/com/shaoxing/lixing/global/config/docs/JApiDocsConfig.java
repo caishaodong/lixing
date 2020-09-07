@@ -18,7 +18,7 @@ public class JApiDocsConfig {
 
     /**
      * 生成 JApiDocs
-     * 文档访问地址：http://127.0.0.1:9090/docs/V1.0/index.html
+     * 文档访问地址：http://127.0.0.1:9091/docs/V1.0/index.html
      */
     public static void generateDocs() {
         DocsConfig config = new DocsConfig();
@@ -27,7 +27,7 @@ public class JApiDocsConfig {
         // 项目根目录
         config.setProjectPath(projectPath);
         // 项目名称
-        config.setProjectName("AdminServer");
+        config.setProjectName("LiXing");
         // 声明该API的版本
         config.setApiVersion("V1.0");
         // 生成API 文档所在目录

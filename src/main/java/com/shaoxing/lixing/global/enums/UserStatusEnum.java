@@ -10,19 +10,19 @@ public enum UserStatusEnum {
     CANCEL(1, "注销"),
     FROZEN(2, "冻结");
 
-    private int status;
+    private Integer status;
     private String desc;
 
-    UserStatusEnum(int status, String desc) {
+    UserStatusEnum(Integer status, String desc) {
         this.status = status;
         this.desc = desc;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
