@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author caishaodong
- * @since 2020-09-07
+ * @since 2020-09-08
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -36,7 +36,7 @@ public class MOrderInfo extends Model<MOrderInfo> {
     /**
      * 订单日期
      */
-    private LocalDateTime orderDate;
+    private Long orderDate;
 
     /**
      * 配送单位id
@@ -57,6 +57,21 @@ public class MOrderInfo extends Model<MOrderInfo> {
      * 客户名称
      */
     private String customerName;
+
+    /**
+     * 价目id
+     */
+    private Long priceCategoryId;
+
+    /**
+     * 价目名称
+     */
+    private String priceCategoryName;
+
+    /**
+     * 品种价格id
+     */
+    private Long varietiesPriceId;
 
     /**
      * 品种名称
@@ -91,7 +106,7 @@ public class MOrderInfo extends Model<MOrderInfo> {
     /**
      * 是否删除（0：未删除，1：删除）
      */
-    private Integer isDeleted;
+    private Boolean isDeleted;
 
     /**
      * 创建时间

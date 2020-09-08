@@ -1,10 +1,14 @@
 package com.shaoxing.lixing.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.entity.SysCity;
 import com.shaoxing.lixing.mapper.SysCityMapper;
 import com.shaoxing.lixing.service.SysCityService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -17,4 +21,42 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysCityServiceImpl extends ServiceImpl<SysCityMapper, SysCity> implements SysCityService {
 
+    /**
+     * 根据地区编码获取地区名称
+     *
+     * @param code
+     * @return
+     */
+    @Override
+    public String getNameByAreaCode(Integer code) {
+        String name = "";
+        SysCity sysCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, code));
+        Integer parentCode;
+        if (Objects.nonNull(sysCity) && Objects.nonNull(parentCode = sysCity.getParentCode())) {
+            name += sysCity.getName();
+            SysCity parentCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, parentCode));
+            Integer pParentCode;
+            if (Objects.nonNull(parentCity) && Objects.nonNull(pParentCode = parentCity.getParentCode())) {
+                name += parentCity.getName();
+                SysCity pParentCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, parentCode));
+                if (Objects.nonNull(pParentCity)) {
+                    name += pParentCity.getName();
+                }
+            }
+        }
+        return name;
+    }
+
+    /**
+     * 根据父级城市编码获取子级城市数据
+     *
+     * @param parentCode
+     * @return
+     */
+    @Override
+    public List<SysCity> getCityListByParentCode(Integer parentCode) {
+        parentCode = Objects.isNull(parentCode) ? 1 : parentCode;
+        List<SysCity> cityList = this.baseMapper.selectList(new LambdaQueryWrapper<SysCity>().eq(SysCity::getParentCode, parentCode));
+        return cityList;
+    }
 }

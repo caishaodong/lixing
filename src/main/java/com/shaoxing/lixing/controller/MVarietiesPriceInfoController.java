@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 /**
- * 品种价格信息
+ * 品种价格信息管理
  *
  * @author caishaodong
  * @since 2020-09-07
  */
 @Controller
-@RequestMapping("/varieties/price/info")
+@RequestMapping("/varietiesPriceInfo")
 public class MVarietiesPriceInfoController extends BaseController {
     @Autowired
     private MVarietiesPriceInfoService varietiesPriceInfoService;

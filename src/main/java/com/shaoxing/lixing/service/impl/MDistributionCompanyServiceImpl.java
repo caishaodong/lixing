@@ -16,6 +16,7 @@ import com.shaoxing.lixing.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,14 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
     private MPriceCategoryService priceCategoryService;
     @Autowired
     private MVarietiesPriceInfoService varietiesPriceInfoService;
+    @Autowired
+    private SysCityService sysCityService;
+
+    @Override
+    public MDistributionCompany getOKById(Long id) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MDistributionCompany>().eq(MDistributionCompany::getId, id)
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
 
     /**
      * 获取配送公司列表 分页
@@ -56,31 +65,64 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         pageUtil.setCurrent(dto.getCurrent());
         pageUtil.setSize(dto.getSize());
         IPage<MDistributionCompany> page = this.page(pageUtil, new LambdaQueryWrapper<MDistributionCompany>()
-                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue()));
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByDesc(MDistributionCompany::getGmtModified));
 
-        List<MDistributionCompany> records = page.getRecords();
+        List<DistributionCompanyVO> distributionCompanyVOList = getMDistributionCompanyVOList(page.getRecords());
+        PageUtil<DistributionCompanyVO> pageUtil2 = new PageUtil<>();
+        pageUtil2.setTotal(pageUtil.getTotal());
+        pageUtil2.setCurrent(pageUtil.getCurrent());
+        pageUtil2.setSize(pageUtil.getSize());
+        pageUtil2.setRecords(distributionCompanyVOList);
 
-        return null;
+        return pageUtil2;
     }
 
     /**
-     * 保存价目
+     * 保存配送公司信息
      *
      * @param distributionCompany
      */
     @Override
     public void saveDistributionCompany(MDistributionCompany distributionCompany) {
-
+        String areaName = "";
+        Integer areaCode;
+        if (Objects.nonNull(areaCode = distributionCompany.getAreaCode())) {
+            areaName = sysCityService.getNameByAreaCode(areaCode);
+        }
+        distributionCompany.setAreaName(areaName);
+        this.baseMapper.insert(distributionCompany);
     }
 
     /**
-     * 修改价目
+     * 修改配送公司信息
      *
      * @param distributionCompany
      */
     @Override
     public void updateDistributionCompany(MDistributionCompany distributionCompany) {
+        String areaName = "";
+        Integer areaCode;
+        if (Objects.nonNull(areaCode = distributionCompany.getAreaCode())) {
+            areaName = sysCityService.getNameByAreaCode(areaCode);
+        }
+        distributionCompany.setAreaName(areaName);
+        this.baseMapper.updateById(distributionCompany);
+    }
 
+    /**
+     * 获取配送公司信息
+     *
+     * @param distributionCompany
+     * @return
+     */
+    @Override
+    public DistributionCompanyVO getDistributionCompanyInfo(MDistributionCompany distributionCompany) {
+        List<MDistributionCompany> list = new ArrayList<>();
+        list.add(distributionCompany);
+        List<DistributionCompanyVO> mDistributionCompanyVOList = getMDistributionCompanyVOList(list);
+
+        return CollectionUtils.isEmpty(mDistributionCompanyVOList) ? null : mDistributionCompanyVOList.get(0);
     }
 
     /**
@@ -136,6 +178,7 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
                                     BeanUtils.copyProperties(priceCategory, priceCategoryVO);
                                     priceCategoryVOList.add(priceCategoryVO);
                                     List<VarietiesPriceInfoVO> varietiesPriceInfoVOList = new ArrayList<>();
+
 
                                     // 根据价目id， 获取价目下面的价格信息
                                     List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.list(new LambdaQueryWrapper<MVarietiesPriceInfo>().eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategory.getId())

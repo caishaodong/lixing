@@ -11,6 +11,9 @@
         <result column="distribution_company_name" property="distributionCompanyName" />
         <result column="customer_id" property="customerId" />
         <result column="customer_name" property="customerName" />
+        <result column="price_category_id" property="priceCategoryId" />
+        <result column="price_category_name" property="priceCategoryName" />
+        <result column="varieties_price_id" property="varietiesPriceId" />
         <result column="varieties_name" property="varietiesName" />
         <result column="unit" property="unit" />
         <result column="num" property="num" />
@@ -24,7 +27,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, order_sn, order_date, distribution_company_id, distribution_company_name, customer_id, customer_name, varieties_name, unit, num, price, total_price, remark, is_deleted, gmt_create, gmt_modified
+        id, order_sn, order_date, distribution_company_id, distribution_company_name, customer_id, customer_name, price_category_id, price_category_name, varieties_price_id, varieties_name, unit, num, price, total_price, remark, is_deleted, gmt_create, gmt_modified
     </sql>
 
 </mapper>

@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * @Author caishaodong
  * @Date 2020-09-07 12:09
- * @Description 登入登出
+ * @Description 登入登出管理
  **/
 @RestController
 @RequestMapping("/sysUser")

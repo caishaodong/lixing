@@ -19,8 +19,16 @@ public enum BusinessEnum {
     USER_FROZEN(107, "该账号已冻结"),
 
     CUSTOMER_INFO_ERROR(201, "客户信息有误"),
+    CUSTOMER_NAME_EMPTY(202, "客户姓名不能为空"),
+    CUSTOMER_NAME_REPEAT(203, "客户姓名不能重复"),
+    CUSTOMER_NOT_EXIST(204, "客户不存在"),
 
     PRICE_CATEGORY_INFO_ERROR(301, "价目信息有误"),
+
+    DISTRIBUTION_COMPANY_NOT_EXIST(401, "配送公司不存在"),
+
+    VARIETIES_PRICE_NOT_EXIST(501, "品种不存在"),
+    PRICE_CATEGORY_NOT_EXIST(502, "价目不存在"),
     ;
     private Integer code;
     private String desc;

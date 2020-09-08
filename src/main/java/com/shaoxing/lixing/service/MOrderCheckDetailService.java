@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-09-07
  */
 public interface MOrderCheckDetailService extends IService<MOrderCheckDetail> {
-
+    MOrderCheckDetail getOKByOrderDate(Long orderDate);
 }

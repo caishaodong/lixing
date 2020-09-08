@@ -8,27 +8,25 @@ import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 /**
- * 配送公司信息表
+ * 配送公司信息管理
  *
  * @author caishaodong
  * @since 2020-09-07
  */
 @Controller
-@RequestMapping("/distribution/company")
+@RequestMapping("/distributionCompany")
 public class MDistributionCompanyController extends BaseController {
 
     @Autowired
@@ -66,7 +64,25 @@ public class MDistributionCompanyController extends BaseController {
             // 修改价目
             distributionCompanyService.updateDistributionCompany(distributionCompany);
         }
-
         return success();
+    }
+
+
+    /**
+     * 获取配送公司信息
+     *
+     * @param id 配送公司id
+     * @return
+     */
+    @GetMapping("/getDistributionCompanyInfo/{id}")
+    public ResponseResult getDistributionCompanyInfo(@PathVariable("id") Long id) {
+
+        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(id);
+        if (Objects.isNull(distributionCompany)) {
+            return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
+        }
+
+        DistributionCompanyVO distributionCompanyVO = distributionCompanyService.getDistributionCompanyInfo(distributionCompany);
+        return success(distributionCompanyVO);
     }
 }

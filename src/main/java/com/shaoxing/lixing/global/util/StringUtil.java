@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @Author caishaodong
@@ -47,4 +48,19 @@ public class StringUtil {
         });
         return list;
     }
+
+    /**
+     * 生成订单编号
+     *
+     * @return
+     */
+    public static String genOrderSn() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replace("-", "");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(genOrderSn());
+    }
+
 }

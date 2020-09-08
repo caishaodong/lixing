@@ -16,6 +16,8 @@ import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
  */
 public interface MDistributionCompanyService extends IService<MDistributionCompany> {
 
+    MDistributionCompany getOKById(Long id);
+
     /**
      * 获取配送公司列表 分页
      *
@@ -38,5 +40,11 @@ public interface MDistributionCompanyService extends IService<MDistributionCompa
      */
     void updateDistributionCompany(MDistributionCompany distributionCompany);
 
-
+    /**
+     * 获取配送公司信息
+     *
+     * @param distributionCompany
+     * @return
+     */
+    DistributionCompanyVO getDistributionCompanyInfo(MDistributionCompany distributionCompany);
 }
