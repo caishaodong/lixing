@@ -17,7 +17,6 @@ import com.shaoxing.lixing.service.MCustomerPriceCategoryRelService;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import com.shaoxing.lixing.service.MPriceCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
  * @author caishaodong
  * @since 2020-09-07
  */
-@Controller
+@RestController
 @RequestMapping("/customerInfo")
 public class MCustomerInfoController extends BaseController {
     @Autowired
@@ -48,55 +47,55 @@ public class MCustomerInfoController extends BaseController {
     /**
      * 添加客户，并绑定配送公司
      *
-     * @param customerInfoDTO
+     * @param dto
      * @return
      */
     @PostMapping("/saveAndBindDistribution")
-    public ResponseResult saveAndBindDistribution(@RequestBody CustomerInfoDTO customerInfoDTO) {
-        if (StringUtil.isBlank(customerInfoDTO.getName())) {
+    public ResponseResult saveAndBindDistribution(@RequestBody CustomerInfoDTO dto) {
+        if (StringUtil.isBlank(dto.getName())) {
             return error(BusinessEnum.CUSTOMER_NAME_EMPTY);
         }
-        if (Objects.isNull(customerInfoDTO.getDistributionCompanyId())) {
+        if (Objects.isNull(dto.getDistributionCompanyId())) {
             return error(BusinessEnum.PARAM_ERROR);
         }
         // 校验客户名称是否重复
-        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().eq(MCustomerInfo::getName, customerInfoDTO.getName()));
+        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().eq(MCustomerInfo::getName, dto.getName()));
         if (count > 0) {
             return error(BusinessEnum.CUSTOMER_NAME_REPEAT);
         }
 
         // 校验配送公司是否存在
-        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(customerInfoDTO.getDistributionCompanyId());
+        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(dto.getDistributionCompanyId());
         if (Objects.isNull(distributionCompany)) {
             return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
         }
-        customerInfoService.saveAndBindDistributionCompany(customerInfoDTO);
+        customerInfoService.saveAndBindDistributionCompany(dto);
         return success();
     }
 
     /**
      * 解绑客户和配送公司关系
      *
-     * @param customerInfoDTO
+     * @param dto
      * @return
      */
     @PostMapping("/unBindDistribution")
-    public ResponseResult unBindDistribution(@RequestBody CustomerInfoDTO customerInfoDTO) {
-        if (Objects.isNull(customerInfoDTO.getCustomerId()) || Objects.isNull(customerInfoDTO.getDistributionCompanyId())) {
+    public ResponseResult unBindDistribution(@RequestBody CustomerInfoDTO dto) {
+        if (Objects.isNull(dto.getCustomerId()) || Objects.isNull(dto.getDistributionCompanyId())) {
             return error(BusinessEnum.PARAM_ERROR);
         }
 
         // 校验配送公司是否存在
-        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(customerInfoDTO.getDistributionCompanyId());
+        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(dto.getDistributionCompanyId());
         if (Objects.isNull(distributionCompany)) {
             return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
         }
         // 校验客户是否存在
-        MCustomerInfo customerInfo = customerInfoService.getOKById(customerInfoDTO.getCustomerId());
+        MCustomerInfo customerInfo = customerInfoService.getOKById(dto.getCustomerId());
         if (Objects.isNull(customerInfo)) {
             return error(BusinessEnum.CUSTOMER_NOT_EXIST);
         }
-        customerInfoService.unBindDistribution(customerInfoDTO);
+        customerInfoService.unBindDistribution(dto);
         return success();
     }
 

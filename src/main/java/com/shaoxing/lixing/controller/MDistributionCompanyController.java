@@ -14,7 +14,6 @@ import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -25,7 +24,7 @@ import java.util.Objects;
  * @author caishaodong
  * @since 2020-09-07
  */
-@Controller
+@RestController
 @RequestMapping("/distributionCompany")
 public class MDistributionCompanyController extends BaseController {
 
@@ -84,5 +83,23 @@ public class MDistributionCompanyController extends BaseController {
 
         DistributionCompanyVO distributionCompanyVO = distributionCompanyService.getDistributionCompanyInfo(distributionCompany);
         return success(distributionCompanyVO);
+    }
+
+    /**
+     * 删除配送公司
+     *
+     * @param id 配送公司id
+     * @return
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseResult delete(@PathVariable Long id) {
+
+        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(id);
+        if (Objects.isNull(distributionCompany)) {
+            return success();
+        }
+        // 删除配送公司
+        distributionCompanyService.deleteDistributionCompany(distributionCompany);
+        return success();
     }
 }

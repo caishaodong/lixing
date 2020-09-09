@@ -15,6 +15,8 @@ import com.shaoxing.lixing.global.util.PageUtil;
  */
 public interface MOrderInfoService extends IService<MOrderInfo> {
 
+    MOrderInfo getOKById(Long id);
+
     /**
      * 获取订单列表
      *

@@ -29,6 +29,8 @@ public enum BusinessEnum {
 
     VARIETIES_PRICE_NOT_EXIST(501, "品种不存在"),
     PRICE_CATEGORY_NOT_EXIST(502, "价目不存在"),
+
+    ORDER_NOT_EXIST(601, "订单不存在"),
     ;
     private Integer code;
     private String desc;

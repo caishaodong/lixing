@@ -10,11 +10,7 @@ import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.MOrderCheckDetailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -24,14 +20,14 @@ import java.util.Objects;
  * @author caishaodong
  * @since 2020-09-07
  */
-@Controller
+@RestController
 @RequestMapping("/orderCheckDetail")
 public class MOrderCheckDetailController extends BaseController {
     @Autowired
     private MOrderCheckDetailService orderCheckDetailService;
 
     /**
-     * 保存或修改订单送货验收信息
+     * 保存（修改）订单送货验收信息
      *
      * @param dto
      * @return

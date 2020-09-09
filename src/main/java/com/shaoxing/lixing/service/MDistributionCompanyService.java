@@ -47,4 +47,11 @@ public interface MDistributionCompanyService extends IService<MDistributionCompa
      * @return
      */
     DistributionCompanyVO getDistributionCompanyInfo(MDistributionCompany distributionCompany);
+
+    /**
+     * 删除配送公司
+     *
+     * @param distributionCompany
+     */
+    void deleteDistributionCompany(MDistributionCompany distributionCompany);
 }

@@ -3,6 +3,7 @@ package com.shaoxing.lixing.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shaoxing.lixing.domain.dto.CustomerInfoDTO;
 import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
 import com.shaoxing.lixing.domain.vo.CustomerInfoVO;
@@ -16,6 +17,7 @@ import com.shaoxing.lixing.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -123,6 +125,17 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         List<DistributionCompanyVO> mDistributionCompanyVOList = getMDistributionCompanyVOList(list);
 
         return CollectionUtils.isEmpty(mDistributionCompanyVOList) ? null : mDistributionCompanyVOList.get(0);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteDistributionCompany(MDistributionCompany distributionCompany) {
+        // 删除配送公司
+        distributionCompany.setIsDeleted(YesNoEnum.YES.getValue());
+        this.baseMapper.updateById(distributionCompany);
+        // 解绑客户和配送公司关系
+        customerDistributionCompanyRelService.remove(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
+                .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId()));
     }
 
     /**

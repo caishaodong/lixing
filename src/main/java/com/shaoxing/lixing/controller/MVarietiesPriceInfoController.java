@@ -15,7 +15,6 @@ import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.MVarietiesPriceInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,14 +26,14 @@ import java.util.Objects;
  * @author caishaodong
  * @since 2020-09-07
  */
-@Controller
+@RestController
 @RequestMapping("/varietiesPriceInfo")
 public class MVarietiesPriceInfoController extends BaseController {
     @Autowired
     private MVarietiesPriceInfoService varietiesPriceInfoService;
 
     /**
-     * 获取品种价格列表 分页
+     * 获取品种价格列表（分页）
      *
      * @param dto
      * @return
@@ -45,11 +44,11 @@ public class MVarietiesPriceInfoController extends BaseController {
             return error(BusinessEnum.PARAM_ERROR);
         }
         IPage<MVarietiesPriceInfo> page = varietiesPriceInfoService.getListPage(dto);
-        return ResponseResult.success(page);
+        return success(page);
     }
 
     /**
-     * 获取品种价格列表 不分页
+     * 根据价目id获取品种价格列表（不分页）
      *
      * @param priceCategoryId 价目id
      * @return
@@ -63,12 +62,12 @@ public class MVarietiesPriceInfoController extends BaseController {
 
 
     /**
-     * 保存（修改）价目
+     * 保存（修改）品种价格
      *
      * @param dto
      * @return
      */
-    @PostMapping("/edit")
+    @PostMapping("/save")
     public ResponseResult edit(@RequestBody VarietiesPriceInfoDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
@@ -89,9 +88,9 @@ public class MVarietiesPriceInfoController extends BaseController {
     }
 
     /**
-     * 删除价目
+     * 删除品种价格
      *
-     * @param id 价目id
+     * @param id 品种价格id
      * @return
      */
     @DeleteMapping("/delete/{id}")

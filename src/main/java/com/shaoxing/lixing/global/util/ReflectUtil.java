@@ -3,6 +3,7 @@ package com.shaoxing.lixing.global.util;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -14,10 +15,10 @@ public class ReflectUtil {
 
     public static void setCreateInfo(Object obj, Class<?> clazz) {
         try {
-            Date now = new Date();
+            LocalDateTime now = LocalDateTime.now();
             ReflectUtil.setObjectValue(obj, clazz, "gmtCreate", now);
             ReflectUtil.setObjectValue(obj, clazz, "gmtModified", now);
-            ReflectUtil.setObjectValue(obj, clazz, "isDeleted", YesNoEnum.NO);
+            ReflectUtil.setObjectValue(obj, clazz, "isDeleted", YesNoEnum.NO.getValue());
         } catch (Exception e) {
             e.printStackTrace();
         }

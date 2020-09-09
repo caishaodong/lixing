@@ -1,20 +1,24 @@
 package com.shaoxing.lixing.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.FCompanyBillDTO;
+import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
+import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
+import com.shaoxing.lixing.global.enums.YesNoEnum;
+import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.FCompanyBillService;
 import com.shaoxing.lixing.service.SysCityService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * 公司账单管理
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author caishaodong
  * @since 2020-09-07
  */
-@Controller
+@RestController
 @RequestMapping("/companyBill")
 public class FCompanyBillController extends BaseController {
     @Autowired
@@ -48,6 +52,23 @@ public class FCompanyBillController extends BaseController {
         String areaName = sysCityService.getNameByAreaCode(companyBill.getAreaCode());
         companyBill.setAreaName(areaName);
         companyBillService.save(companyBill);
+        return success();
+    }
+
+    /**
+     * 删除公司账单
+     *
+     * @param id 公司账单id
+     * @return
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseResult delete(@PathVariable("id") Long id) {
+        FCompanyBill companyBill = companyBillService.getOKById(id);
+        if (Objects.isNull(companyBill)) {
+            return success();
+        }
+        companyBill.setIsDeleted(YesNoEnum.YES.getValue());
+        companyBillService.updateById(companyBill);
         return success();
     }
 

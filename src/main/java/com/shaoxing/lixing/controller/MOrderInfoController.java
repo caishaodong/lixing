@@ -1,14 +1,13 @@
 package com.shaoxing.lixing.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.OrderInfoDTO;
 import com.shaoxing.lixing.domain.dto.OrderInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
-import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
+import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.DecimalUtil;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
@@ -16,11 +15,7 @@ import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -31,7 +26,7 @@ import java.util.Objects;
  * @author caishaodong
  * @since 2020-09-08
  */
-@Controller
+@RestController
 @RequestMapping("/orderInfo")
 public class MOrderInfoController extends BaseController {
     @Autowired
@@ -106,6 +101,41 @@ public class MOrderInfoController extends BaseController {
         // 生成订单编号
         orderInfo.setOrderSn(StringUtil.genOrderSn());
         orderInfoService.save(orderInfo);
+        return success();
+    }
+
+    /**
+     * 复制订单
+     *
+     * @param id 订单id
+     * @return
+     */
+    @PostMapping("/reproduce/{id}")
+    public ResponseResult reproduce(@PathVariable("id") Long id) {
+        MOrderInfo existOrderId = orderInfoService.getOKById(id);
+        if (Objects.isNull(existOrderId)) {
+            return error(BusinessEnum.ORDER_NOT_EXIST);
+        }
+        MOrderInfo newOrderInfo = new MOrderInfo();
+        BeanUtils.copyProperties(existOrderId, newOrderInfo, "id");
+        orderInfoService.save(newOrderInfo);
+        return success();
+    }
+
+    /**
+     * 删除订单
+     *
+     * @param id 订单id
+     * @return
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseResult delete(@PathVariable("id") Long id) {
+        MOrderInfo existOrderId = orderInfoService.getOKById(id);
+        if (Objects.isNull(existOrderId)) {
+            return success();
+        }
+        existOrderId.setIsDeleted(YesNoEnum.YES.getValue());
+        orderInfoService.updateById(existOrderId);
         return success();
     }
 

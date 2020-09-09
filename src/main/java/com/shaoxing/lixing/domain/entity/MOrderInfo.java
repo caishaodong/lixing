@@ -106,7 +106,7 @@ public class MOrderInfo extends Model<MOrderInfo> {
     /**
      * 是否删除（0：未删除，1：删除）
      */
-    private Boolean isDeleted;
+    private Integer isDeleted;
 
     /**
      * 创建时间

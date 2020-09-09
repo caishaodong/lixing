@@ -22,6 +22,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderInfo> implements MOrderInfoService {
 
+    @Override
+    public MOrderInfo getOKById(Long id) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MOrderInfo>().eq(MOrderInfo::getId, id)
+                .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
+
     /**
      * 获取订单列表
      *
