@@ -56,7 +56,7 @@ public class FCompanyBill extends Model<FCompanyBill> {
     /**
      * 账单日期
      */
-    private LocalDateTime billDate;
+    private Long billDate;
 
     /**
      * 单价

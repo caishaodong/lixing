@@ -52,7 +52,7 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
     }
 
     /**
-     * 查询价目列表 分页
+     * 获取品种价格列表 分页
      *
      * @param dto
      * @return
@@ -67,6 +67,19 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
                 .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByAsc(MVarietiesPriceInfo::getGmtCreate));
         return page;
+    }
+
+    /**
+     * 获取品种价格列表 不分页
+     *
+     * @param priceCategoryId
+     * @return
+     */
+    @Override
+    public List<MVarietiesPriceInfo> getListByPriceCategoryId(Long priceCategoryId) {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<MVarietiesPriceInfo>()
+                .eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategoryId)
+                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
     }
 
     /**

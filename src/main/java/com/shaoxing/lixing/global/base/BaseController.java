@@ -14,7 +14,7 @@ public class BaseController {
         return ResponseResult.success();
     }
 
-    public <T> ResponseResult<T> success(T t) {
+    public ResponseResult success(Object t) {
         return ResponseResult.success(t);
     }
 

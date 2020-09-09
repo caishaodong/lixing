@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,15 +34,31 @@ public class MVarietiesPriceInfoController extends BaseController {
     private MVarietiesPriceInfoService varietiesPriceInfoService;
 
     /**
-     * 获取价目列表 分页
+     * 获取品种价格列表 分页
      *
      * @param dto
      * @return
      */
     @GetMapping("/getListPage")
     public ResponseResult<PageUtil<MVarietiesPriceInfo>> getListPage(@RequestBody VarietiesPriceInfoSearchDTO dto) {
+        if (!dto.paramCheck()) {
+            return error(BusinessEnum.PARAM_ERROR);
+        }
         IPage<MVarietiesPriceInfo> page = varietiesPriceInfoService.getListPage(dto);
         return ResponseResult.success(page);
+    }
+
+    /**
+     * 获取品种价格列表 不分页
+     *
+     * @param priceCategoryId 价目id
+     * @return
+     */
+    @GetMapping("/getListByPriceCategoryId/{priceCategoryId}")
+    public ResponseResult<MVarietiesPriceInfo> getList(@PathVariable("priceCategoryId") Long priceCategoryId) {
+        // 根据价目id获取品种价格信息
+        List<MVarietiesPriceInfo> list = varietiesPriceInfoService.getListByPriceCategoryId(priceCategoryId);
+        return success(list);
     }
 
 
