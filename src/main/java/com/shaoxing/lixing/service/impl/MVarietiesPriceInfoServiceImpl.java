@@ -20,10 +20,12 @@ import com.shaoxing.lixing.service.MPriceCategoryService;
 import com.shaoxing.lixing.service.MVarietiesPriceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -75,24 +77,43 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
      */
     @Override
     public ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto) {
+        // 客户信息校验
         List<Long> custormerIdList = dto.getCustormerIdList();
         int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, custormerIdList));
         if (count != custormerIdList.size()) {
             return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);
         }
+        // 价目信息校验
         MPriceCategory priceCategory = priceCategoryService.getOKById(dto.getPriceCategoryId());
         if (Objects.isNull(priceCategory)) {
             return ResponseResult.error(BusinessEnum.PRICE_CATEGORY_INFO_ERROR);
         }
+        // 获取已经绑定过改价目的客户关系
+        List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
+                .in(MCustomerPriceCategoryRel::getCustomerId, custormerIdList)
+                .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategory)
+                .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
+        List<Long> existCustomerIds = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(customerPriceCategoryRelList)) {
+            existCustomerIds = customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getCustomerId).collect(Collectors.toList());
+        }
 
+        // 客户绑定价目
         List<MCustomerPriceCategoryRel> list = new ArrayList<>();
-        custormerIdList.forEach(custormerId -> {
+        for (Long customerId : custormerIdList) {
+            Long id = null;
+            if (existCustomerIds.contains(customerId)) {
+                MCustomerPriceCategoryRel rel = customerPriceCategoryRelList.stream()
+                        .filter(customerPriceCategoryRel -> customerId.equals(customerPriceCategoryRel.getCustomerId())).findAny().get();
+                id = rel.getId();
+            }
             MCustomerPriceCategoryRel rel = new MCustomerPriceCategoryRel();
-            rel.setCustomerId(custormerId);
+            rel.setCustomerId(customerId);
             rel.setPriceCategoryId(dto.getPriceCategoryId());
+            rel.setId(id);
             list.add(rel);
-        });
-        customerPriceCategoryRelService.saveBatch(list);
+        }
+        customerPriceCategoryRelService.saveOrUpdateBatch(list);
 
         return ResponseResult.success();
     }

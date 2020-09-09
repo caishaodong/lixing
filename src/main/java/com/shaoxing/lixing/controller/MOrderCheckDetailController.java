@@ -11,6 +11,8 @@ import com.shaoxing.lixing.service.MOrderCheckDetailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -53,6 +55,19 @@ public class MOrderCheckDetailController extends BaseController {
         }
         orderCheckDetailService.saveOrUpdate(existsOrderCheckDetail);
         return success();
+    }
+
+    /**
+     * 获取送货验收信息
+     *
+     * @param orderDate
+     * @return
+     */
+    @GetMapping("/getInfo/{orderDate}")
+    public ResponseResult<MOrderCheckDetail> getInfo(@PathVariable("orderDate") Long orderDate) {
+
+        MOrderCheckDetail okByOrderDate = orderCheckDetailService.getOKByOrderDate(orderDate);
+        return success(okByOrderDate);
     }
 
 }

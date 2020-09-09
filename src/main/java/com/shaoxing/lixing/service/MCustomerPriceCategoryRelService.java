@@ -3,6 +3,8 @@ package com.shaoxing.lixing.service;
 import com.shaoxing.lixing.domain.entity.MCustomerPriceCategoryRel;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 客户和价目关联表 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MCustomerPriceCategoryRelService extends IService<MCustomerPriceCategoryRel> {
 
+    List<MCustomerPriceCategoryRel> getListByCustomerId(Long customerId);
 }

@@ -1,6 +1,7 @@
 package com.shaoxing.lixing.controller;
 
 
+import com.shaoxing.lixing.global.base.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Controller;
  * @since 2020-09-07
  */
 @Controller
-@RequestMapping("/m-price-category")
-public class MPriceCategoryController {
+@RequestMapping("/priceCategory")
+public class MPriceCategoryController extends BaseController {
 
 }
