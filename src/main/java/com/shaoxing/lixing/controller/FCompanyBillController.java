@@ -2,6 +2,7 @@ package com.shaoxing.lixing.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.shaoxing.lixing.domain.dto.CompanyBillSearchDTO;
 import com.shaoxing.lixing.domain.dto.FCompanyBillDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
@@ -33,6 +34,20 @@ public class FCompanyBillController extends BaseController {
     private SysCityService sysCityService;
     @Autowired
     private FCompanyBillService companyBillService;
+
+    /**
+     * 获取公司账单列表（分页）
+     * @param dto
+     * @return
+     */
+    @GetMapping("/getListPage")
+    public ResponseResult<PageUtil<FCompanyBill>> getListPage(@RequestBody CompanyBillSearchDTO dto) {
+        if (!dto.paramCheck()) {
+            return error(BusinessEnum.PARAM_ERROR);
+        }
+        IPage<FCompanyBill> page = companyBillService.getListPage(dto);
+        return success(page);
+    }
 
     /**
      * 保存公司账单
