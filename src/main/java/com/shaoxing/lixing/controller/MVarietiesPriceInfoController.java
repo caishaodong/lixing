@@ -12,11 +12,16 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.MVarietiesPriceInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -120,6 +125,32 @@ public class MVarietiesPriceInfoController extends BaseController {
         }
         ResponseResult responseResult = varietiesPriceInfoService.customersBindingPriceCategory(dto);
         return responseResult;
+    }
+
+    /**
+     * 导出品种价格列表
+     *
+     * @param priceCategoryId
+     */
+    @GetMapping("/export/{priceCategoryId}")
+    public void export(@PathVariable("priceCategoryId") Long priceCategoryId, HttpServletResponse response) {
+        // 根据价目id获取品种价格信息
+        List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.getListByPriceCategoryId(priceCategoryId);
+
+        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("食材品种", "name");
+        fieldNameMap.put("单位", "unit");
+        fieldNameMap.put("单价", "price");
+        fieldNameMap.put("备注", "remark");
+        fieldNameMap.put("添加时间", "gmtCreate");
+
+        try {
+            String fileName = "品种价格";
+            ExcelDataUtil.export(fieldNameMap, varietiesPriceInfoList, fileName, response);
+        } catch (Exception e) {
+            System.out.println("导出失败");
+            e.printStackTrace();
+        }
     }
 
 }

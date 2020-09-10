@@ -9,9 +9,9 @@ import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.DecimalUtil;
+import com.shaoxing.lixing.global.util.OrderNoUtils;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
-import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class MOrderInfoController extends BaseController {
         // 计算总价
         orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), new BigDecimal(String.valueOf(orderInfo.getNum()))));
         // 生成订单编号
-        orderInfo.setOrderSn(StringUtil.genOrderSn());
+        orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
         orderInfoService.save(orderInfo);
         return success();
     }
