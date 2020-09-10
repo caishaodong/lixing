@@ -29,7 +29,7 @@ public class SysCityController extends BaseController {
     /**
      * 根据地区编码获取地区名称
      *
-     * @param code
+     * @param code 地区编码
      * @return
      */
     @GetMapping("/getNameByAreaCode/{code}")
@@ -41,7 +41,7 @@ public class SysCityController extends BaseController {
     /**
      * 根据父级城市编码获取子级城市数据（获取省份时，parentCode传1）
      *
-     * @param parentCode
+     * @param parentCode 父级地区编码
      * @return
      */
     @GetMapping("/getCityListByParentCode/{parentCode}")

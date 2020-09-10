@@ -56,7 +56,7 @@ public class MOrderCheckDetailController extends BaseController {
     /**
      * 获取送货验收信息
      *
-     * @param orderDate
+     * @param orderDate 订单日期（格式yyyyMMdd）
      * @return
      */
     @GetMapping("/getInfo/{orderDate}")

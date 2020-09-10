@@ -101,7 +101,7 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
         if (Objects.isNull(priceCategory)) {
             return ResponseResult.error(BusinessEnum.PRICE_CATEGORY_INFO_ERROR);
         }
-        // 获取已经绑定过改价目的客户关系
+        // 获取已经绑定过该价目的客户关系
         List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
                 .in(MCustomerPriceCategoryRel::getCustomerId, custormerIdList)
                 .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategory)

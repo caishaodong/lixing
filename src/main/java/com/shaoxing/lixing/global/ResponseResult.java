@@ -22,15 +22,15 @@ public class ResponseResult<T> {
     }
 
     public static ResponseResult success() {
-        return new ResponseResult(200, "成功", null);
+        return new ResponseResult(BusinessEnum.SUCCESS.getCode(), BusinessEnum.SUCCESS.getDesc(), null);
     }
 
     public static ResponseResult success(Object data) {
-        return new ResponseResult(200, "成功", data);
+        return new ResponseResult(BusinessEnum.SUCCESS.getCode(), BusinessEnum.SUCCESS.getDesc(), data);
     }
 
     public static ResponseResult error() {
-        return new ResponseResult(500, "失败", null);
+        return new ResponseResult(BusinessEnum.FAIL.getCode(), BusinessEnum.FAIL.getDesc(), null);
     }
 
     public static ResponseResult error(Integer code, String errorMsg) {

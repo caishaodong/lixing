@@ -68,7 +68,7 @@ public class MVarietiesPriceInfoController extends BaseController {
      * @return
      */
     @PostMapping("/save")
-    public ResponseResult edit(@RequestBody VarietiesPriceInfoDTO dto) {
+    public ResponseResult save(@RequestBody VarietiesPriceInfoDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
         }

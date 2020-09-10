@@ -32,7 +32,7 @@ public class MDistributionCompanyController extends BaseController {
     private MDistributionCompanyService distributionCompanyService;
 
     /**
-     * 获取配送公司列表 分页
+     * 获取配送公司列表（分页）
      *
      * @param dto
      * @return
@@ -49,7 +49,7 @@ public class MDistributionCompanyController extends BaseController {
      * @param dto
      * @return
      */
-    @PostMapping("/edit")
+    @PostMapping("/save")
     public ResponseResult save(@RequestBody DistributionCompanyDTO dto) {
 
         MDistributionCompany distributionCompany = new MDistributionCompany();
