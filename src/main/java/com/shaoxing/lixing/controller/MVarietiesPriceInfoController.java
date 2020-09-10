@@ -1,10 +1,12 @@
 package com.shaoxing.lixing.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
+import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
@@ -81,6 +83,15 @@ public class MVarietiesPriceInfoController extends BaseController {
         MVarietiesPriceInfo varietiesPriceInfo = new MVarietiesPriceInfo();
         BeanUtils.copyProperties(dto, varietiesPriceInfo);
         ReflectUtil.setCreateInfo(varietiesPriceInfo, MVarietiesPriceInfo.class);
+
+        // 校验价格品种名称是否重复
+        int count = varietiesPriceInfoService.count(new LambdaQueryWrapper<MVarietiesPriceInfo>().eq(MVarietiesPriceInfo::getName, dto.getName())
+                .eq(MVarietiesPriceInfo::getPriceCategoryId, dto.getPriceCategoryId())
+                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .ne(Objects.nonNull(dto.getId()), MVarietiesPriceInfo::getId, dto.getId()));
+        if (count > 0) {
+            return error(BusinessEnum.VARIETIES_PRICE_NAME_REPEAT);
+        }
 
         if (Objects.isNull(dto.getId())) {
             // 保存价目

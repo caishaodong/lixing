@@ -29,6 +29,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/orderInfo")
 public class MOrderInfoController extends BaseController {
+
     @Autowired
     private MDistributionCompanyService distributionCompanyService;
     @Autowired

@@ -24,13 +24,14 @@ public enum BusinessEnum {
     CUSTOMER_NOT_EXIST(204, "客户不存在"),
 
     PRICE_CATEGORY_INFO_ERROR(301, "价目信息有误"),
+    VARIETIES_PRICE_NOT_EXIST(302, "品种不存在"),
+    PRICE_CATEGORY_NOT_EXIST(303, "价目不存在"),
+    VARIETIES_PRICE_NAME_REPEAT(304, "品种名称不能重复"),
 
     DISTRIBUTION_COMPANY_NOT_EXIST(401, "配送公司不存在"),
+    DISTRIBUTION_COMPANY_NAME_REPEAT(403, "配送公司名称不能重复"),
 
-    VARIETIES_PRICE_NOT_EXIST(501, "品种不存在"),
-    PRICE_CATEGORY_NOT_EXIST(502, "价目不存在"),
-
-    ORDER_NOT_EXIST(601, "订单不存在"),
+    ORDER_NOT_EXIST(501, "订单不存在"),
     ;
     private Integer code;
     private String desc;

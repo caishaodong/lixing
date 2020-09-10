@@ -1,6 +1,7 @@
 package com.shaoxing.lixing.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.DistributionCompanyDTO;
 import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
@@ -9,6 +10,7 @@ import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
+import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
@@ -55,6 +57,14 @@ public class MDistributionCompanyController extends BaseController {
         MDistributionCompany distributionCompany = new MDistributionCompany();
         BeanUtils.copyProperties(dto, distributionCompany);
         ReflectUtil.setCreateInfo(distributionCompany, MDistributionCompany.class);
+
+        // 校验配送公司名称是否重复
+        int count = distributionCompanyService.count(new LambdaQueryWrapper<MDistributionCompany>().eq(MDistributionCompany::getName, dto.getName())
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue())
+                .ne(Objects.nonNull(dto.getId()), MDistributionCompany::getId, dto.getId()));
+        if (count > 0) {
+            return error(BusinessEnum.DISTRIBUTION_COMPANY_NAME_REPEAT);
+        }
 
         if (Objects.isNull(dto.getId())) {
             // 保存价目
