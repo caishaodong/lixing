@@ -111,6 +111,8 @@ public class MOrderInfoController extends BaseController {
         orderInfo.setPriceCategoryName(priceCategory.getName());
         // 设置单价
         orderInfo.setPrice(varietiesPriceInfo.getPrice());
+        // 设置单位
+        orderInfo.setUnit(varietiesPriceInfo.getUnit());
         // 计算总价
         orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), orderInfo.getNum()));
         // 生成订单编号

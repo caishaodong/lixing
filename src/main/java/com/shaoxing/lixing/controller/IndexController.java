@@ -4,22 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.IndexStatisticsDTO;
+import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.entity.MOrderInfo;
+import com.shaoxing.lixing.domain.vo.DistributionCompanyExportVO;
 import com.shaoxing.lixing.domain.vo.IndexDataVo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.LocalDateTimeUtil;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
+import com.shaoxing.lixing.service.MDistributionCompanyService;
 import com.shaoxing.lixing.service.MOrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
@@ -35,6 +36,8 @@ import java.util.*;
 public class IndexController extends BaseController {
     @Autowired
     private MOrderInfoService orderInfoService;
+    @Autowired
+    private MDistributionCompanyService distributionCompanyService;
 
     /**
      * 首页数据统计
@@ -142,10 +145,10 @@ public class IndexController extends BaseController {
      * @param response
      * @return
      */
-    @GetMapping("/export")
-    public ResponseResult export(IndexStatisticsDTO dto, HttpServletResponse response) {
+    @GetMapping("/statistics/export")
+    public ResponseResult statisticsExport(IndexStatisticsDTO dto, HttpServletResponse response) {
         List<Long> customerIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getCustomerIds());
-        List<Long> varietiesPriceIdList =  Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
+        List<Long> varietiesPriceIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
 
         List<MOrderInfo> list = orderInfoService.list(new LambdaQueryWrapper<MOrderInfo>()
                 .eq(Objects.nonNull(dto.getOrderDate()), MOrderInfo::getOrderDate, dto.getOrderDate())
@@ -168,6 +171,51 @@ public class IndexController extends BaseController {
             ExcelDataUtil.export(fieldNameMap, list, "销售统计", response);
         } catch (Exception e) {
             LOGGER.error("销售统计导出失败", e);
+            return error();
+        }
+        return success();
+    }
+
+    @GetMapping("/distributionCompany/export/{distributionCompanyId}")
+    public ResponseResult distributionCompanyExport(@PathVariable("distributionCompanyId") Long distributionCompanyId, HttpServletResponse response) {
+        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(distributionCompanyId);
+        if (Objects.isNull(distributionCompany)) {
+            return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
+        }
+        List<MOrderInfo> list = orderInfoService.list(new LambdaQueryWrapper<MOrderInfo>()
+                .eq(MOrderInfo::getDistributionCompanyId, distributionCompanyId)
+                .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByDesc(MOrderInfo::getGmtModified));
+
+        Map<String, DistributionCompanyExportVO> map = new HashMap<>();
+        for (MOrderInfo orderInfo : list) {
+            Long customerId = orderInfo.getCustomerId();
+            String customerName = orderInfo.getCustomerName();
+            String varietiesName = orderInfo.getVarietiesName();
+            BigDecimal num = orderInfo.getNum();
+            String unit = orderInfo.getUnit();
+            String remark = orderInfo.getRemark();
+            if (!map.containsKey(String.valueOf(customerId))) {
+                DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+                distributionCompanyExportVO.setCustomerId(customerId);
+                distributionCompanyExportVO.setCustomerName(customerName);
+                distributionCompanyExportVO.setDetail(StringUtil.concatString(varietiesName, num.toString(), unit, remark));
+                map.put(String.valueOf(customerId), distributionCompanyExportVO);
+            } else {
+                DistributionCompanyExportVO distributionCompanyExportVO = map.get(String.valueOf(customerId));
+                String detail = distributionCompanyExportVO.getDetail();
+                distributionCompanyExportVO.setDetail(StringUtil.concatString(detail, "、", varietiesName, num.toString(), unit, remark));
+            }
+        }
+        List<DistributionCompanyExportVO> distributionCompanyExportVOList = new ArrayList<>(map.values());
+        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("客户名称", "customerName");
+        fieldNameMap.put("配送明细", "detail");
+        try {
+            LOGGER.info("开始准备导出配送清单");
+            ExcelDataUtil.export(fieldNameMap, distributionCompanyExportVOList, "配送清单", response);
+        } catch (Exception e) {
+            LOGGER.error("配送清单导出失败", e);
             return error();
         }
         return success();
