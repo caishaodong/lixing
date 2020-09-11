@@ -132,4 +132,16 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
 
         return ResponseResult.success();
     }
+
+    /**
+     * 根据客户名称获取客户
+     *
+     * @param customerName
+     * @return
+     */
+    @Override
+    public MCustomerInfo getByName(String customerName) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MCustomerInfo>().eq(MCustomerInfo::getName, customerName)
+                .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
 }

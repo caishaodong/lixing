@@ -143,6 +143,18 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
     }
 
     /**
+     * 根据配送单位名称获取配送单位
+     *
+     * @param distributionCompanyName
+     * @return
+     */
+    @Override
+    public MDistributionCompany getByName(String distributionCompanyName) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MDistributionCompany>().eq(MDistributionCompany::getName, distributionCompanyName)
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
+
+    /**
      * 获取配送管理绑定的用户信息
      *
      * @param distributionCompanyList

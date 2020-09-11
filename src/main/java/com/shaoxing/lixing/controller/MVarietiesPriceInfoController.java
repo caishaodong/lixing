@@ -129,7 +129,7 @@ public class MVarietiesPriceInfoController extends BaseController {
      * @param priceCategoryId 价目id
      */
     @GetMapping("/export/{priceCategoryId}")
-    public void export(@PathVariable("priceCategoryId") Long priceCategoryId, HttpServletResponse response) {
+    public ResponseResult export(@PathVariable("priceCategoryId") Long priceCategoryId, HttpServletResponse response) {
         // 根据价目id获取品种价格信息
         List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.getListByPriceCategoryId(priceCategoryId);
 
@@ -145,7 +145,9 @@ public class MVarietiesPriceInfoController extends BaseController {
             ExcelDataUtil.export(fieldNameMap, varietiesPriceInfoList, "品种价格", response);
         } catch (Exception e) {
             LOGGER.error("品种价格导出失败", e);
+            return error();
         }
+        return success();
     }
 
 }

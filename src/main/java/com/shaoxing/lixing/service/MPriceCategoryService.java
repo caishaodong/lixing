@@ -1,7 +1,7 @@
 package com.shaoxing.lixing.service;
 
-import com.shaoxing.lixing.domain.entity.MPriceCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoxing.lixing.domain.entity.MPriceCategory;
 
 /**
  * <p>
@@ -13,4 +13,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MPriceCategoryService extends IService<MPriceCategory> {
     MPriceCategory getOKById(Long id);
+
+    /**
+     * 根据价目名称获取价目
+     *
+     * @param priceCategoryName
+     * @return
+     */
+    MPriceCategory getByName(String priceCategoryName);
 }

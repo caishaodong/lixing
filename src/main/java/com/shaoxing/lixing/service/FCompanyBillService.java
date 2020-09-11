@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.shaoxing.lixing.domain.dto.CompanyBillSearchDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
 
+import java.util.List;
+
 /**
  * <p>
  * 公司账单表 服务类
@@ -24,4 +26,11 @@ public interface FCompanyBillService extends IService<FCompanyBill> {
      * @return
      */
     IPage<FCompanyBill> getListPage(CompanyBillSearchDTO dto);
+
+    /**
+     * 获取账单列表（不分页）
+     *
+     * @return
+     */
+    List<FCompanyBill> getList();
 }

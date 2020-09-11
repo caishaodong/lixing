@@ -2,10 +2,13 @@ package com.shaoxing.lixing.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shaoxing.lixing.domain.dto.CompanyBillSearchDTO;
 import com.shaoxing.lixing.domain.dto.FCompanyBillDTO;
+import com.shaoxing.lixing.domain.dto.OrderInfoExportDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
+import com.shaoxing.lixing.domain.entity.MOrderInfo;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
@@ -13,13 +16,17 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.FCompanyBillService;
 import com.shaoxing.lixing.service.SysCityService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -86,6 +93,38 @@ public class FCompanyBillController extends BaseController {
         companyBill.setIsDeleted(YesNoEnum.YES.getValue());
         companyBill.setGmtModified(LocalDateTime.now());
         companyBillService.updateById(companyBill);
+        return success();
+    }
+
+    /**
+     * 导出公司账单
+     * @param response
+     * @return
+     */
+    @GetMapping("/export")
+    public ResponseResult export(HttpServletResponse response) {
+        // 获取需要导出的账单列表
+        List<FCompanyBill> companyBillList = companyBillService.getList();
+
+        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("费用类别", "feeCategoryName");
+        fieldNameMap.put("费用科目", "feeSubjectName");
+        fieldNameMap.put("进货产地", "areaName");
+        fieldNameMap.put("日期", "billDate");
+        fieldNameMap.put("单价", "price");
+        fieldNameMap.put("数量", "num");
+        fieldNameMap.put("重量", "weight");
+        fieldNameMap.put("金额(元)", "totalPrice");
+        fieldNameMap.put("录入人", "enteredUserName");
+        fieldNameMap.put("备注", "remark");
+
+        try {
+            LOGGER.info("开始准备导出公司账单");
+            ExcelDataUtil.export(fieldNameMap, companyBillList, "账单", response);
+        } catch (Exception e) {
+            LOGGER.error("公司账单导出失败", e);
+            return error();
+        }
         return success();
     }
 

@@ -1,17 +1,16 @@
 package com.shaoxing.lixing.domain.dto;
 
-import com.shaoxing.lixing.global.util.PageUtil;
 import lombok.Data;
 
 import java.util.Objects;
 
 /**
  * @Author caishaodong
- * @Date 2020-09-08 17:39
+ * @Date 2020-09-11 14:21
  * @Description
  **/
 @Data
-public class OrderInfoSearchDTO extends PageUtil {
+public class OrderInfoExportDTO {
     /**
      * 订单日期（格式yyyyMMdd）
      */

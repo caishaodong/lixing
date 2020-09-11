@@ -60,4 +60,18 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
                 .eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategoryId)
                 .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
     }
+
+    /**
+     * 根据价目id和品种名称获取品种
+     *
+     * @param priceCategoryId
+     * @param varietiesName
+     * @return
+     */
+    @Override
+    public MVarietiesPriceInfo getByPriceCategoryIdAndName(Long priceCategoryId, String varietiesName) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MVarietiesPriceInfo>().eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategoryId)
+                .eq(MVarietiesPriceInfo::getName, varietiesName)
+                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
 }

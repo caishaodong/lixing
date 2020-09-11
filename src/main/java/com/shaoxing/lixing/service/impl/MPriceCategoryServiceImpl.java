@@ -24,4 +24,16 @@ public class MPriceCategoryServiceImpl extends ServiceImpl<MPriceCategoryMapper,
         return this.baseMapper.selectOne(new LambdaQueryWrapper<MPriceCategory>().eq(MPriceCategory::getId, id)
                 .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO));
     }
+
+    /**
+     * 根据价目名称获取价目
+     *
+     * @param priceCategoryName
+     * @return
+     */
+    @Override
+    public MPriceCategory getByName(String priceCategoryName) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<MPriceCategory>().eq(MPriceCategory::getName, priceCategoryName)
+                .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
 }

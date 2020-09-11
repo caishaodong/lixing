@@ -2,10 +2,8 @@ package com.shaoxing.lixing.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
-import com.shaoxing.lixing.global.ResponseResult;
 
 import java.util.List;
 
@@ -37,4 +35,12 @@ public interface MVarietiesPriceInfoService extends IService<MVarietiesPriceInfo
      */
     List<MVarietiesPriceInfo> getListByPriceCategoryId(Long priceCategoryId);
 
+    /**
+     * 根据价目id和品种名称获取品种
+     *
+     * @param priceCategoryId
+     * @param varietiesName
+     * @return
+     */
+    MVarietiesPriceInfo getByPriceCategoryIdAndName(Long priceCategoryId, String varietiesName);
 }

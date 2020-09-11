@@ -54,4 +54,12 @@ public interface MDistributionCompanyService extends IService<MDistributionCompa
      * @param distributionCompany
      */
     void deleteDistributionCompany(MDistributionCompany distributionCompany);
+
+    /**
+     * 根据配送单位名称获取配送单位
+     *
+     * @param distributionCompanyName
+     * @return
+     */
+    MDistributionCompany getByName(String distributionCompanyName);
 }

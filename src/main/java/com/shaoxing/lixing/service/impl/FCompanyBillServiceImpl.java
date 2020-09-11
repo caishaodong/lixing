@@ -11,6 +11,8 @@ import com.shaoxing.lixing.mapper.FCompanyBillMapper;
 import com.shaoxing.lixing.service.FCompanyBillService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 公司账单表 服务实现类
@@ -40,7 +42,19 @@ public class FCompanyBillServiceImpl extends ServiceImpl<FCompanyBillMapper, FCo
         pageUtil.setCurrent(dto.getCurrent());
         pageUtil.setSize(dto.getSize());
         IPage<FCompanyBill> page = this.page(pageUtil, new LambdaQueryWrapper<FCompanyBill>()
+                .eq(FCompanyBill::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(FCompanyBill::getGmtCreate));
         return page;
+    }
+
+    /**
+     * 获取账单列表（不分页）
+     *
+     * @return
+     */
+    @Override
+    public List<FCompanyBill> getList() {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<FCompanyBill>()
+                .eq(FCompanyBill::getIsDeleted, YesNoEnum.NO.getValue()));
     }
 }

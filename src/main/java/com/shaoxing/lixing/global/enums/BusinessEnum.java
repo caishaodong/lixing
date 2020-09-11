@@ -22,14 +22,18 @@ public enum BusinessEnum {
     CUSTOMER_NAME_EMPTY(202, "客户姓名不能为空"),
     CUSTOMER_NAME_REPEAT(203, "客户姓名不能重复"),
     CUSTOMER_NOT_EXIST(204, "客户不存在"),
+    CUSTOMER__NAME_NOT_EXIST(205, "客户名称不存在"),
 
     PRICE_CATEGORY_INFO_ERROR(301, "价目信息有误"),
     VARIETIES_PRICE_NOT_EXIST(302, "品种不存在"),
     PRICE_CATEGORY_NOT_EXIST(303, "价目不存在"),
     VARIETIES_PRICE_NAME_REPEAT(304, "品种名称不能重复"),
+    PRICE_CATEGORY_NAME_NOT_EXIST(305, "价目名称不存在"),
+    VARIETIES_PRICE_NAME_NOT_EXIST(306, "品种名称不存在"),
 
     DISTRIBUTION_COMPANY_NOT_EXIST(401, "配送公司不存在"),
-    DISTRIBUTION_COMPANY_NAME_REPEAT(403, "配送公司名称不能重复"),
+    DISTRIBUTION_COMPANY_NAME_REPEAT(402, "配送公司名称不能重复"),
+    DISTRIBUTION_COMPANY_NAME_NOT_EXIST(403, "配送公司名称不存在"),
 
     ORDER_NOT_EXIST(501, "订单不存在"),
     ;

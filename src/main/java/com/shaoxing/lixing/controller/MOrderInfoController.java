@@ -1,7 +1,9 @@
 package com.shaoxing.lixing.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.OrderInfoDTO;
+import com.shaoxing.lixing.domain.dto.OrderInfoExportDTO;
 import com.shaoxing.lixing.domain.dto.OrderInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
 import com.shaoxing.lixing.global.ResponseResult;
@@ -12,6 +14,7 @@ import com.shaoxing.lixing.global.util.DecimalUtil;
 import com.shaoxing.lixing.global.util.OrderNoUtils;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelSheetPO;
 import com.shaoxing.lixing.global.util.excel.ExcelUtil;
 import com.shaoxing.lixing.service.*;
@@ -21,10 +24,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,7 +65,7 @@ public class MOrderInfoController extends BaseController {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
         }
-        PageUtil<MOrderInfo> page = orderInfoService.getListPage(dto);
+        IPage<MOrderInfo> page = orderInfoService.getListPage(dto);
         return success(page);
     }
 
@@ -152,6 +157,42 @@ public class MOrderInfoController extends BaseController {
     }
 
     /**
+     * 导出订单
+     * @param dto
+     * @param response
+     * @return
+     */
+    @GetMapping("/export")
+    public ResponseResult export(OrderInfoExportDTO dto, HttpServletResponse response) {
+        if (!dto.paramCheck()) {
+            return error(BusinessEnum.PARAM_ERROR);
+        }
+        // 获取需要导出的订单列表
+        List<MOrderInfo> orderInfoList = orderInfoService.getList(dto);
+
+        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("订单日期", "orderDate");
+        fieldNameMap.put("配送单位", "distributionCompanyName");
+        fieldNameMap.put("客户", "customerName");
+        fieldNameMap.put("价目", "priceCategoryName");
+        fieldNameMap.put("品种", "varietiesName");
+        fieldNameMap.put("单位", "unit");
+        fieldNameMap.put("数量", "num");
+        fieldNameMap.put("单价(元)", "price");
+        fieldNameMap.put("总价(元)", "totalPrice");
+        fieldNameMap.put("备注", "remark");
+
+        try {
+            LOGGER.info("开始准备导出订单");
+            ExcelDataUtil.export(fieldNameMap, orderInfoList, "订单", response);
+        } catch (Exception e) {
+            LOGGER.error("订单导出失败", e);
+            return error();
+        }
+        return success();
+    }
+
+    /**
      * 导入订单
      *
      * @param file 导入文件
@@ -184,29 +225,18 @@ public class MOrderInfoController extends BaseController {
                 orderInfo.setVarietiesName(String.valueOf(rowData.get(j++)));
                 orderInfo.setNum(Integer.valueOf(String.valueOf(rowData.get(j++))));
                 orderInfo.setRemark(String.valueOf(rowData.get(j++)));
-                errorResult = dataCheck(orderInfo);
+                errorResult = orderInfoService.dataCheck(orderInfo);
                 if (Objects.nonNull(errorResult)) {
                     break;
                 }
+                orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
                 list.add(orderInfo);
+            }
+            if (Objects.isNull(errorResult) && !CollectionUtils.isEmpty(list)) {
+                orderInfoService.saveBatch(list);
             }
         }
         return Objects.nonNull(errorResult) ? errorResult : success();
-    }
-
-    /**
-     * 订单导入信息校验
-     *
-     * @param orderInfo
-     * @return
-     */
-    private ResponseResult dataCheck(MOrderInfo orderInfo) {
-        // 根据配送单位名称获取配送单位id
-        // 根据客户名称获取客户id
-        // 根据价目名称获取价目id
-        // 根据价目id和品种名称获取品种id，品种单价
-        // 根据数量和单价，计算总价
-        return error(BusinessEnum.CUSTOMER_INFO_ERROR);
     }
 
 }

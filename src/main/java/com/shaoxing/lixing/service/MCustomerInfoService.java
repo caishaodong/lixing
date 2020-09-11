@@ -39,4 +39,12 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
      * @return
      */
     ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto);
+
+    /**
+     * 根据客户名称获取客户
+     *
+     * @param customerName
+     * @return
+     */
+    MCustomerInfo getByName(String customerName);
 }
