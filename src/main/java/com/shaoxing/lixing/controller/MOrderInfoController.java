@@ -112,7 +112,7 @@ public class MOrderInfoController extends BaseController {
         // 设置单价
         orderInfo.setPrice(varietiesPriceInfo.getPrice());
         // 计算总价
-        orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), new BigDecimal(String.valueOf(orderInfo.getNum()))));
+        orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), orderInfo.getNum()));
         // 生成订单编号
         orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
         orderInfoService.save(orderInfo);
@@ -223,7 +223,7 @@ public class MOrderInfoController extends BaseController {
                 orderInfo.setCustomerName(String.valueOf(rowData.get(j++)));
                 orderInfo.setPriceCategoryName(String.valueOf(rowData.get(j++)));
                 orderInfo.setVarietiesName(String.valueOf(rowData.get(j++)));
-                orderInfo.setNum(Integer.valueOf(String.valueOf(rowData.get(j++))));
+                orderInfo.setNum(new BigDecimal(String.valueOf(rowData.get(j++))));
                 orderInfo.setRemark(String.valueOf(rowData.get(j++)));
                 errorResult = orderInfoService.dataCheck(orderInfo);
                 if (Objects.nonNull(errorResult)) {

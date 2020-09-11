@@ -20,9 +20,10 @@ import org.springframework.stereotype.Service;
 public class MOrderCheckDetailServiceImpl extends ServiceImpl<MOrderCheckDetailMapper, MOrderCheckDetail> implements MOrderCheckDetailService {
 
     @Override
-    public MOrderCheckDetail getOKByOrderDate(Long orderDate) {
+    public MOrderCheckDetail getOKByOrderDateAndDistributionCompanyId(Long orderDate, Long distributionCompanyId) {
         MOrderCheckDetail orderCheckDetail = this.baseMapper.selectOne(new LambdaQueryWrapper<MOrderCheckDetail>()
                 .eq(MOrderCheckDetail::getOrderDate, orderDate)
+                .eq(MOrderCheckDetail::getDistributionCompanyId, distributionCompanyId)
                 .eq(MOrderCheckDetail::getIsDeleted, YesNoEnum.NO.getValue()));
         return orderCheckDetail;
     }

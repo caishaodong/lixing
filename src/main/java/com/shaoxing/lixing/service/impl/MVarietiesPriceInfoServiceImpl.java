@@ -38,10 +38,8 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
      */
     @Override
     public IPage<MVarietiesPriceInfo> getListPage(VarietiesPriceInfoSearchDTO dto) {
-        PageUtil<MVarietiesPriceInfo> pageUtil = new PageUtil<>();
-        pageUtil.setCurrent(dto.getCurrent());
-        pageUtil.setSize(dto.getSize());
-        IPage<MVarietiesPriceInfo> page = this.page(pageUtil, new LambdaQueryWrapper<MVarietiesPriceInfo>()
+
+        IPage<MVarietiesPriceInfo> page = this.page(dto, new LambdaQueryWrapper<MVarietiesPriceInfo>()
                 .eq(MVarietiesPriceInfo::getPriceCategoryId, dto.getPriceCategoryId())
                 .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByAsc(MVarietiesPriceInfo::getGmtCreate));

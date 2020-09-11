@@ -38,10 +38,7 @@ public class FCompanyBillServiceImpl extends ServiceImpl<FCompanyBillMapper, FCo
      */
     @Override
     public IPage<FCompanyBill> getListPage(CompanyBillSearchDTO dto) {
-        PageUtil<FCompanyBill> pageUtil = new PageUtil<>();
-        pageUtil.setCurrent(dto.getCurrent());
-        pageUtil.setSize(dto.getSize());
-        IPage<FCompanyBill> page = this.page(pageUtil, new LambdaQueryWrapper<FCompanyBill>()
+        IPage<FCompanyBill> page = this.page(dto, new LambdaQueryWrapper<FCompanyBill>()
                 .eq(FCompanyBill::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(FCompanyBill::getGmtCreate));
         return page;

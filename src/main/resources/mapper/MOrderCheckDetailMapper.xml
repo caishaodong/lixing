@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.shaoxing.lixing.domain.entity.MOrderCheckDetail">
         <id column="id" property="id" />
         <result column="order_date" property="orderDate" />
+        <result column="distribution_company_id" property="distributionCompanyId" />
         <result column="delivery_user_name" property="deliveryUserName" />
         <result column="check_user_name" property="checkUserName" />
         <result column="is_deleted" property="isDeleted" />
@@ -15,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, order_date, delivery_user_name, check_user_name, is_deleted, gmt_create, gmt_modified
+        id, order_date, distribution_company_id, delivery_user_name, check_user_name, is_deleted, gmt_create, gmt_modified
     </sql>
 
 </mapper>

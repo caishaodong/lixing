@@ -30,7 +30,12 @@ public class MOrderCheckDetail extends Model<MOrderCheckDetail> {
     /**
      * 订单日期
      */
-    private Integer orderDate;
+    private Long orderDate;
+
+    /**
+     * 配送单位id
+     */
+    private Long distributionCompanyId;
 
     /**
      * 送货人姓名

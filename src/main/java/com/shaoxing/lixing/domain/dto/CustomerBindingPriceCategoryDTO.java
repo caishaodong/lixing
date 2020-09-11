@@ -15,9 +15,9 @@ import java.util.Objects;
 @Data
 public class CustomerBindingPriceCategoryDTO {
     /**
-     * 客户id（jsonArray字符串）
+     * 客户id（jsonArray字符串，如：[1,2,3,4]）
      */
-    private String custormerIds;
+    private String customerIds;
     /**
      * 价目id
      */
@@ -26,17 +26,17 @@ public class CustomerBindingPriceCategoryDTO {
      * 客户id集合
      */
     @Ignore
-    private List<Long> custormerIdList;
+    private List<Long> customerIdList;
 
     public boolean paramCheck() {
-        if (StringUtil.isBlank(this.custormerIds) || Objects.isNull(this.priceCategoryId)) {
+        if (StringUtil.isBlank(this.customerIds) || Objects.isNull(this.priceCategoryId)) {
             return false;
         }
-        List<Long> custormerIdList = StringUtil.jsonArrayToLongList(custormerIds);
+        List<Long> custormerIdList = StringUtil.jsonArrayToLongList(customerIds);
         if (Objects.isNull(custormerIdList) || custormerIdList.isEmpty()) {
             return false;
         }
-        this.custormerIdList = custormerIdList;
+        this.customerIdList = custormerIdList;
         return true;
     }
 }

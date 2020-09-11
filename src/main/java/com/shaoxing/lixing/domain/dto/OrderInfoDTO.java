@@ -2,6 +2,7 @@ package com.shaoxing.lixing.domain.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -31,7 +32,7 @@ public class OrderInfoDTO {
     /**
      * 数量
      */
-    private Integer num;
+    private BigDecimal num;
     /**
      * 备注
      */

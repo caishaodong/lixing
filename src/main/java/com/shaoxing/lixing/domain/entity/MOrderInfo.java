@@ -86,7 +86,7 @@ public class MOrderInfo extends Model<MOrderInfo> {
     /**
      * 数量
      */
-    private Integer num;
+    private BigDecimal num;
 
     /**
      * 单价

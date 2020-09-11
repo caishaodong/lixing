@@ -39,7 +39,7 @@ public class FCompanyBillDTO {
     /**
      * 数量
      */
-    private Integer num;
+    private BigDecimal num;
     /**
      * 重量
      */

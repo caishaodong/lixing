@@ -16,6 +16,12 @@ public class OrderCheckDetailDTO {
      * 订单日期（格式yyyyMMdd）
      */
     private Long orderDate;
+
+    /**
+     * 配送单位id
+     */
+    private Long distributionCompanyId;
+
     /**
      * 送货人姓名
      */
@@ -27,6 +33,6 @@ public class OrderCheckDetailDTO {
     private String checkUserName;
 
     public boolean paramCheck() {
-        return Objects.nonNull(orderDate) && StringUtil.isNotBlank(deliveryUserName) && StringUtil.isNotBlank(checkUserName);
+        return Objects.nonNull(orderDate) && Objects.nonNull(distributionCompanyId) && StringUtil.isNotBlank(deliveryUserName) && StringUtil.isNotBlank(checkUserName);
     }
 }

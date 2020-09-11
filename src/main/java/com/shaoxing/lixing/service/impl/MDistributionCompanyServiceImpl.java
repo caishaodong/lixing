@@ -64,18 +64,16 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
      */
     @Override
     public IPage<DistributionCompanyVO> getListPage(DistributionCompanySearchDTO dto) {
-        PageUtil<MDistributionCompany> pageUtil = new PageUtil<>();
-        pageUtil.setCurrent(dto.getCurrent());
-        pageUtil.setSize(dto.getSize());
-        IPage<MDistributionCompany> page = this.page(pageUtil, new LambdaQueryWrapper<MDistributionCompany>()
+
+        IPage<MDistributionCompany> page = this.page(dto, new LambdaQueryWrapper<MDistributionCompany>()
                 .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MDistributionCompany::getGmtModified));
 
         List<DistributionCompanyVO> distributionCompanyVOList = getMDistributionCompanyVOList(page.getRecords());
         PageUtil<DistributionCompanyVO> pageUtil2 = new PageUtil<>();
-        pageUtil2.setTotal(pageUtil.getTotal());
-        pageUtil2.setCurrent(pageUtil.getCurrent());
-        pageUtil2.setSize(pageUtil.getSize());
+        pageUtil2.setTotal(dto.getTotal());
+        pageUtil2.setCurrent(dto.getCurrent());
+        pageUtil2.setSize(dto.getSize());
         pageUtil2.setRecords(distributionCompanyVOList);
 
         return pageUtil2;

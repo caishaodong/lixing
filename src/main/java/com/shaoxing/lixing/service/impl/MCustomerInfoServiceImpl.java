@@ -95,7 +95,7 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     @Override
     public ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto) {
         // 客户信息校验
-        List<Long> custormerIdList = dto.getCustormerIdList();
+        List<Long> custormerIdList = dto.getCustomerIdList();
         int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, custormerIdList));
         if (count != custormerIdList.size()) {
             return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);

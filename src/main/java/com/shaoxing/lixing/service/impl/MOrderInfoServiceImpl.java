@@ -53,11 +53,8 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
      */
     @Override
     public IPage<MOrderInfo> getListPage(OrderInfoSearchDTO dto) {
-        PageUtil<MOrderInfo> pageUtil = new PageUtil<>();
-        pageUtil.setCurrent(dto.getCurrent());
-        pageUtil.setSize(dto.getSize());
 
-        IPage<MOrderInfo> page = this.page(pageUtil, new LambdaQueryWrapper<MOrderInfo>().eq(MOrderInfo::getOrderDate, dto.getOrderDate())
+        IPage<MOrderInfo> page = this.page(dto, new LambdaQueryWrapper<MOrderInfo>().eq(MOrderInfo::getOrderDate, dto.getOrderDate())
                 .eq(MOrderInfo::getDistributionCompanyId, dto.getDistributionCompanyId())
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
@@ -102,7 +99,7 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
         orderInfo.setPrice(varietiesPriceInfo.getPrice());
 
         // 根据数量和单价，计算总价
-        orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), new BigDecimal(String.valueOf(orderInfo.getNum()))));
+        orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), orderInfo.getNum()));
         return null;
     }
 
