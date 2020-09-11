@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -48,6 +49,7 @@ public class MOrderCheckDetailController extends BaseController {
             // 修改
             existsOrderCheckDetail.setDeliveryUserName(dto.getDeliveryUserName());
             existsOrderCheckDetail.setCheckUserName(dto.getCheckUserName());
+            existsOrderCheckDetail.setGmtModified(LocalDateTime.now());
         }
         orderCheckDetailService.saveOrUpdate(existsOrderCheckDetail);
         return success();

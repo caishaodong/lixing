@@ -185,14 +185,13 @@ public class ExcelUtil {
         }
     }
 
-    public static byte[] export(List<ExcelSheetPO> excelSheets, String fileName, HttpServletResponse response) throws IOException {
+    public static void export(List<ExcelSheetPO> excelSheets, String fileName, HttpServletResponse response) throws IOException {
         fileName = URLEncoder.encode(fileName, "UTF-8");
-        response.setHeader("Content-Disposition", "attachment;Filename=" + fileName + ".xls");
+        response.setHeader("Content-Disposition", "attachment;Filename=" + fileName + ".xlsx");
         OutputStream outputStream = response.getOutputStream();
-        HSSFWorkbook wb = (HSSFWorkbook) createWorkBook(ExcelVersion.V2003, excelSheets);
+        Workbook wb = createWorkBook(ExcelVersion.V2007, excelSheets);
         wb.write(outputStream);
         outputStream.close();
-        return wb.getBytes();
     }
 
     private static Workbook createWorkBook(ExcelVersion version, List<ExcelSheetPO> excelSheets) {

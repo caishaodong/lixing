@@ -37,12 +37,4 @@ public interface MVarietiesPriceInfoService extends IService<MVarietiesPriceInfo
      */
     List<MVarietiesPriceInfo> getListByPriceCategoryId(Long priceCategoryId);
 
-    /**
-     * 客户绑定价目
-     *
-     * @param dto
-     * @return
-     */
-    ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto);
-
 }

@@ -10,8 +10,8 @@ import java.util.UUID;
  * @Description
  **/
 public class OrderNoUtils {
-    protected static final String pattern = "yyyyMMdd";
-    protected static final DateTimeFormatter formatter;
+    protected static final String PATTERN = "yyyyMMdd";
+    protected static final DateTimeFormatter FORMATTER;
     static OrderNoUtils orderNoUtils;
 
     public static OrderNoUtils getInstance() {
@@ -26,11 +26,11 @@ public class OrderNoUtils {
         if (hashCode < 0) {
             hashCode = -hashCode;
         }
-        return OrderNoUtils.formatter.format(LocalDateTime.now()).substring(2, 8) + String.format("%010d", hashCode);
+        return OrderNoUtils.FORMATTER.format(LocalDateTime.now()).substring(2, 8) + String.format("%010d", hashCode);
     }
 
     static {
-        formatter = DateTimeFormatter.ofPattern(pattern);
+        FORMATTER = DateTimeFormatter.ofPattern(PATTERN);
         OrderNoUtils.orderNoUtils = new OrderNoUtils();
     }
 

@@ -2,6 +2,8 @@ package com.shaoxing.lixing.global.base;
 
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Author caishaodong
@@ -9,6 +11,7 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
  * @Description 基础类
  **/
 public class BaseController {
+    public static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
     public ResponseResult success() {
         return ResponseResult.success();

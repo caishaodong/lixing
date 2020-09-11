@@ -1,8 +1,10 @@
 package com.shaoxing.lixing.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
 import com.shaoxing.lixing.domain.dto.CustomerInfoDTO;
 import com.shaoxing.lixing.domain.entity.MCustomerInfo;
+import com.shaoxing.lixing.global.ResponseResult;
 
 /**
  * <p>
@@ -29,4 +31,12 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
      * @param customerInfoDTO
      */
     void unBindDistribution(CustomerInfoDTO customerInfoDTO);
+
+    /**
+     * 客户绑定价目
+     *
+     * @param dto
+     * @return
+     */
+    ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto);
 }

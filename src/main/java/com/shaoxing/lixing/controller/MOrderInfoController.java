@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -42,7 +43,7 @@ public class MOrderInfoController extends BaseController {
     private MOrderInfoService orderInfoService;
 
     /**
-     * 获取订单列表
+     * 获取订单列表（分页）
      *
      * @param dto
      * @return
@@ -62,7 +63,7 @@ public class MOrderInfoController extends BaseController {
      * @param dto
      * @return
      */
-    @PostMapping("/sava")
+    @PostMapping("/save")
     public ResponseResult save(@RequestBody OrderInfoDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
@@ -94,6 +95,7 @@ public class MOrderInfoController extends BaseController {
         if (Objects.isNull(priceCategory)) {
             return error(BusinessEnum.PRICE_CATEGORY_NOT_EXIST);
         }
+        orderInfo.setPriceCategoryId(priceCategory.getId());
         orderInfo.setPriceCategoryName(priceCategory.getName());
         // 设置单价
         orderInfo.setPrice(varietiesPriceInfo.getPrice());
@@ -119,6 +121,7 @@ public class MOrderInfoController extends BaseController {
         }
         MOrderInfo newOrderInfo = new MOrderInfo();
         BeanUtils.copyProperties(existOrderId, newOrderInfo, "id");
+        ReflectUtil.setCreateInfo(newOrderInfo, MOrderInfo.class);
         orderInfoService.save(newOrderInfo);
         return success();
     }
@@ -136,6 +139,7 @@ public class MOrderInfoController extends BaseController {
             return success();
         }
         existOrderId.setIsDeleted(YesNoEnum.YES.getValue());
+        existOrderId.setGmtModified(LocalDateTime.now());
         orderInfoService.updateById(existOrderId);
         return success();
     }

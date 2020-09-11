@@ -2,6 +2,7 @@ package com.shaoxing.lixing.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
 import com.shaoxing.lixing.domain.dto.CustomerInfoDTO;
 import com.shaoxing.lixing.domain.entity.MCustomerInfo;
 import com.shaoxing.lixing.domain.entity.MCustomerPriceCategoryRel;
@@ -97,6 +98,21 @@ public class MCustomerInfoController extends BaseController {
         }
         customerInfoService.unBindDistribution(dto);
         return success();
+    }
+
+    /**
+     * 客户绑定价目
+     *
+     * @param dto
+     * @return
+     */
+    @PostMapping("/customersBindingPriceCategory")
+    public ResponseResult customersBindingPriceCategory(@RequestBody CustomerBindingPriceCategoryDTO dto) {
+        if (!dto.paramCheck()) {
+            return error(BusinessEnum.PARAM_ERROR);
+        }
+        ResponseResult responseResult = customerInfoService.customersBindingPriceCategory(dto);
+        return responseResult;
     }
 
     /**

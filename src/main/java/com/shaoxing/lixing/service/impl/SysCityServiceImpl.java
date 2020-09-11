@@ -33,14 +33,14 @@ public class SysCityServiceImpl extends ServiceImpl<SysCityMapper, SysCity> impl
         SysCity sysCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, code));
         Integer parentCode;
         if (Objects.nonNull(sysCity) && Objects.nonNull(parentCode = sysCity.getParentCode())) {
-            name += sysCity.getName();
+            name = sysCity.getName();
             SysCity parentCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, parentCode));
             Integer pParentCode;
             if (Objects.nonNull(parentCity) && Objects.nonNull(pParentCode = parentCity.getParentCode())) {
-                name += parentCity.getName();
+                name = parentCity.getName() + name;
                 SysCity pParentCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, parentCode));
                 if (Objects.nonNull(pParentCity)) {
-                    name += pParentCity.getName();
+                    name = pParentCity.getName() + name;
                 }
             }
         }

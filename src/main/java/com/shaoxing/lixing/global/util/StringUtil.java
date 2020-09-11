@@ -43,7 +43,7 @@ public class StringUtil {
             return list;
         }
         jsonArray.stream().forEach(object -> {
-            list.add((Long) object);
+            list.add(Long.valueOf(String.valueOf(object)));
         });
         return list;
     }

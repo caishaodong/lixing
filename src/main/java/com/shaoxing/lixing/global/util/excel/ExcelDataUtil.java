@@ -18,6 +18,7 @@ public class ExcelDataUtil {
 
     public static <T> void export(LinkedHashMap<String, String> fieldNameMap, List<T> objects, String fileName, HttpServletResponse response)
             throws NoSuchFieldException, IllegalAccessException, IOException {
+
         // 表格数据
         List<List<Object>> dataList = new ArrayList<>();
         // 列名称
@@ -60,11 +61,9 @@ public class ExcelDataUtil {
         // 参数准备
         List<ExcelSheetPO> list = new ArrayList<>();
         ExcelSheetPO excelSheetPO = new ExcelSheetPO();
-        excelSheetPO.setSheetName("sheet1");
         excelSheetPO.setTitle("title");
         excelSheetPO.setDataList(dataList);
         list.add(excelSheetPO);
-        System.out.println("参数准备完毕，开始导出");
 
         // 导出
         ExcelUtil.export(list, fileName + System.currentTimeMillis(), response);

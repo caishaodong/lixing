@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -83,6 +84,7 @@ public class FCompanyBillController extends BaseController {
             return success();
         }
         companyBill.setIsDeleted(YesNoEnum.YES.getValue());
+        companyBill.setGmtModified(LocalDateTime.now());
         companyBillService.updateById(companyBill);
         return success();
     }

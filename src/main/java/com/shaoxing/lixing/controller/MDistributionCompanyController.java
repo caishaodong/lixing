@@ -46,7 +46,7 @@ public class MDistributionCompanyController extends BaseController {
     }
 
     /**
-     * 保存（修改）配送管理
+     * 保存（修改）配送公司信息
      *
      * @param dto
      * @return
@@ -56,7 +56,6 @@ public class MDistributionCompanyController extends BaseController {
 
         MDistributionCompany distributionCompany = new MDistributionCompany();
         BeanUtils.copyProperties(dto, distributionCompany);
-        ReflectUtil.setCreateInfo(distributionCompany, MDistributionCompany.class);
 
         // 校验配送公司名称是否重复
         int count = distributionCompanyService.count(new LambdaQueryWrapper<MDistributionCompany>().eq(MDistributionCompany::getName, dto.getName())
@@ -67,10 +66,10 @@ public class MDistributionCompanyController extends BaseController {
         }
 
         if (Objects.isNull(dto.getId())) {
-            // 保存价目
+            // 保存配送公司信息
             distributionCompanyService.saveDistributionCompany(distributionCompany);
         } else {
-            // 修改价目
+            // 修改配送公司信息
             distributionCompanyService.updateDistributionCompany(distributionCompany);
         }
         return success();
