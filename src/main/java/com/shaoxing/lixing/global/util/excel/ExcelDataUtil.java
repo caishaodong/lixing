@@ -66,7 +66,7 @@ public class ExcelDataUtil {
         list.add(excelSheetPO);
 
         // 导出
-        ExcelUtil.export(list, fileName + System.currentTimeMillis(), response);
+        ExcelUtil.exportToBrowser(list, fileName + System.currentTimeMillis(), response);
 
     }
 }

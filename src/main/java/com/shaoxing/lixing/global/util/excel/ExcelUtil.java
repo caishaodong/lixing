@@ -7,9 +7,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -43,23 +46,34 @@ public class ExcelUtil {
     private static final HashMap<String, CellStyle> cellStyleMap = new HashMap<>();
 
     /**
+     * 读取Excel
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static List<ExcelSheetPO> readExcel(MultipartFile file) throws IOException {
+        return readExcel(file, null, null);
+    }
+
+    /**
      * 读取excel文件里面的内容 支持日期，数字，字符，函数公式，布尔类型
      *
      * @param file
      * @param rowCount
      * @param columnCount
      */
-    public static List<ExcelSheetPO> readExcel(File file, Integer rowCount, Integer columnCount)
-            throws FileNotFoundException, IOException {
+    public static List<ExcelSheetPO> readExcel(MultipartFile file, Integer rowCount, Integer columnCount)
+            throws IOException {
 
         // 根据后缀名称判断excel的版本
-        String extName = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+        String extName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
         Workbook wb = null;
         if (ExcelVersion.V2003.getSuffix().equals(extName)) {
-            wb = new HSSFWorkbook(new FileInputStream(file));
+            wb = new HSSFWorkbook(file.getInputStream());
 
         } else if (ExcelVersion.V2007.getSuffix().equals(extName)) {
-            wb = new XSSFWorkbook(new FileInputStream(file));
+            wb = new XSSFWorkbook(file.getInputStream());
 
         } else {
             // 无效后缀名称，这里之能保证excel的后缀名称，不能保证文件类型正确，不过没关系，在创建Workbook的时候会校验文件格式
@@ -185,7 +199,15 @@ public class ExcelUtil {
         }
     }
 
-    public static void export(List<ExcelSheetPO> excelSheets, String fileName, HttpServletResponse response) throws IOException {
+    /**
+     * 导出到浏览器
+     *
+     * @param excelSheets
+     * @param fileName
+     * @param response
+     * @throws IOException
+     */
+    public static void exportToBrowser(List<ExcelSheetPO> excelSheets, String fileName, HttpServletResponse response) throws IOException {
         fileName = URLEncoder.encode(fileName, "UTF-8");
         response.setHeader("Content-Disposition", "attachment;Filename=" + fileName + ".xlsx");
         OutputStream outputStream = response.getOutputStream();
