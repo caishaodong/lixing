@@ -176,6 +176,13 @@ public class IndexController extends BaseController {
         return success();
     }
 
+    /**
+     * 导出配送清单
+     *
+     * @param distributionCompanyId
+     * @param response
+     * @return
+     */
     @GetMapping("/distributionCompany/export/{distributionCompanyId}")
     public ResponseResult distributionCompanyExport(@PathVariable("distributionCompanyId") Long distributionCompanyId, HttpServletResponse response) {
         MDistributionCompany distributionCompany = distributionCompanyService.getOKById(distributionCompanyId);
