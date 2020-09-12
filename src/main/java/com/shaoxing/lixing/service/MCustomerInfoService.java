@@ -6,6 +6,8 @@ import com.shaoxing.lixing.domain.dto.CustomerInfoDTO;
 import com.shaoxing.lixing.domain.entity.MCustomerInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 
+import java.util.List;
+
 /**
  * <p>
  * 客户表 服务类
@@ -47,4 +49,11 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
      * @return
      */
     MCustomerInfo getByName(String customerName);
+
+    /**
+     * 获取全部客户列表（不分页）
+     *
+     * @return
+     */
+    List<MCustomerInfo> getList();
 }

@@ -144,4 +144,15 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
         return this.baseMapper.selectOne(new LambdaQueryWrapper<MCustomerInfo>().eq(MCustomerInfo::getName, customerName)
                 .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
     }
+
+    /**
+     * 获取全部客户列表（不分页）
+     *
+     * @return
+     */
+    @Override
+    public List<MCustomerInfo> getList() {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<MCustomerInfo>()
+                .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+    }
 }

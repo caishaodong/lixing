@@ -138,4 +138,15 @@ public class MCustomerInfoController extends BaseController {
         }
         return success(list);
     }
+
+    /**
+     * 获取全部客户列表（不分页）
+     *
+     * @return
+     */
+    @GetMapping("/getList")
+    public ResponseResult<MCustomerInfo> getList() {
+        List<MCustomerInfo> list = customerInfoService.getList();
+        return success(list);
+    }
 }
