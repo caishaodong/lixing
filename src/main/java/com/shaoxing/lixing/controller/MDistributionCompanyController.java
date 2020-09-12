@@ -6,17 +6,21 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.DistributionCompanyDTO;
 import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
 import com.shaoxing.lixing.domain.entity.MDistributionCompany;
+import com.shaoxing.lixing.domain.vo.DistributionCompanyExportVO;
 import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -120,6 +124,43 @@ public class MDistributionCompanyController extends BaseController {
         }
         // 删除配送公司
         distributionCompanyService.deleteDistributionCompany(distributionCompany);
+        return success();
+    }
+
+    /**
+     * 导出配送公司列表
+     *
+     * @return
+     */
+    @GetMapping("/export")
+    public ResponseResult export(HttpServletResponse response) {
+        // 获取配送公司信息
+        List<DistributionCompanyExportVO> list = distributionCompanyService.getDistributionCompanyExportVOList();
+
+        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("配送单位", "distributionCompanyName");
+        fieldNameMap.put("客户名称", "customerName");
+        fieldNameMap.put("商品类别", "varietiesPriceName");
+        fieldNameMap.put("价目", "priceCategoryName");
+        fieldNameMap.put("结算扣率", "settlementDeductionRate");
+        fieldNameMap.put("联系地址", "address");
+        fieldNameMap.put("联系人", "contactUserName");
+        fieldNameMap.put("联系方式", "contactUserMobile");
+        fieldNameMap.put("订单管理人", "orderManagerName");
+        fieldNameMap.put("订单管理人联系方式", "orderManagerMobile");
+        fieldNameMap.put("财务联系人", "financialContactName");
+        fieldNameMap.put("财务联系人联系方式", "financialContactMobile");
+        fieldNameMap.put("是否需要开机打发票", "needInvoiceStr");
+        fieldNameMap.put("其他备注", "remark");
+
+
+        try {
+            LOGGER.info("开始准备导出配送管理");
+            ExcelDataUtil.export(fieldNameMap, list, "配送管理", response);
+        } catch (Exception e) {
+            LOGGER.error("配送管理导出失败", e);
+            return error();
+        }
         return success();
     }
 

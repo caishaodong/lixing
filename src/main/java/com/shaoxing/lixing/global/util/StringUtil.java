@@ -57,9 +57,8 @@ public class StringUtil {
     public static String concatString(String... strs) {
         StringBuilder sb = new StringBuilder();
         for (String str : strs) {
-            sb.append(str);
+            sb.append(isBlank(str) ? "" : str);
         }
         return sb.toString();
     }
-
 }

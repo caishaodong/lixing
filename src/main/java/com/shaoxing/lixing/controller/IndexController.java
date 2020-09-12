@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.IndexStatisticsDTO;
 import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.entity.MOrderInfo;
-import com.shaoxing.lixing.domain.vo.DistributionCompanyExportVO;
+import com.shaoxing.lixing.domain.vo.CustomerInfoExportVO;
 import com.shaoxing.lixing.domain.vo.IndexDataVo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
@@ -194,7 +194,7 @@ public class IndexController extends BaseController {
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
 
-        Map<String, DistributionCompanyExportVO> map = new HashMap<>();
+        Map<String, CustomerInfoExportVO> map = new HashMap<>();
         for (MOrderInfo orderInfo : list) {
             Long customerId = orderInfo.getCustomerId();
             String customerName = orderInfo.getCustomerName();
@@ -203,24 +203,24 @@ public class IndexController extends BaseController {
             String unit = orderInfo.getUnit();
             String remark = orderInfo.getRemark();
             if (!map.containsKey(String.valueOf(customerId))) {
-                DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
-                distributionCompanyExportVO.setCustomerId(customerId);
-                distributionCompanyExportVO.setCustomerName(customerName);
-                distributionCompanyExportVO.setDetail(StringUtil.concatString(varietiesName, num.toString(), unit, remark));
-                map.put(String.valueOf(customerId), distributionCompanyExportVO);
+                CustomerInfoExportVO customerInfoExportVO = new CustomerInfoExportVO();
+                customerInfoExportVO.setCustomerId(customerId);
+                customerInfoExportVO.setCustomerName(customerName);
+                customerInfoExportVO.setDetail(StringUtil.concatString(varietiesName, num.toString(), unit, remark));
+                map.put(String.valueOf(customerId), customerInfoExportVO);
             } else {
-                DistributionCompanyExportVO distributionCompanyExportVO = map.get(String.valueOf(customerId));
-                String detail = distributionCompanyExportVO.getDetail();
-                distributionCompanyExportVO.setDetail(StringUtil.concatString(detail, "、", varietiesName, num.toString(), unit, remark));
+                CustomerInfoExportVO customerInfoExportVO = map.get(String.valueOf(customerId));
+                String detail = customerInfoExportVO.getDetail();
+                customerInfoExportVO.setDetail(StringUtil.concatString(detail, "、", varietiesName, num.toString(), unit, remark));
             }
         }
-        List<DistributionCompanyExportVO> distributionCompanyExportVOList = new ArrayList<>(map.values());
+        List<CustomerInfoExportVO> customerInfoExportVOList = new ArrayList<>(map.values());
         LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("客户名称", "customerName");
         fieldNameMap.put("配送明细", "detail");
         try {
             LOGGER.info("开始准备导出配送清单");
-            ExcelDataUtil.export(fieldNameMap, distributionCompanyExportVOList, "配送清单", response);
+            ExcelDataUtil.export(fieldNameMap, customerInfoExportVOList, "配送清单", response);
         } catch (Exception e) {
             LOGGER.error("配送清单导出失败", e);
             return error();

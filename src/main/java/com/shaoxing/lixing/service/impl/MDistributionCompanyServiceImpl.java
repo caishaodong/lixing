@@ -5,13 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
-import com.shaoxing.lixing.domain.vo.CustomerInfoVO;
-import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
-import com.shaoxing.lixing.domain.vo.PriceCategoryVO;
-import com.shaoxing.lixing.domain.vo.VarietiesPriceInfoVO;
+import com.shaoxing.lixing.domain.vo.*;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.mapper.MDistributionCompanyMapper;
 import com.shaoxing.lixing.service.*;
 import org.springframework.beans.BeanUtils;
@@ -164,6 +162,26 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
     }
 
     /**
+     * 获取配送公司信息
+     *
+     * @return
+     */
+    @Override
+    public List<DistributionCompanyExportVO> getDistributionCompanyExportVOList() {
+        // 获取配送公司信息
+        List<MDistributionCompany> distributionCompanyList = this.baseMapper.selectList(new LambdaQueryWrapper<MDistributionCompany>()
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByDesc(MDistributionCompany::getGmtModified));
+
+        // 获取配送公司对应的客户信息
+        List<DistributionCompanyVO> distributionCompanyVOList = getMDistributionCompanyVOList(distributionCompanyList);
+
+        // 重新组装配送公司信息
+        List<DistributionCompanyExportVO> list = convertDistributionCompanyVOListToExport(distributionCompanyVOList);
+        return list;
+    }
+
+    /**
      * 获取配送管理绑定的用户信息
      *
      * @param distributionCompanyList
@@ -186,13 +204,13 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
             // 根据配送公司id，获取绑定的用户列表
             List<MCustomerDistributionCompanyRel> customerDistributionCompanyRelList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>().eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId())
                     .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue()));
-            if (Objects.nonNull(customerDistributionCompanyRelList) && !customerDistributionCompanyRelList.isEmpty()) {
+            if (!CollectionUtils.isEmpty(customerDistributionCompanyRelList)) {
                 // 获取客户id
                 List<Long> customerIdList = customerDistributionCompanyRelList.stream().map(MCustomerDistributionCompanyRel::getCustomerId).collect(Collectors.toList());
                 // 获取客户信息
                 List<MCustomerInfo> customerInfoList = customerInfoService.list(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, customerIdList)
                         .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
-                if (Objects.nonNull(customerInfoList) && !customerInfoList.isEmpty()) {
+                if (!CollectionUtils.isEmpty(customerInfoList)) {
                     for (MCustomerInfo mCustomerInfo : customerInfoList) {
                         // 封装客户信息
                         CustomerInfoVO customerInfoVO = new CustomerInfoVO();
@@ -205,25 +223,26 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
                         // 根据客户id，获取绑定的价目列表
                         List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>().eq(MCustomerPriceCategoryRel::getCustomerId, mCustomerInfo.getId())
                                 .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
-                        if (Objects.nonNull(customerPriceCategoryRelList) && !customerPriceCategoryRelList.isEmpty()) {
+                        if (!CollectionUtils.isEmpty(customerPriceCategoryRelList)) {
                             // 获取价目id
                             List<Long> priceCategoryIdList = customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getPriceCategoryId).collect(Collectors.toList());
                             // 获取价目信息
                             List<MPriceCategory> priceCategoryList = priceCategoryService.list(new LambdaQueryWrapper<MPriceCategory>().in(MPriceCategory::getId, priceCategoryIdList)
                                     .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO.getValue()));
-                            if (Objects.nonNull(priceCategoryIdList) && !priceCategoryList.isEmpty()) {
+                            if (!CollectionUtils.isEmpty(priceCategoryIdList)) {
                                 for (MPriceCategory priceCategory : priceCategoryList) {
                                     // 封装价目信息
                                     PriceCategoryVO priceCategoryVO = new PriceCategoryVO();
                                     BeanUtils.copyProperties(priceCategory, priceCategoryVO);
                                     priceCategoryVOList.add(priceCategoryVO);
                                     List<VarietiesPriceInfoVO> varietiesPriceInfoVOList = new ArrayList<>();
+                                    priceCategoryVO.setVarietiesPriceInfoVOList(varietiesPriceInfoVOList);
 
 
                                     // 根据价目id， 获取价目下面的价格信息
                                     List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.list(new LambdaQueryWrapper<MVarietiesPriceInfo>().eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategory.getId())
                                             .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
-                                    if (Objects.nonNull(varietiesPriceInfoList) && !varietiesPriceInfoList.isEmpty()) {
+                                    if (!CollectionUtils.isEmpty(varietiesPriceInfoList)) {
                                         for (MVarietiesPriceInfo varietiesPriceInfo : varietiesPriceInfoList) {
                                             // 封装价目下面的价格信息
                                             VarietiesPriceInfoVO varietiesPriceInfoVO = new VarietiesPriceInfoVO();
@@ -240,5 +259,84 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         }
 
         return list;
+    }
+
+    /**
+     * 重新组装配送公司信息
+     *
+     * @param distributionCompanyVOList
+     * @return
+     */
+    private List<DistributionCompanyExportVO> convertDistributionCompanyVOListToExport(List<DistributionCompanyVO> distributionCompanyVOList) {
+        List<DistributionCompanyExportVO> list = new ArrayList<>();
+
+        for (DistributionCompanyVO distributionCompanyVO : distributionCompanyVOList) {
+            List<CustomerInfoVO> customerInfoVoList = distributionCompanyVO.getCustomerInfoVoList();
+            if (CollectionUtils.isEmpty(customerInfoVoList)) {
+                continue;
+            }
+            for (CustomerInfoVO customerInfoVO : customerInfoVoList) {
+                List<PriceCategoryVO> priceCategoryVOList = customerInfoVO.getPriceCategoryVOList();
+                if (CollectionUtils.isEmpty(priceCategoryVOList)) {
+                    continue;
+                }
+                for (PriceCategoryVO priceCategoryVO : priceCategoryVOList) {
+                    List<VarietiesPriceInfoVO> varietiesPriceInfoVOList = priceCategoryVO.getVarietiesPriceInfoVOList();
+                    if (CollectionUtils.isEmpty(varietiesPriceInfoVOList)) {
+                        continue;
+                    }
+                    for (VarietiesPriceInfoVO varietiesPriceInfoVO : varietiesPriceInfoVOList) {
+                        DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+                        // 数组重组
+                        assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO, varietiesPriceInfoVO, distributionCompanyExportVO);
+                        list.add(distributionCompanyExportVO);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 数据重组
+     *
+     * @param distributionCompanyVO
+     * @param customerInfoVO
+     * @param priceCategoryVO
+     * @param varietiesPriceInfoVO
+     * @param distributionCompanyExportVO
+     */
+    private void assemble(DistributionCompanyVO distributionCompanyVO, CustomerInfoVO customerInfoVO, PriceCategoryVO priceCategoryVO,
+                          VarietiesPriceInfoVO varietiesPriceInfoVO, DistributionCompanyExportVO distributionCompanyExportVO) {
+        // 配送公司信息
+        distributionCompanyExportVO.setDistributionCompanyId(distributionCompanyVO.getId());
+        distributionCompanyExportVO.setDistributionCompanyName(distributionCompanyVO.getName());
+        distributionCompanyExportVO.setSettlementDeductionRate(distributionCompanyVO.getSettlementDeductionRate());
+        distributionCompanyExportVO.setAreaCode(distributionCompanyVO.getAreaCode());
+        distributionCompanyExportVO.setAreaName(distributionCompanyVO.getAreaName());
+        distributionCompanyExportVO.setAddress(StringUtil.concatString(distributionCompanyVO.getAreaName(), distributionCompanyExportVO.getAddress()));
+        distributionCompanyExportVO.setContactUserName(distributionCompanyVO.getContactUserName());
+        distributionCompanyExportVO.setContactUserMobile(distributionCompanyVO.getContactUserMobile());
+        distributionCompanyExportVO.setOrderManagerName(distributionCompanyVO.getOrderManagerName());
+        distributionCompanyExportVO.setOrderManagerMobile(distributionCompanyVO.getOrderManagerMobile());
+        distributionCompanyExportVO.setFinancialContactName(distributionCompanyVO.getFinancialContactName());
+        distributionCompanyExportVO.setFinancialContactMobile(distributionCompanyVO.getFinancialContactMobile());
+        distributionCompanyExportVO.setNeedInvoice(distributionCompanyVO.getNeedInvoice());
+        distributionCompanyExportVO.setNeedInvoiceStr(Objects.isNull(distributionCompanyVO.getNeedInvoice()) ? "否" :
+                (YesNoEnum.YES.getValue().equals(distributionCompanyVO.getNeedInvoice()) ? "是" : "否"));
+        distributionCompanyExportVO.setRemark(distributionCompanyVO.getRemark());
+
+        // 客户信息
+        distributionCompanyExportVO.setCustomerId(customerInfoVO.getId());
+        distributionCompanyExportVO.setCustomerName(customerInfoVO.getName());
+
+        // 价目信息
+        distributionCompanyExportVO.setPriceCategoryId(priceCategoryVO.getId());
+        distributionCompanyExportVO.setPriceCategoryName(priceCategoryVO.getName());
+
+        // 品种价格信息
+        distributionCompanyExportVO.setVarietiesPriceId(varietiesPriceInfoVO.getId());
+        distributionCompanyExportVO.setVarietiesPriceName(varietiesPriceInfoVO.getName());
+
     }
 }

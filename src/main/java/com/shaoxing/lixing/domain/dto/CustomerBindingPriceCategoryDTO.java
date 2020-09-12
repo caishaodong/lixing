@@ -32,11 +32,11 @@ public class CustomerBindingPriceCategoryDTO {
         if (StringUtil.isBlank(this.customerIds) || Objects.isNull(this.priceCategoryId)) {
             return false;
         }
-        List<Long> custormerIdList = StringUtil.jsonArrayToLongList(customerIds);
-        if (Objects.isNull(custormerIdList) || custormerIdList.isEmpty()) {
+        List<Long> customerIdList = StringUtil.jsonArrayToLongList(customerIds);
+        if (Objects.isNull(customerIdList) || customerIdList.isEmpty()) {
             return false;
         }
-        this.customerIdList = custormerIdList;
+        this.customerIdList = customerIdList;
         return true;
     }
 }

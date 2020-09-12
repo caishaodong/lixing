@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
 import com.shaoxing.lixing.domain.entity.MDistributionCompany;
+import com.shaoxing.lixing.domain.vo.DistributionCompanyExportVO;
 import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 
 import java.util.List;
@@ -72,5 +73,10 @@ public interface MDistributionCompanyService extends IService<MDistributionCompa
      */
     MDistributionCompany getByName(String distributionCompanyName);
 
-
+    /**
+     * 获取配送公司信息
+     *
+     * @return
+     */
+    List<DistributionCompanyExportVO> getDistributionCompanyExportVOList();
 }

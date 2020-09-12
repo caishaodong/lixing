@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class DistributionCompanyVO {
     /**
-     * id
+     * 配送公司id
      */
     private Long id;
 
