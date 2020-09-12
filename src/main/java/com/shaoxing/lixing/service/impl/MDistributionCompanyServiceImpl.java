@@ -57,7 +57,7 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
     }
 
     /**
-     * 获取配送公司列表 分页
+     * 获取配送公司列表（分页）
      *
      * @param dto
      * @return
@@ -77,6 +77,17 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         pageUtil2.setRecords(distributionCompanyVOList);
 
         return pageUtil2;
+    }
+
+    /**
+     * 获取配送公司列表（不分页）
+     *
+     * @return
+     */
+    @Override
+    public List<MDistributionCompany> getList() {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<MDistributionCompany>()
+                .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue()));
     }
 
     /**

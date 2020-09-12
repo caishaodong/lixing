@@ -6,6 +6,8 @@ import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
 import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 
+import java.util.List;
+
 /**
  * <p>
  * 配送公司信息表 服务类
@@ -19,12 +21,19 @@ public interface MDistributionCompanyService extends IService<MDistributionCompa
     MDistributionCompany getOKById(Long id);
 
     /**
-     * 获取配送公司列表 分页
+     * 获取配送公司列表（分页）
      *
      * @param dto
      * @return
      */
     IPage<DistributionCompanyVO> getListPage(DistributionCompanySearchDTO dto);
+
+    /**
+     * 获取配送公司列表（不分页）
+     *
+     * @return
+     */
+    List<MDistributionCompany> getList();
 
     /**
      * 保存价目
@@ -62,4 +71,6 @@ public interface MDistributionCompanyService extends IService<MDistributionCompa
      * @return
      */
     MDistributionCompany getByName(String distributionCompanyName);
+
+
 }

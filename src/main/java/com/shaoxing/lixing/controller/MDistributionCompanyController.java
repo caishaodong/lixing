@@ -17,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -41,7 +42,18 @@ public class MDistributionCompanyController extends BaseController {
     @PostMapping("/getListPage")
     public ResponseResult<PageUtil<DistributionCompanyVO>> getListPage(@RequestBody DistributionCompanySearchDTO dto) {
         IPage<DistributionCompanyVO> page = distributionCompanyService.getListPage(dto);
-        return ResponseResult.success(page);
+        return success(page);
+    }
+
+    /**
+     * 获取配送公司列表（不分页）
+     *
+     * @return
+     */
+    @GetMapping("/getList")
+    public ResponseResult<MDistributionCompany> getList() {
+        List<MDistributionCompany> list = distributionCompanyService.getList();
+        return success(list);
     }
 
     /**
@@ -110,4 +122,5 @@ public class MDistributionCompanyController extends BaseController {
         distributionCompanyService.deleteDistributionCompany(distributionCompany);
         return success();
     }
+
 }
