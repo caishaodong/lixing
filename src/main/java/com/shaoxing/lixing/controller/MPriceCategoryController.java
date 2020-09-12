@@ -9,10 +9,7 @@ import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.service.MPriceCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class MPriceCategoryController extends BaseController {
      * @param dto
      * @return
      */
-    @GetMapping("/getListPage")
+    @PostMapping("/getListPage")
     public ResponseResult<PageUtil<MPriceCategory>> getListPage(@RequestBody PriceCategoryDTO dto) {
 
         IPage<MPriceCategory> page = priceCategoryService.getListPage(dto);

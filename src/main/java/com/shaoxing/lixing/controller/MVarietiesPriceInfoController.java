@@ -3,7 +3,6 @@ package com.shaoxing.lixing.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoDTO;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
@@ -43,7 +42,7 @@ public class MVarietiesPriceInfoController extends BaseController {
      * @param dto
      * @return
      */
-    @GetMapping("/getListPage")
+    @PostMapping("/getListPage")
     public ResponseResult<PageUtil<MVarietiesPriceInfo>> getListPage(@RequestBody VarietiesPriceInfoSearchDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);

@@ -2,14 +2,9 @@ package com.shaoxing.lixing.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shaoxing.lixing.domain.dto.CompanyBillSearchDTO;
 import com.shaoxing.lixing.domain.dto.FCompanyBillDTO;
-import com.shaoxing.lixing.domain.dto.OrderInfoExportDTO;
-import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
-import com.shaoxing.lixing.domain.entity.MOrderInfo;
-import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
@@ -45,10 +40,11 @@ public class FCompanyBillController extends BaseController {
 
     /**
      * 获取公司账单列表（分页）
+     *
      * @param dto
      * @return
      */
-    @GetMapping("/getListPage")
+    @PostMapping("/getListPage")
     public ResponseResult<PageUtil<FCompanyBill>> getListPage(@RequestBody CompanyBillSearchDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
@@ -98,6 +94,7 @@ public class FCompanyBillController extends BaseController {
 
     /**
      * 导出公司账单
+     *
      * @param response
      * @return
      */

@@ -12,7 +12,6 @@ import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
-import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class MDistributionCompanyController extends BaseController {
      * @param dto
      * @return
      */
-    @GetMapping("/getListPage")
+    @PostMapping("/getListPage")
     public ResponseResult<PageUtil<DistributionCompanyVO>> getListPage(@RequestBody DistributionCompanySearchDTO dto) {
         IPage<DistributionCompanyVO> page = distributionCompanyService.getListPage(dto);
         return ResponseResult.success(page);

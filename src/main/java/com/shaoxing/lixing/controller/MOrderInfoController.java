@@ -60,7 +60,7 @@ public class MOrderInfoController extends BaseController {
      * @param dto
      * @return
      */
-    @GetMapping("/getListPage")
+    @PostMapping("/getListPage")
     public ResponseResult<PageUtil<MOrderInfo>> getListPage(@RequestBody OrderInfoSearchDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
@@ -160,6 +160,7 @@ public class MOrderInfoController extends BaseController {
 
     /**
      * 导出订单
+     *
      * @param dto
      * @param response
      * @return

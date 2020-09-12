@@ -114,7 +114,7 @@ public class IndexController extends BaseController {
      * @param dto
      * @return
      */
-    @GetMapping("/statistics")
+    @PostMapping("/statistics")
     public ResponseResult<PageUtil<MOrderInfo>> statistics(@RequestBody IndexStatisticsDTO dto) {
         List<Long> customerIdList = StringUtil.jsonArrayToLongList(dto.getCustomerIds());
         List<Long> varietiesPriceIdList = StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
