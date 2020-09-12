@@ -50,7 +50,7 @@ public class LoginController extends BaseController {
 
         // 密码校验
         if (!StringUtil.equals(dto.getPassword(), loginUser.getPassword())) {
-            error(BusinessEnum.LOGIN_NAME_OR_PASSWORD_ERROR);
+            return error(BusinessEnum.LOGIN_NAME_OR_PASSWORD_ERROR);
         }
 
         return success(loginUser);
