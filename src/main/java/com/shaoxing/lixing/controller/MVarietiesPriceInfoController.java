@@ -141,7 +141,7 @@ public class MVarietiesPriceInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出品种价格");
-            ExcelDataUtil.export(fieldNameMap, varietiesPriceInfoList, "品种价格", response);
+            ExcelDataUtil.export(null, null, fieldNameMap, varietiesPriceInfoList, "品种价格", response);
         } catch (Exception e) {
             LOGGER.error("品种价格导出失败", e);
             return error();

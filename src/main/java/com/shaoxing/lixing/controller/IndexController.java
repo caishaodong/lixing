@@ -157,6 +157,8 @@ public class IndexController extends BaseController {
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
 
+        String title = "绍兴市立兴农产品有限公司（4.17鲜肉配送清单）";
+
         LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("配送单位", "distributionCompanyName");
         fieldNameMap.put("客户", "customerName");
@@ -168,7 +170,7 @@ public class IndexController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出销售统计");
-            ExcelDataUtil.export(fieldNameMap, list, "销售统计", response);
+            ExcelDataUtil.export(title, null, fieldNameMap, list, "销售统计", response);
         } catch (Exception e) {
             LOGGER.error("销售统计导出失败", e);
             return error();
@@ -220,11 +222,22 @@ public class IndexController extends BaseController {
         fieldNameMap.put("配送明细", "detail");
         try {
             LOGGER.info("开始准备导出配送清单");
-            ExcelDataUtil.export(fieldNameMap, customerInfoExportVOList, "配送清单", response);
+            ExcelDataUtil.export(null, columnWidth(), fieldNameMap, customerInfoExportVOList, "配送清单", response);
         } catch (Exception e) {
             LOGGER.error("配送清单导出失败", e);
             return error();
         }
         return success();
+    }
+
+    /**
+     * 设置列宽
+     *
+     * @return
+     */
+    public Map<Integer, Integer> columnWidth() {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 200);
+        return map;
     }
 }

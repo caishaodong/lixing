@@ -205,7 +205,7 @@ public class MOrderInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(fieldNameMap, orderInfoList, "订单", response);
+            ExcelDataUtil.export(null, null, fieldNameMap, orderInfoList, "订单", response);
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);
             return error();

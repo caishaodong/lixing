@@ -117,7 +117,7 @@ public class FCompanyBillController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出公司账单");
-            ExcelDataUtil.export(fieldNameMap, companyBillList, "账单", response);
+            ExcelDataUtil.export(null, null, fieldNameMap, companyBillList, "账单", response);
         } catch (Exception e) {
             LOGGER.error("公司账单导出失败", e);
             return error();

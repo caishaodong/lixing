@@ -156,7 +156,7 @@ public class MDistributionCompanyController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出配送管理");
-            ExcelDataUtil.export(fieldNameMap, list, "配送管理", response);
+            ExcelDataUtil.export(null, null, fieldNameMap, list, "配送管理", response);
         } catch (Exception e) {
             LOGGER.error("配送管理导出失败", e);
             return error();
