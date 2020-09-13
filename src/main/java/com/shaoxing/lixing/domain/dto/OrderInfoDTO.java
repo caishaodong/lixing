@@ -13,6 +13,10 @@ import java.util.Objects;
 @Data
 public class OrderInfoDTO {
     /**
+     * 订单id（修改时传入）
+     */
+    private Long id;
+    /**
      * 订单日期（格式yyyyMMdd）
      */
     private Long orderDate;

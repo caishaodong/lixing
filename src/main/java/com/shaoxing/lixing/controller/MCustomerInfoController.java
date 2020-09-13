@@ -101,6 +101,23 @@ public class MCustomerInfoController extends BaseController {
     }
 
     /**
+     * 根据配送公司id获取绑定的客户列表
+     *
+     * @param distributionCompanyId 配送公司id
+     * @return
+     */
+    @GetMapping("/getCustomerListByDistributionCompanyId/{distributionCompanyId}")
+    public ResponseResult<List<MCustomerInfo>> getCustomerListByDistributionCompanyId(@PathVariable("distributionCompanyId") Long distributionCompanyId) {
+        // 校验配送公司是否存在
+        MDistributionCompany distributionCompany = distributionCompanyService.getOKById(distributionCompanyId);
+        if (Objects.isNull(distributionCompany)) {
+            return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
+        }
+        List<MCustomerInfo> list = customerInfoService.getCustomerListByDistributionCompanyId(distributionCompanyId);
+        return success(list);
+    }
+
+    /**
      * 客户绑定价目
      *
      * @param dto

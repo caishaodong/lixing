@@ -87,6 +87,28 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     }
 
     /**
+     * 根据配送公司id获取绑定的客户列表
+     *
+     * @param distributionCompanyId
+     * @return
+     */
+    @Override
+    public List<MCustomerInfo> getCustomerListByDistributionCompanyId(Long distributionCompanyId) {
+        List<MCustomerInfo> list = new ArrayList<>();
+        List<MCustomerDistributionCompanyRel> relList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
+                .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompanyId)
+                .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue()));
+
+        if (!CollectionUtils.isEmpty(relList)) {
+            List<Long> customerIdList = relList.stream().map(MCustomerDistributionCompanyRel::getCustomerId).collect(Collectors.toList());
+            list = this.baseMapper.selectList(new LambdaQueryWrapper<MCustomerInfo>()
+                    .in(MCustomerInfo::getId, customerIdList)
+                    .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+        }
+        return list;
+    }
+
+    /**
      * 客户绑定价目
      *
      * @param dto

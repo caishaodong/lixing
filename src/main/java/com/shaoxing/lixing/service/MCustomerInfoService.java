@@ -35,6 +35,14 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
     void unBindDistribution(CustomerInfoDTO customerInfoDTO);
 
     /**
+     * 根据配送公司id获取绑定的客户列表
+     *
+     * @param distributionCompanyId
+     * @return
+     */
+    List<MCustomerInfo> getCustomerListByDistributionCompanyId(Long distributionCompanyId);
+
+    /**
      * 客户绑定价目
      *
      * @param dto
@@ -56,4 +64,6 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
      * @return
      */
     List<MCustomerInfo> getList();
+
+
 }

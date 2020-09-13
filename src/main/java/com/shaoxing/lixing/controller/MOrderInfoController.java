@@ -70,7 +70,7 @@ public class MOrderInfoController extends BaseController {
     }
 
     /**
-     * 创建订单
+     * 创建（修改）订单
      *
      * @param dto
      * @return
@@ -81,8 +81,19 @@ public class MOrderInfoController extends BaseController {
             return error(BusinessEnum.PARAM_ERROR);
         }
         MOrderInfo orderInfo = new MOrderInfo();
+        if (Objects.isNull(dto.getId())) {
+            // 新增
+            ReflectUtil.setCreateInfo(orderInfo, MOrderInfo.class);
+        } else {
+            // 修改
+            orderInfo = orderInfoService.getOKById(dto.getId());
+            if (Objects.isNull(orderInfo)) {
+                return error(BusinessEnum.ORDER_NOT_EXIST);
+            }
+            orderInfo.setGmtModified(LocalDateTime.now());
+        }
         BeanUtils.copyProperties(dto, orderInfo);
-        ReflectUtil.setCreateInfo(orderInfo, MOrderInfo.class);
+
 
         // 校验配送单位是否存在
         MDistributionCompany distributionCompany = distributionCompanyService.getOKById(orderInfo.getDistributionCompanyId());
@@ -115,9 +126,16 @@ public class MOrderInfoController extends BaseController {
         orderInfo.setUnit(varietiesPriceInfo.getUnit());
         // 计算总价
         orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), orderInfo.getNum()));
-        // 生成订单编号
-        orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
-        orderInfoService.save(orderInfo);
+
+        if (Objects.isNull(dto.getId())) {
+            // 生成订单编号
+            orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
+            orderInfoService.save(orderInfo);
+        } else {
+            // 修改
+            orderInfoService.updateById(orderInfo);
+        }
+
         return success();
     }
 
