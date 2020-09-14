@@ -14,6 +14,10 @@ import java.util.Objects;
 @Data
 public class FCompanyBillDTO {
     /**
+     * 账单id（修改时传入）
+     */
+    private Long id;
+    /**
      * 费用类别名称
      */
     private String feeCategoryName;

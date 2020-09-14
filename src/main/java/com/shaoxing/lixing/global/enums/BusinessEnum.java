@@ -36,6 +36,8 @@ public enum BusinessEnum {
     DISTRIBUTION_COMPANY_NAME_NOT_EXIST(403, "配送公司名称不存在"),
 
     ORDER_NOT_EXIST(501, "订单不存在"),
+
+    COMPANY_BILL_NOT_EXIST(601, "账单不存在"),
     ;
     private Integer code;
     private String desc;

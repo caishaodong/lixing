@@ -54,7 +54,7 @@ public class FCompanyBillController extends BaseController {
     }
 
     /**
-     * 保存公司账单
+     * 保存（修改）公司账单
      *
      * @param dto
      * @return
@@ -66,11 +66,20 @@ public class FCompanyBillController extends BaseController {
         }
         FCompanyBill companyBill = new FCompanyBill();
         BeanUtils.copyProperties(dto, companyBill);
-        ReflectUtil.setCreateInfo(companyBill, FCompanyBill.class);
+
         // 根据城市编码获取城市名称
         String areaName = sysCityService.getNameByAreaCode(companyBill.getAreaCode());
         companyBill.setAreaName(areaName);
-        companyBillService.save(companyBill);
+        if (Objects.isNull(dto.getId())) {
+            // 保存
+            ReflectUtil.setCreateInfo(companyBill, FCompanyBill.class);
+            companyBillService.save(companyBill);
+        } else {
+            // 修改
+            companyBill.setGmtModified(LocalDateTime.now());
+            companyBillService.updateById(companyBill);
+        }
+
         return success();
     }
 
