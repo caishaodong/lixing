@@ -1,4 +1,4 @@
-package com.shaoxing.lixing.global.util;
+package com.shaoxing.lixing.global.util.decimal;
 
 
 import com.shaoxing.lixing.global.constant.NumberConsts;

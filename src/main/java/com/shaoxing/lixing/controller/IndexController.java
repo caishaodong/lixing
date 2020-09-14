@@ -149,28 +149,36 @@ public class IndexController extends BaseController {
     public ResponseResult statisticsExport(IndexStatisticsDTO dto, HttpServletResponse response) {
         List<Long> customerIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getCustomerIds());
         List<Long> varietiesPriceIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
+        Long orderDate = dto.getOrderDate();
 
         List<MOrderInfo> list = orderInfoService.list(new LambdaQueryWrapper<MOrderInfo>()
-                .eq(Objects.nonNull(dto.getOrderDate()), MOrderInfo::getOrderDate, dto.getOrderDate())
+                .eq(Objects.nonNull(orderDate), MOrderInfo::getOrderDate, orderDate)
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
 
-        String title = "绍兴市立兴农产品有限公司（4.17鲜肉配送清单）";
+        String title = "绍兴市立兴农产品有限公司配送清单";
+        if (Objects.nonNull(orderDate)) {
+            Integer month = LocalDateTimeUtil.getByLocalDatePattern(String.valueOf(orderDate), "yyyyMMdd", LocalDateTimeUtil.MONTH);
+            Integer day = LocalDateTimeUtil.getByLocalDatePattern(String.valueOf(orderDate), "yyyyMMdd", LocalDateTimeUtil.DAY);
+            title = new StringBuilder().append("绍兴市立兴农产品有限公司（").append(month).append(".").append(day).append("）配送清单").toString();
+        }
 
-        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("配送单位", "distributionCompanyName");
-        fieldNameMap.put("客户", "customerName");
-        fieldNameMap.put("品种", "varietiesName");
-        fieldNameMap.put("单位", "unit");
-        fieldNameMap.put("数量", "num");
-        fieldNameMap.put("单价(元)", "price");
-        fieldNameMap.put("金额(元)", "totalPrice");
+
+        LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName"});
+        fieldNameMap.put("客户", new String[]{"customerName"});
+        fieldNameMap.put("品种", new String[]{"varietiesName"});
+        fieldNameMap.put("单位", new String[]{"unit"});
+        fieldNameMap.put("数量", new String[]{"num"});
+        fieldNameMap.put("单价(元)", new String[]{"price"});
+        fieldNameMap.put("金额(元)", new String[]{"totalPrice"});
 
         try {
             LOGGER.info("开始准备导出销售统计");
-            ExcelDataUtil.export(title, null, fieldNameMap, list, "销售统计", response);
+            ExcelDataUtil.export(title, fieldNameMap, list, "销售统计", response);
+            LOGGER.info("销售统计导出完成");
         } catch (Exception e) {
             LOGGER.error("销售统计导出失败", e);
             return error();
@@ -217,27 +225,17 @@ public class IndexController extends BaseController {
             }
         }
         List<CustomerInfoExportVO> customerInfoExportVOList = new ArrayList<>(map.values());
-        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("客户名称", "customerName");
-        fieldNameMap.put("配送明细", "detail");
+        LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("客户名称", new String[]{"customerName"});
+        fieldNameMap.put("配送明细", new String[]{"detail", "200"});
         try {
             LOGGER.info("开始准备导出配送清单");
-            ExcelDataUtil.export(null, columnWidth(), fieldNameMap, customerInfoExportVOList, "配送清单", response);
+            ExcelDataUtil.export(null, fieldNameMap, customerInfoExportVOList, "配送清单", response);
+            LOGGER.info("配送清单导出完成");
         } catch (Exception e) {
             LOGGER.error("配送清单导出失败", e);
             return error();
         }
         return success();
-    }
-
-    /**
-     * 设置列宽
-     *
-     * @return
-     */
-    public Map<Integer, Integer> columnWidth() {
-        Map<Integer, Integer> map = new HashMap<>();
-        map.put(1, 200);
-        return map;
     }
 }

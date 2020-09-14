@@ -10,10 +10,10 @@ import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
-import com.shaoxing.lixing.global.util.DecimalUtil;
 import com.shaoxing.lixing.global.util.OrderNoUtils;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelSheetPO;
 import com.shaoxing.lixing.global.util.excel.ExcelUtil;
@@ -191,21 +191,22 @@ public class MOrderInfoController extends BaseController {
         // 获取需要导出的订单列表
         List<MOrderInfo> orderInfoList = orderInfoService.getList(dto);
 
-        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("订单日期", "orderDate");
-        fieldNameMap.put("配送单位", "distributionCompanyName");
-        fieldNameMap.put("客户", "customerName");
-        fieldNameMap.put("价目", "priceCategoryName");
-        fieldNameMap.put("品种", "varietiesName");
-        fieldNameMap.put("单位", "unit");
-        fieldNameMap.put("数量", "num");
-        fieldNameMap.put("单价(元)", "price");
-        fieldNameMap.put("总价(元)", "totalPrice");
-        fieldNameMap.put("备注", "remark");
+        LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("订单日期", new String[]{"orderDate"});
+        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName"});
+        fieldNameMap.put("客户", new String[]{"customerName"});
+        fieldNameMap.put("价目", new String[]{"priceCategoryName"});
+        fieldNameMap.put("品种", new String[]{"varietiesName"});
+        fieldNameMap.put("单位", new String[]{"unit"});
+        fieldNameMap.put("数量", new String[]{"num"});
+        fieldNameMap.put("单价(元)", new String[]{"price"});
+        fieldNameMap.put("总价(元)", new String[]{"totalPrice"});
+        fieldNameMap.put("备注", new String[]{"remark"});
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(null, null, fieldNameMap, orderInfoList, "订单", response);
+            ExcelDataUtil.export(null, fieldNameMap, orderInfoList, "订单", response);
+            LOGGER.info("订单导出完成");
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);
             return error();

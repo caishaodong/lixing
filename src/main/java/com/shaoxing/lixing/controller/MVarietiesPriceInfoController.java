@@ -132,16 +132,17 @@ public class MVarietiesPriceInfoController extends BaseController {
         // 根据价目id获取品种价格信息
         List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.getListByPriceCategoryId(priceCategoryId);
 
-        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("食材品种", "name");
-        fieldNameMap.put("单位", "unit");
-        fieldNameMap.put("单价", "price");
-        fieldNameMap.put("备注", "remark");
-        fieldNameMap.put("添加时间", "gmtCreate");
+        LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("食材品种", new String[]{"name"});
+        fieldNameMap.put("单位", new String[]{"unit"});
+        fieldNameMap.put("单价", new String[]{"price"});
+        fieldNameMap.put("备注", new String[]{"remark"});
+        fieldNameMap.put("添加时间", new String[]{"gmtCreate"});
 
         try {
             LOGGER.info("开始准备导出品种价格");
-            ExcelDataUtil.export(null, null, fieldNameMap, varietiesPriceInfoList, "品种价格", response);
+            ExcelDataUtil.export(null, fieldNameMap, varietiesPriceInfoList, "品种价格", response);
+            LOGGER.info("品种价格导出完成");
         } catch (Exception e) {
             LOGGER.error("品种价格导出失败", e);
             return error();

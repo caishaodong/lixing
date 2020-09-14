@@ -1,4 +1,4 @@
-package com.shaoxing.lixing.global.util.excel;
+package com.shaoxing.lixing.global.util.decimal;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

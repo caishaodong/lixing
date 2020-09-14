@@ -137,26 +137,27 @@ public class MDistributionCompanyController extends BaseController {
         // 获取配送公司信息
         List<DistributionCompanyExportVO> list = distributionCompanyService.getDistributionCompanyExportVOList();
 
-        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("配送单位", "distributionCompanyName");
-        fieldNameMap.put("客户名称", "customerName");
-        fieldNameMap.put("商品类别", "varietiesPriceName");
-        fieldNameMap.put("价目", "priceCategoryName");
-        fieldNameMap.put("结算扣率", "settlementDeductionRate");
-        fieldNameMap.put("联系地址", "address");
-        fieldNameMap.put("联系人", "contactUserName");
-        fieldNameMap.put("联系方式", "contactUserMobile");
-        fieldNameMap.put("订单管理人", "orderManagerName");
-        fieldNameMap.put("订单管理人联系方式", "orderManagerMobile");
-        fieldNameMap.put("财务联系人", "financialContactName");
-        fieldNameMap.put("财务联系人联系方式", "financialContactMobile");
-        fieldNameMap.put("是否需要开机打发票", "needInvoiceStr");
-        fieldNameMap.put("其他备注", "remark");
+        LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName"});
+        fieldNameMap.put("客户名称", new String[]{"customerName"});
+        fieldNameMap.put("商品类别", new String[]{"varietiesPriceName"});
+        fieldNameMap.put("价目", new String[]{"priceCategoryName"});
+        fieldNameMap.put("结算扣率", new String[]{"settlementDeductionRate"});
+        fieldNameMap.put("联系地址", new String[]{"address"});
+        fieldNameMap.put("联系人", new String[]{"contactUserName"});
+        fieldNameMap.put("联系方式", new String[]{"contactUserMobile"});
+        fieldNameMap.put("订单管理人", new String[]{"orderManagerName"});
+        fieldNameMap.put("订单管理人联系方式", new String[]{"orderManagerMobile"});
+        fieldNameMap.put("财务联系人", new String[]{"financialContactName"});
+        fieldNameMap.put("财务联系人联系方式", new String[]{"financialContactMobile"});
+        fieldNameMap.put("是否需要开机打发票", new String[]{"needInvoiceStr"});
+        fieldNameMap.put("其他备注", new String[]{"remark"});
 
 
         try {
             LOGGER.info("开始准备导出配送管理");
-            ExcelDataUtil.export(null, null, fieldNameMap, list, "配送管理", response);
+            ExcelDataUtil.export(null, fieldNameMap, list, "配送管理", response);
+            LOGGER.info("配送管理导出完成");
         } catch (Exception e) {
             LOGGER.error("配送管理导出失败", e);
             return error();

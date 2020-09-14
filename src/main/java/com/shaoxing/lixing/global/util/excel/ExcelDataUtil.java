@@ -1,6 +1,7 @@
 package com.shaoxing.lixing.global.util.excel;
 
 import com.shaoxing.lixing.global.util.StringUtil;
+import com.shaoxing.lixing.global.util.decimal.DecimalFormatUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class ExcelDataUtil {
      * @throws IllegalAccessException
      * @throws IOException
      */
-    public static <T> void export(String title, Map<Integer, Integer> columnWidth, LinkedHashMap<String, String> fieldNameMap, List<T> objects, String fileName, HttpServletResponse response)
+    public static <T> void export(String title, LinkedHashMap<String, String[]> fieldNameMap, List<T> objects, String fileName, HttpServletResponse response)
             throws NoSuchFieldException, IllegalAccessException, IOException {
 
         // 表格数据
@@ -40,15 +41,25 @@ public class ExcelDataUtil {
         // 列名称
         String[] headers = new String[fieldNameMap.size()];
         // 属性名
-        LinkedList fieldNameList = new LinkedList();
+        LinkedList<String> fieldNameList = new LinkedList();
+        // 列宽
+        Map<Integer, Integer> columnWidth = new HashMap<>();
 
         // 把列名称放在第一行
-        Iterator<Map.Entry<String, String>> mapIterator = fieldNameMap.entrySet().iterator();
+        Iterator<Map.Entry<String, String[]>> mapIterator = fieldNameMap.entrySet().iterator();
         int i = 0;
         while (mapIterator.hasNext()) {
-            Map.Entry<String, String> next = mapIterator.next();
-            fieldNameList.add(next.getValue());
-            headers[i++] = next.getKey();
+            Map.Entry<String, String[]> next = mapIterator.next();
+            String[] fieldNameAndColumnWidth = next.getValue();
+            if (fieldNameAndColumnWidth.length > 1) {
+                int width = Integer.parseInt(fieldNameAndColumnWidth[1]);
+                if (width > 0) {
+                    columnWidth.put(i, width);
+                }
+            }
+            fieldNameList.add(fieldNameAndColumnWidth[0]);
+            headers[i] = next.getKey();
+            i++;
         }
 
         // 填充属性值

@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
  * @Description
  **/
 public class LocalDateTimeUtil {
+    public static final String YEAR = "YEAR";
+    public static final String MONTH = "MONTH";
+    public static final String DAY = "DAY";
 
     /**
      * 获取今日日期（yyyyMMdd）
@@ -54,10 +57,39 @@ public class LocalDateTimeUtil {
         return Long.parseLong(lastMondayStr);
     }
 
+    /**
+     * 获取日期中的年月日
+     *
+     * @param date
+     * @param pattern
+     * @return
+     */
+    public static Integer getByLocalDatePattern(String date, String pattern, String type) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern(pattern);
+        LocalDate localDateTime = LocalDate.parse(date, df);
+
+        Integer value;
+        switch (type) {
+            case YEAR:
+                value = localDateTime.getYear();
+                break;
+            case MONTH:
+                value = localDateTime.getMonthValue();
+                break;
+            case DAY:
+                value = localDateTime.getDayOfMonth();
+                break;
+            default:
+                value = null;
+        }
+        return value;
+    }
+
     public static void main(String[] args) {
-        System.out.println(getLongToday());
-        System.out.println(getLongYesterday());
-        System.out.println(getLongThisMonday());
-        System.out.println(getLongLastMonday());
+//        System.out.println(getLongToday());
+//        System.out.println(getLongYesterday());
+//        System.out.println(getLongThisMonday());
+//        System.out.println(getLongLastMonday());
+        System.out.println(getByLocalDatePattern("20200230", "yyyyMMdd", LocalDateTimeUtil.DAY));
     }
 }

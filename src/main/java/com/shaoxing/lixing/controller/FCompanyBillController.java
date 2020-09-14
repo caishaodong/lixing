@@ -103,21 +103,22 @@ public class FCompanyBillController extends BaseController {
         // 获取需要导出的账单列表
         List<FCompanyBill> companyBillList = companyBillService.getList();
 
-        LinkedHashMap<String, String> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("费用类别", "feeCategoryName");
-        fieldNameMap.put("费用科目", "feeSubjectName");
-        fieldNameMap.put("进货产地", "areaName");
-        fieldNameMap.put("日期", "billDate");
-        fieldNameMap.put("单价", "price");
-        fieldNameMap.put("数量", "num");
-        fieldNameMap.put("重量", "weight");
-        fieldNameMap.put("金额(元)", "totalPrice");
-        fieldNameMap.put("录入人", "enteredUserName");
-        fieldNameMap.put("备注", "remark");
+        LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
+        fieldNameMap.put("费用类别", new String[]{"feeCategoryName"});
+        fieldNameMap.put("费用科目", new String[]{"feeSubjectName"});
+        fieldNameMap.put("进货产地", new String[]{"areaName"});
+        fieldNameMap.put("日期", new String[]{"billDate"});
+        fieldNameMap.put("单价", new String[]{"price"});
+        fieldNameMap.put("数量", new String[]{"num"});
+        fieldNameMap.put("重量", new String[]{"weight"});
+        fieldNameMap.put("金额(元)", new String[]{"totalPrice"});
+        fieldNameMap.put("录入人", new String[]{"enteredUserName"});
+        fieldNameMap.put("备注", new String[]{"remark"});
 
         try {
             LOGGER.info("开始准备导出公司账单");
-            ExcelDataUtil.export(null, null, fieldNameMap, companyBillList, "账单", response);
+            ExcelDataUtil.export(null, fieldNameMap, companyBillList, "账单", response);
+            LOGGER.info("公司账单导出完成");
         } catch (Exception e) {
             LOGGER.error("公司账单导出失败", e);
             return error();
