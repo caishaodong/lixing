@@ -8,6 +8,7 @@ import com.shaoxing.lixing.domain.entity.MCustomerInfo;
 import com.shaoxing.lixing.domain.entity.MCustomerPriceCategoryRel;
 import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.entity.MPriceCategory;
+import com.shaoxing.lixing.domain.vo.CustomerInfoListVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
@@ -164,6 +165,18 @@ public class MCustomerInfoController extends BaseController {
     @GetMapping("/getList")
     public ResponseResult<MCustomerInfo> getList() {
         List<MCustomerInfo> list = customerInfoService.getList();
+        return success(list);
+    }
+
+    /**
+     * 获取全部客户列表（不分页）（返回是否绑定价目标识）
+     *
+     * @param priceCategoryId
+     * @return
+     */
+    @GetMapping("/getCustomerInfoList")
+    public ResponseResult<CustomerInfoListVO> getCustomerInfoList(@RequestParam(value = "priceCategoryId", required = false) Long priceCategoryId) {
+        List<CustomerInfoListVO> list = customerInfoService.getCustomerInfoList(priceCategoryId);
         return success(list);
     }
 }
