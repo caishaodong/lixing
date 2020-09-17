@@ -24,8 +24,9 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
      * 添加客户，并绑定配送公司
      *
      * @param customerInfoDTO
+     * @return
      */
-    void saveAndBindDistributionCompany(CustomerInfoDTO customerInfoDTO);
+    MCustomerInfo saveAndBindDistributionCompany(CustomerInfoDTO customerInfoDTO);
 
     /**
      * 解绑客户和配送公司关系

@@ -57,10 +57,11 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
      * 添加客户，并绑定配送公司
      *
      * @param customerInfoDTO
+     * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveAndBindDistributionCompany(CustomerInfoDTO customerInfoDTO) {
+    public MCustomerInfo saveAndBindDistributionCompany(CustomerInfoDTO customerInfoDTO) {
         // 添加客户
         MCustomerInfo customerInfo = new MCustomerInfo();
         BeanUtils.copyProperties(customerInfoDTO, customerInfo);
@@ -72,6 +73,8 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
         customerDistributionCompanyRel.setDistributionCompanyId(customerInfoDTO.getDistributionCompanyId());
         ReflectUtil.setCreateInfo(customerDistributionCompanyRel, MCustomerDistributionCompanyRel.class);
         customerDistributionCompanyRelService.save(customerDistributionCompanyRel);
+
+        return customerInfo;
     }
 
     /**

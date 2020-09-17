@@ -52,7 +52,7 @@ public class MCustomerInfoController extends BaseController {
      * @return
      */
     @PostMapping("/saveAndBindDistribution")
-    public ResponseResult saveAndBindDistribution(@RequestBody CustomerInfoDTO dto) {
+    public ResponseResult<MCustomerInfo> saveAndBindDistribution(@RequestBody CustomerInfoDTO dto) {
         if (StringUtil.isBlank(dto.getName())) {
             return error(BusinessEnum.CUSTOMER_NAME_EMPTY);
         }
@@ -70,8 +70,8 @@ public class MCustomerInfoController extends BaseController {
         if (Objects.isNull(distributionCompany)) {
             return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
         }
-        customerInfoService.saveAndBindDistributionCompany(dto);
-        return success();
+        MCustomerInfo customerInfo = customerInfoService.saveAndBindDistributionCompany(dto);
+        return success(customerInfo);
     }
 
     /**
