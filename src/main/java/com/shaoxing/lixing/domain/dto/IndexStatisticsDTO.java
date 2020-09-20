@@ -17,6 +17,10 @@ public class IndexStatisticsDTO extends PageUtil {
      */
     private String customerIds;
     /**
+     * 价目id（jsonArray字符串，如：[1,2,3,4]）
+     */
+    private String priceCategoryIds;
+    /**
      * 品种价格id（jsonArray字符串，如：[1,2,3,4]）
      */
     private String varietiesPriceIds;

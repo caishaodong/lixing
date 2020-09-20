@@ -314,7 +314,7 @@ public class ExcelUtil {
      */
     private static void setColumnWith(Sheet sheet, ExcelSheetPO excelSheetPO) {
         sheet.setDefaultRowHeight((short) 400);
-        sheet.setDefaultColumnWidth((short) 10);
+        sheet.setDefaultColumnWidth((short) 14);
         Map<Integer, Integer> columnWithMap = excelSheetPO.getColumnWidthMap();
         if (CollectionUtils.isEmpty(columnWithMap)) {
             return;

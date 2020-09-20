@@ -10,6 +10,7 @@ import com.shaoxing.lixing.domain.vo.DistributionCompanyExportVO;
 import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
@@ -138,20 +139,20 @@ public class MDistributionCompanyController extends BaseController {
         List<DistributionCompanyExportVO> list = distributionCompanyService.getDistributionCompanyExportVOList();
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
-        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName"});
-        fieldNameMap.put("客户名称", new String[]{"customerName"});
+        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
+        fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("商品类别", new String[]{"varietiesPriceName"});
         fieldNameMap.put("价目", new String[]{"priceCategoryName"});
         fieldNameMap.put("结算扣率", new String[]{"settlementDeductionRate"});
-        fieldNameMap.put("联系地址", new String[]{"address"});
+        fieldNameMap.put("联系地址", new String[]{"address", Constant.COLUMN_WIDTH_40});
         fieldNameMap.put("联系人", new String[]{"contactUserName"});
         fieldNameMap.put("联系方式", new String[]{"contactUserMobile"});
-        fieldNameMap.put("订单管理人", new String[]{"orderManagerName"});
-        fieldNameMap.put("订单管理人联系方式", new String[]{"orderManagerMobile"});
+        fieldNameMap.put("订单管理人", new String[]{"orderManagerName", Constant.COLUMN_WIDTH_17});
+        fieldNameMap.put("订单管理人联系方式", new String[]{"orderManagerMobile", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("财务联系人", new String[]{"financialContactName"});
-        fieldNameMap.put("财务联系人联系方式", new String[]{"financialContactMobile"});
-        fieldNameMap.put("是否需要开机打发票", new String[]{"needInvoiceStr"});
-        fieldNameMap.put("其他备注", new String[]{"remark"});
+        fieldNameMap.put("财务联系人联系方式", new String[]{"financialContactMobile", Constant.COLUMN_WIDTH_27});
+        fieldNameMap.put("是否需要开机打发票", new String[]{"needInvoiceStr", Constant.COLUMN_WIDTH_27});
+        fieldNameMap.put("其他备注", new String[]{"remark", Constant.COLUMN_WIDTH_80});
 
 
         try {

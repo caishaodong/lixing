@@ -8,6 +8,7 @@ import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
@@ -136,8 +137,8 @@ public class MVarietiesPriceInfoController extends BaseController {
         fieldNameMap.put("食材品种", new String[]{"name"});
         fieldNameMap.put("单位", new String[]{"unit"});
         fieldNameMap.put("单价", new String[]{"price"});
-        fieldNameMap.put("备注", new String[]{"remark"});
-        fieldNameMap.put("添加时间", new String[]{"gmtCreate"});
+        fieldNameMap.put("备注", new String[]{"remark", Constant.COLUMN_WIDTH_80});
+        fieldNameMap.put("添加时间", new String[]{"gmtCreate", Constant.COLUMN_WIDTH_27});
 
         try {
             LOGGER.info("开始准备导出品种价格");

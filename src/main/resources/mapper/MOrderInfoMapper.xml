@@ -20,6 +20,7 @@
         <result column="price" property="price" />
         <result column="total_price" property="totalPrice" />
         <result column="remark" property="remark" />
+        <result column="source" property="source" />
         <result column="is_deleted" property="isDeleted" />
         <result column="gmt_create" property="gmtCreate" />
         <result column="gmt_modified" property="gmtModified" />

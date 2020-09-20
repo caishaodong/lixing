@@ -95,6 +95,7 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
         }
         orderInfo.setVarietiesPriceId(varietiesPriceInfo.getId());
         orderInfo.setPrice(varietiesPriceInfo.getPrice());
+        orderInfo.setUnit(varietiesPriceInfo.getUnit());
 
         // 根据数量和单价，计算总价
         orderInfo.setTotalPrice(DecimalUtil.multiply(varietiesPriceInfo.getPrice(), orderInfo.getNum()));

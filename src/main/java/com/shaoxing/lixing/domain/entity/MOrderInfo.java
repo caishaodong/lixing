@@ -104,6 +104,11 @@ public class MOrderInfo extends Model<MOrderInfo> {
     private String remark;
 
     /**
+     * 来源（1：后台添加，2：复制，3：导入）
+     */
+    private Integer source;
+
+    /**
      * 是否删除（0：未删除，1：删除）
      */
     private Integer isDeleted;

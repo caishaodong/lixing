@@ -7,6 +7,7 @@ import com.shaoxing.lixing.domain.dto.FCompanyBillDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
@@ -115,14 +116,14 @@ public class FCompanyBillController extends BaseController {
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("费用类别", new String[]{"feeCategoryName"});
         fieldNameMap.put("费用科目", new String[]{"feeSubjectName"});
-        fieldNameMap.put("进货产地", new String[]{"areaName"});
+        fieldNameMap.put("进货产地", new String[]{"areaName", Constant.COLUMN_WIDTH_40});
         fieldNameMap.put("日期", new String[]{"billDate"});
         fieldNameMap.put("单价", new String[]{"price"});
         fieldNameMap.put("数量", new String[]{"num"});
         fieldNameMap.put("重量", new String[]{"weight"});
         fieldNameMap.put("金额(元)", new String[]{"totalPrice"});
-        fieldNameMap.put("录入人", new String[]{"enteredUserName"});
-        fieldNameMap.put("备注", new String[]{"remark"});
+        fieldNameMap.put("录入人", new String[]{"enteredUserName", Constant.COLUMN_WIDTH_17});
+        fieldNameMap.put("备注", new String[]{"remark", Constant.COLUMN_WIDTH_80});
 
         try {
             LOGGER.info("开始准备导出公司账单");

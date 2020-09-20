@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
+/**
+ * @Author caishaodong
+ * @Date 2020-08-06 14:27
+ * @Description
+ **/
 public class DecimalFormatUtil {
     private static final DecimalFormat DECIMAL_FORMAT;
 

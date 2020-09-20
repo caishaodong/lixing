@@ -8,7 +8,9 @@ import com.shaoxing.lixing.domain.dto.OrderInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
+import com.shaoxing.lixing.global.enums.OrderSourceEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.OrderNoUtils;
 import com.shaoxing.lixing.global.util.PageUtil;
@@ -130,6 +132,7 @@ public class MOrderInfoController extends BaseController {
         if (Objects.isNull(dto.getId())) {
             // 生成订单编号
             orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
+            orderInfo.setSource(OrderSourceEnum.ADMIN.getSource());
             orderInfoService.save(orderInfo);
         } else {
             // 修改
@@ -156,6 +159,7 @@ public class MOrderInfoController extends BaseController {
         ReflectUtil.setCreateInfo(newOrderInfo, MOrderInfo.class);
         // 生成订单编号
         newOrderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
+        newOrderInfo.setSource(OrderSourceEnum.COPY.getSource());
         orderInfoService.save(newOrderInfo);
         return success();
     }
@@ -195,15 +199,15 @@ public class MOrderInfoController extends BaseController {
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("订单日期", new String[]{"orderDate"});
-        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName"});
-        fieldNameMap.put("客户", new String[]{"customerName"});
+        fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
+        fieldNameMap.put("客户", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("价目", new String[]{"priceCategoryName"});
         fieldNameMap.put("品种", new String[]{"varietiesName"});
         fieldNameMap.put("单位", new String[]{"unit"});
         fieldNameMap.put("数量", new String[]{"num"});
         fieldNameMap.put("单价(元)", new String[]{"price"});
         fieldNameMap.put("总价(元)", new String[]{"totalPrice"});
-        fieldNameMap.put("备注", new String[]{"remark"});
+        fieldNameMap.put("备注", new String[]{"remark", Constant.COLUMN_WIDTH_80});
 
         try {
             LOGGER.info("开始准备导出订单");
@@ -254,6 +258,7 @@ public class MOrderInfoController extends BaseController {
                     break;
                 }
                 orderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
+                orderInfo.setSource(OrderSourceEnum.IMPORT.getSource());
                 list.add(orderInfo);
             }
             if (Objects.isNull(errorResult) && !CollectionUtils.isEmpty(list)) {
