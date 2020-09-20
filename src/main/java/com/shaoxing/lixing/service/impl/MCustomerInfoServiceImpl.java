@@ -8,7 +8,6 @@ import com.shaoxing.lixing.domain.entity.MCustomerDistributionCompanyRel;
 import com.shaoxing.lixing.domain.entity.MCustomerInfo;
 import com.shaoxing.lixing.domain.entity.MCustomerPriceCategoryRel;
 import com.shaoxing.lixing.domain.entity.MPriceCategory;
-import com.shaoxing.lixing.domain.vo.CustomerInfoListVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
@@ -183,34 +182,17 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     }
 
     /**
-     * 获取全部客户列表（不分页）（返回是否绑定价目标识）
+     * 根据价目id获取绑定的客户id
      *
+     * @param priceCategoryId
      * @return
      */
     @Override
-    public List<CustomerInfoListVO> getCustomerInfoList(Long priceCategoryId) {
-        List<MCustomerInfo> list = this.baseMapper.selectList(new LambdaQueryWrapper<MCustomerInfo>()
-                .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
-
-        List<Long> customerIdList = null;
-        if (Objects.nonNull(priceCategoryId)) {
-            List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
-                    .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategoryId)
-                    .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
-            if (!CollectionUtils.isEmpty(customerPriceCategoryRelList)) {
-                customerIdList = customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getCustomerId).collect(Collectors.toList());
-            }
-        }
-        customerIdList = Objects.isNull(customerIdList) ? new ArrayList<>() : customerIdList;
-        List<CustomerInfoListVO> resultList = new ArrayList<>();
-
-        for (MCustomerInfo customerInfo : list) {
-            CustomerInfoListVO customerInfoListVO = new CustomerInfoListVO();
-            BeanUtils.copyProperties(customerInfo, customerInfoListVO);
-            customerInfoListVO.setIsBandPriceCategory(customerIdList.contains(customerInfo.getId()) ? YesNoEnum.YES.getValue() : YesNoEnum.NO.getValue());
-            resultList.add(customerInfoListVO);
-        }
-
-        return resultList;
+    public List<Long> getCustomerIdList(Long priceCategoryId) {
+        List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
+                .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategoryId)
+                .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
+        return CollectionUtils.isEmpty(customerPriceCategoryRelList) ? new ArrayList<>() :
+                customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getCustomerId).collect(Collectors.toList());
     }
 }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.shaoxing.lixing.domain.dto.CustomerBindingPriceCategoryDTO;
 import com.shaoxing.lixing.domain.dto.CustomerInfoDTO;
 import com.shaoxing.lixing.domain.entity.MCustomerInfo;
-import com.shaoxing.lixing.domain.vo.CustomerInfoListVO;
 import com.shaoxing.lixing.global.ResponseResult;
 
 import java.util.List;
@@ -68,9 +67,10 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
     List<MCustomerInfo> getList();
 
     /**
-     * 获取全部客户列表（不分页）（返回是否绑定价目标识）
+     * 根据价目id获取绑定的客户id
      *
+     * @param priceCategoryId
      * @return
      */
-    List<CustomerInfoListVO> getCustomerInfoList(Long priceCategoryId);
+    List<Long> getCustomerIdList(Long priceCategoryId);
 }

@@ -38,7 +38,7 @@ public class SysCityServiceImpl extends ServiceImpl<SysCityMapper, SysCity> impl
             Integer pParentCode;
             if (Objects.nonNull(parentCity) && Objects.nonNull(pParentCode = parentCity.getParentCode())) {
                 name = parentCity.getName() + name;
-                SysCity pParentCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, parentCode));
+                SysCity pParentCity = this.baseMapper.selectOne(new LambdaQueryWrapper<SysCity>().eq(SysCity::getCode, pParentCode));
                 if (Objects.nonNull(pParentCity)) {
                     name = pParentCity.getName() + name;
                 }

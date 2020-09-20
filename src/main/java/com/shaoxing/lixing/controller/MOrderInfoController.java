@@ -154,6 +154,8 @@ public class MOrderInfoController extends BaseController {
         MOrderInfo newOrderInfo = new MOrderInfo();
         BeanUtils.copyProperties(existOrderId, newOrderInfo, "id");
         ReflectUtil.setCreateInfo(newOrderInfo, MOrderInfo.class);
+        // 生成订单编号
+        newOrderInfo.setOrderSn(OrderNoUtils.getSerialNumber());
         orderInfoService.save(newOrderInfo);
         return success();
     }
