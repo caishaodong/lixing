@@ -6,6 +6,7 @@ import com.shaoxing.lixing.domain.dto.OrderInfoDTO;
 import com.shaoxing.lixing.domain.dto.OrderInfoExportDTO;
 import com.shaoxing.lixing.domain.dto.OrderInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
+import com.shaoxing.lixing.domain.vo.OrderInfoSearchVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.constant.Constant;
@@ -13,7 +14,6 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.OrderSourceEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.OrderNoUtils;
-import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
@@ -55,6 +55,8 @@ public class MOrderInfoController extends BaseController {
     private MPriceCategoryService priceCategoryService;
     @Autowired
     private MOrderInfoService orderInfoService;
+    @Autowired
+    private MOrderCheckDetailService orderCheckDetailService;
 
     /**
      * 获取订单列表（分页）
@@ -63,11 +65,19 @@ public class MOrderInfoController extends BaseController {
      * @return
      */
     @PostMapping("/getListPage")
-    public ResponseResult<PageUtil<MOrderInfo>> getListPage(@RequestBody OrderInfoSearchDTO dto) {
+    public ResponseResult<OrderInfoSearchVO<MOrderInfo>> getListPage(@RequestBody OrderInfoSearchDTO dto) {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
         }
         IPage<MOrderInfo> page = orderInfoService.getListPage(dto);
+
+        // 获取标题
+        String title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+
+        // 封装返回值
+        OrderInfoSearchVO orderInfoSearchVO = new OrderInfoSearchVO();
+        BeanUtils.copyProperties(page, orderInfoSearchVO);
+        orderInfoSearchVO.setTitle(title);
         return success(page);
     }
 
@@ -194,6 +204,10 @@ public class MOrderInfoController extends BaseController {
         if (!dto.paramCheck()) {
             return error(BusinessEnum.PARAM_ERROR);
         }
+
+        // 获取订单标题
+        String title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+
         // 获取需要导出的订单列表
         List<MOrderInfo> orderInfoList = orderInfoService.getList(dto);
 
@@ -211,7 +225,7 @@ public class MOrderInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(null, fieldNameMap, orderInfoList, "订单", response);
+            ExcelDataUtil.export(title, fieldNameMap, orderInfoList, "订单", response);
             LOGGER.info("订单导出完成");
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);

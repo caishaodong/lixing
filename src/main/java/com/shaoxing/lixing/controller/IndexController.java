@@ -8,6 +8,7 @@ import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.entity.MOrderInfo;
 import com.shaoxing.lixing.domain.vo.CustomerInfoExportVO;
 import com.shaoxing.lixing.domain.vo.IndexDataVo;
+import com.shaoxing.lixing.domain.vo.IndexStatisticsVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.constant.Constant;
@@ -20,6 +21,7 @@ import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import com.shaoxing.lixing.service.MOrderInfoService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -111,13 +113,13 @@ public class IndexController extends BaseController {
     }
 
     /**
-     * 首页销售统计（回参：总价totalAmount）
+     * 首页销售统计
      *
      * @param dto
      * @return
      */
     @PostMapping("/statistics")
-    public ResponseResult<PageUtil<MOrderInfo>> statistics(@RequestBody IndexStatisticsDTO dto) {
+    public ResponseResult<IndexStatisticsVO<MOrderInfo>> statistics(@RequestBody IndexStatisticsDTO dto) {
         List<Long> customerIdList = StringUtil.jsonArrayToLongList(dto.getCustomerIds());
         List<Long> priceCategoryIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getPriceCategoryIds());
         List<Long> varietiesPriceIdList = StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
@@ -140,8 +142,12 @@ public class IndexController extends BaseController {
                 .select("IFNULL(sum(IFNULL(total_price,0)),0) AS totalAmount");
         Map<String, Object> totalAmountMap = orderInfoService.getMap(totalAmountQueryWrapper);
         BigDecimal totalAmount = new BigDecimal(String.valueOf(totalAmountMap.get("totalAmount")));
-        dto.setTotalAmount(totalAmount);
-        return success(page);
+
+        // 封装返回值
+        IndexStatisticsVO indexStatisticsVO = new IndexStatisticsVO();
+        BeanUtils.copyProperties(page, indexStatisticsVO);
+        indexStatisticsVO.setTotalAmount(totalAmount);
+        return success(indexStatisticsVO);
     }
 
     /**

@@ -3,10 +3,16 @@ package com.shaoxing.lixing.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.entity.MOrderCheckDetail;
+import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
+import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.mapper.MOrderCheckDetailMapper;
 import com.shaoxing.lixing.service.MOrderCheckDetailService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * <p>
@@ -27,4 +33,39 @@ public class MOrderCheckDetailServiceImpl extends ServiceImpl<MOrderCheckDetailM
                 .eq(MOrderCheckDetail::getIsDeleted, YesNoEnum.NO.getValue()));
         return orderCheckDetail;
     }
+
+    /**
+     * 根据日期和配送单位id获取title
+     *
+     * @param orderDate
+     * @param distributionCompanyId
+     * @return
+     */
+    @Override
+    public String getTitle(Long orderDate, Long distributionCompanyId) {
+        String title = Constant.COMPANY_NAME;
+        MOrderCheckDetail existsOrderCheckDetail = this.getOKByOrderDateAndDistributionCompanyId(orderDate, distributionCompanyId);
+        if (Objects.isNull(existsOrderCheckDetail)) {
+            // 新增
+            existsOrderCheckDetail = new MOrderCheckDetail();
+            existsOrderCheckDetail.setOrderDate(orderDate);
+            existsOrderCheckDetail.setDistributionCompanyId(distributionCompanyId);
+            existsOrderCheckDetail.setTitle(title);
+            ReflectUtil.setCreateInfo(existsOrderCheckDetail, MOrderCheckDetail.class);
+            this.save(existsOrderCheckDetail);
+        } else {
+            // 修改
+            String existTitle = existsOrderCheckDetail.getTitle();
+            if (StringUtil.isBlank(existTitle)) {
+                existsOrderCheckDetail.setTitle(title);
+                existsOrderCheckDetail.setGmtModified(LocalDateTime.now());
+                this.updateById(existsOrderCheckDetail);
+            } else {
+                title = existTitle;
+            }
+        }
+        return title;
+    }
+
+
 }

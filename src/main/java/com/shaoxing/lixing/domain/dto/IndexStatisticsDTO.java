@@ -32,8 +32,4 @@ public class IndexStatisticsDTO extends PageUtil {
      * 订单结束日期（格式yyyyMMdd）
      */
     private Long endOrderDate;
-    /**
-     * 总价
-     */
-    private BigDecimal totalAmount;
 }

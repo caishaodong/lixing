@@ -24,4 +24,8 @@ public class Constant {
     public static final String COLUMN_WIDTH_80 = "80";
     // 配送明细
     public static final String COLUMN_WIDTH_200 = "200";
+
+    /*************************** 特殊字符串 ***************************/
+    // 公司名称
+    public static final String COMPANY_NAME = "绍兴市立兴农产品有限公司";
 }

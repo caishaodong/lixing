@@ -1,7 +1,7 @@
 package com.shaoxing.lixing.service;
 
-import com.shaoxing.lixing.domain.entity.MOrderCheckDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoxing.lixing.domain.entity.MOrderCheckDetail;
 
 /**
  * <p>
@@ -13,4 +13,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MOrderCheckDetailService extends IService<MOrderCheckDetail> {
     MOrderCheckDetail getOKByOrderDateAndDistributionCompanyId(Long orderDate, Long distributionCompanyId);
+
+    /**
+     * 根据日期和配送单位id获取title
+     *
+     * @param orderDate
+     * @param distributionCompanyId
+     * @return
+     */
+    String getTitle(Long orderDate, Long distributionCompanyId);
 }

@@ -33,6 +33,11 @@ public class MOrderCheckDetail extends Model<MOrderCheckDetail> {
     private Long orderDate;
 
     /**
+     * 标题
+     */
+    private String title;
+
+    /**
      * 配送单位id
      */
     private Long distributionCompanyId;
