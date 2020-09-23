@@ -123,7 +123,8 @@ public class IndexController extends BaseController {
         List<Long> varietiesPriceIdList = StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
 
         IPage<MOrderInfo> page = orderInfoService.page(dto, new LambdaQueryWrapper<MOrderInfo>()
-                .eq(Objects.nonNull(dto.getOrderDate()), MOrderInfo::getOrderDate, dto.getOrderDate())
+                .ge(Objects.nonNull(dto.getStartOrderDate()), MOrderInfo::getOrderDate, dto.getStartOrderDate())
+                .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
                 .in(CollectionUtils.isEmpty(varietiesPriceIdList) && !CollectionUtils.isEmpty(priceCategoryIdList), MOrderInfo::getPriceCategoryId, priceCategoryIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
@@ -131,7 +132,8 @@ public class IndexController extends BaseController {
 
         // 获取总价
         QueryWrapper<MOrderInfo> totalAmountQueryWrapper = new QueryWrapper<MOrderInfo>()
-                .eq(Objects.nonNull(dto.getOrderDate()), "order_date", dto.getOrderDate())
+                .ge(Objects.nonNull(dto.getStartOrderDate()), "order_date", dto.getStartOrderDate())
+                .le(Objects.nonNull(dto.getEndOrderDate()), "order_date", dto.getEndOrderDate())
                 .in(!CollectionUtils.isEmpty(customerIdList), "customer_id", customerIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), "varieties_price_id", varietiesPriceIdList)
                 .eq("is_deleted", YesNoEnum.NO.getValue())
@@ -154,10 +156,10 @@ public class IndexController extends BaseController {
         List<Long> customerIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getCustomerIds());
         List<Long> priceCategoryIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getPriceCategoryIds());
         List<Long> varietiesPriceIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
-        Long orderDate = dto.getOrderDate();
 
         List<MOrderInfo> list = orderInfoService.list(new LambdaQueryWrapper<MOrderInfo>()
-                .eq(Objects.nonNull(orderDate), MOrderInfo::getOrderDate, orderDate)
+                .ge(Objects.nonNull(dto.getStartOrderDate()), MOrderInfo::getOrderDate, dto.getStartOrderDate())
+                .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
                 .in(CollectionUtils.isEmpty(varietiesPriceIdList) && !CollectionUtils.isEmpty(priceCategoryIdList), MOrderInfo::getPriceCategoryId, priceCategoryIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
@@ -165,12 +167,6 @@ public class IndexController extends BaseController {
                 .orderByDesc(MOrderInfo::getGmtModified));
 
         String title = "绍兴市立兴农产品有限公司配送清单";
-        if (Objects.nonNull(orderDate)) {
-            Integer month = LocalDateTimeUtil.getByLocalDatePattern(String.valueOf(orderDate), "yyyyMMdd", LocalDateTimeUtil.MONTH);
-            Integer day = LocalDateTimeUtil.getByLocalDatePattern(String.valueOf(orderDate), "yyyyMMdd", LocalDateTimeUtil.DAY);
-            title = new StringBuilder().append("绍兴市立兴农产品有限公司（").append(month).append(".").append(day).append("）配送清单").toString();
-        }
-
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});

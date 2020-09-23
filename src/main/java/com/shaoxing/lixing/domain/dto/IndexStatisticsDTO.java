@@ -25,9 +25,13 @@ public class IndexStatisticsDTO extends PageUtil {
      */
     private String varietiesPriceIds;
     /**
-     * 订单日期（格式yyyyMMdd）
+     * 订单开始日期（格式yyyyMMdd）
      */
-    private Long orderDate;
+    private Long startOrderDate;
+    /**
+     * 订单结束日期（格式yyyyMMdd）
+     */
+    private Long endOrderDate;
     /**
      * 总价
      */
