@@ -9,9 +9,11 @@ import com.shaoxing.lixing.domain.entity.MOrderInfo;
 import com.shaoxing.lixing.domain.vo.OrderCheckDetailVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
+import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import com.shaoxing.lixing.service.MOrderCheckDetailService;
 import com.shaoxing.lixing.service.MOrderInfoService;
@@ -68,6 +70,10 @@ public class MOrderCheckDetailController extends BaseController {
             existsOrderCheckDetail.setDeliveryUserName(dto.getDeliveryUserName());
             existsOrderCheckDetail.setCheckUserName(dto.getCheckUserName());
             existsOrderCheckDetail.setGmtModified(LocalDateTime.now());
+        }
+        // 校验title是否为空
+        if (StringUtil.isBlank(existsOrderCheckDetail.getTitle())) {
+            existsOrderCheckDetail.setTitle(Constant.COMPANY_NAME);
         }
         orderCheckDetailService.saveOrUpdate(existsOrderCheckDetail);
         return success();

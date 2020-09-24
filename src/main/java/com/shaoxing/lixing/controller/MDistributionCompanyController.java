@@ -56,7 +56,7 @@ public class MDistributionCompanyController extends BaseController {
      * @return
      */
     @GetMapping("/getList")
-    public ResponseResult<MDistributionCompany> getList() {
+    public ResponseResult<List<MDistributionCompany>> getList() {
         List<MDistributionCompany> list = distributionCompanyService.getList();
         return success(list);
     }
@@ -99,7 +99,7 @@ public class MDistributionCompanyController extends BaseController {
      * @return
      */
     @GetMapping("/getDistributionCompanyInfo/{id}")
-    public ResponseResult getDistributionCompanyInfo(@PathVariable("id") Long id) {
+    public ResponseResult<DistributionCompanyVO> getDistributionCompanyInfo(@PathVariable("id") Long id) {
 
         MDistributionCompany distributionCompany = distributionCompanyService.getOKById(id);
         if (Objects.isNull(distributionCompany)) {

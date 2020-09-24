@@ -162,20 +162,20 @@ public class MCustomerInfoController extends BaseController {
      * @return
      */
     @GetMapping("/getList")
-    public ResponseResult<MCustomerInfo> getList() {
+    public ResponseResult<List<MCustomerInfo>> getList() {
         List<MCustomerInfo> list = customerInfoService.getList();
         return success(list);
     }
 
     /**
-     * 根据价目id获取绑定的客户id
+     * 根据价目id获取绑定的客户信息
      *
      * @param priceCategoryId 价目id
      * @return
      */
     @GetMapping("/getCustomerInfoList")
-    public ResponseResult<List<Long>> getCustomerInfoList(@RequestParam(value = "priceCategoryId") Long priceCategoryId) {
-        List<Long> list = customerInfoService.getCustomerIdList(priceCategoryId);
+    public ResponseResult<List<MCustomerInfo>> getCustomerInfoList(@RequestParam(value = "priceCategoryId") Long priceCategoryId) {
+        List<MCustomerInfo> list = customerInfoService.getCustomerInfoList(priceCategoryId);
         return success(list);
     }
 }

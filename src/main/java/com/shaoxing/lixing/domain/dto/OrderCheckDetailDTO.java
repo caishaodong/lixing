@@ -31,6 +31,10 @@ public class OrderCheckDetailDTO {
      * 验收人姓名
      */
     private String checkUserName;
+    /**
+     * 标题
+     */
+    private String title;
 
     public boolean paramCheck() {
         return Objects.nonNull(orderDate) && Objects.nonNull(distributionCompanyId) && StringUtil.isNotBlank(deliveryUserName) && StringUtil.isNotBlank(checkUserName);

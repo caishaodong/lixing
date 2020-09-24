@@ -67,10 +67,10 @@ public interface MCustomerInfoService extends IService<MCustomerInfo> {
     List<MCustomerInfo> getList();
 
     /**
-     * 根据价目id获取绑定的客户id
+     * 根据价目id获取绑定的客户信息
      *
      * @param priceCategoryId
      * @return
      */
-    List<Long> getCustomerIdList(Long priceCategoryId);
+    List<MCustomerInfo> getCustomerInfoList(Long priceCategoryId);
 }

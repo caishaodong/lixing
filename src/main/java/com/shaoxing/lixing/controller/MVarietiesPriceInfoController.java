@@ -59,7 +59,7 @@ public class MVarietiesPriceInfoController extends BaseController {
      * @return
      */
     @GetMapping("/getListByPriceCategoryId/{priceCategoryId}")
-    public ResponseResult<MVarietiesPriceInfo> getList(@PathVariable("priceCategoryId") Long priceCategoryId) {
+    public ResponseResult<List<MVarietiesPriceInfo>> getList(@PathVariable("priceCategoryId") Long priceCategoryId) {
         // 根据价目id获取品种价格信息
         List<MVarietiesPriceInfo> list = varietiesPriceInfoService.getListByPriceCategoryId(priceCategoryId);
         return success(list);

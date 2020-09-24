@@ -30,7 +30,7 @@ public class SysMenuController extends BaseController {
      * @return
      */
     @GetMapping("/getList")
-    public ResponseResult<SysMenuVO> getList() {
+    public ResponseResult<List<SysMenuVO>> getList() {
         List<SysMenuVO> list = sysMenuService.getList();
         return success(list);
     }

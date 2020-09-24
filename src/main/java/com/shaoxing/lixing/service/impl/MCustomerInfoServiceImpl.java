@@ -182,17 +182,24 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     }
 
     /**
-     * 根据价目id获取绑定的客户id
+     * 根据价目id获取绑定的客户信息
      *
      * @param priceCategoryId
      * @return
      */
     @Override
-    public List<Long> getCustomerIdList(Long priceCategoryId) {
+    public List<MCustomerInfo> getCustomerInfoList(Long priceCategoryId) {
         List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
                 .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategoryId)
                 .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
-        return CollectionUtils.isEmpty(customerPriceCategoryRelList) ? new ArrayList<>() :
+        List<Long> customerIdList = CollectionUtils.isEmpty(customerPriceCategoryRelList) ? new ArrayList<>() :
                 customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getCustomerId).collect(Collectors.toList());
+
+        List<MCustomerInfo> customerInfoList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(customerIdList)) {
+            customerInfoList = this.baseMapper.selectList(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, customerIdList)
+                    .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+        }
+        return customerInfoList;
     }
 }

@@ -33,7 +33,7 @@ public class SysCityController extends BaseController {
      * @return
      */
     @GetMapping("/getNameByAreaCode/{code}")
-    public ResponseResult getNameByAreaCode(@PathVariable(value = "code") Integer code) {
+    public ResponseResult<String> getNameByAreaCode(@PathVariable(value = "code") Integer code) {
         String name = sysCityService.getNameByAreaCode(code);
         return success(name);
     }
@@ -45,7 +45,7 @@ public class SysCityController extends BaseController {
      * @return
      */
     @GetMapping("/getCityListByParentCode/{parentCode}")
-    public ResponseResult getCityListByParentCode(@PathVariable(value = "parentCode") Integer parentCode) {
+    public ResponseResult<List<SysCity>> getCityListByParentCode(@PathVariable(value = "parentCode") Integer parentCode) {
         List<SysCity> cityList = sysCityService.getCityListByParentCode(parentCode);
         return success(cityList);
     }

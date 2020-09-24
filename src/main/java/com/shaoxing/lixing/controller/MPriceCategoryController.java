@@ -44,7 +44,7 @@ public class MPriceCategoryController extends BaseController {
      * @return
      */
     @GetMapping("/getList")
-    public ResponseResult<MPriceCategory> getList() {
+    public ResponseResult<List<MPriceCategory>> getList() {
 
         List<MPriceCategory> page = priceCategoryService.getList();
         return success(page);
