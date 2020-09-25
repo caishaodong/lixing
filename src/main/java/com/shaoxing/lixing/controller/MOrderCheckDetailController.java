@@ -69,6 +69,7 @@ public class MOrderCheckDetailController extends BaseController {
             // 修改
             existsOrderCheckDetail.setDeliveryUserName(dto.getDeliveryUserName());
             existsOrderCheckDetail.setCheckUserName(dto.getCheckUserName());
+            existsOrderCheckDetail.setTitle(dto.getTitle());
             existsOrderCheckDetail.setGmtModified(LocalDateTime.now());
         }
         // 校验title是否为空
