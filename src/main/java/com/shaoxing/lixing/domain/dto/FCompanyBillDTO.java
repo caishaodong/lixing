@@ -28,9 +28,9 @@ public class FCompanyBillDTO {
     private String feeSubjectName;
 
     /**
-     * 进货产地编码
+     * 进货产地详细地址
      */
-    private Integer areaCode;
+    private String address;
     /**
      * 账单日期
      */
@@ -65,7 +65,7 @@ public class FCompanyBillDTO {
     private String remark;
 
     public boolean paramCheck() {
-        return StringUtil.isNotBlank(feeCategoryName) && StringUtil.isNotBlank(feeSubjectName) && Objects.nonNull(areaCode) && Objects.nonNull(billDate)
+        return StringUtil.isNotBlank(feeCategoryName) && StringUtil.isNotBlank(feeSubjectName) && StringUtil.isNotBlank(address) && Objects.nonNull(billDate)
                 && Objects.nonNull(price) && Objects.nonNull(num) && Objects.nonNull(weight) && Objects.nonNull(totalPrice) && StringUtil.isNotBlank(enteredUserName);
     }
 }

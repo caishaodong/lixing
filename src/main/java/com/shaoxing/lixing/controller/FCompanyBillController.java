@@ -68,9 +68,12 @@ public class FCompanyBillController extends BaseController {
         FCompanyBill companyBill = new FCompanyBill();
         BeanUtils.copyProperties(dto, companyBill);
 
-        // 根据城市编码获取城市名称
-        String areaName = sysCityService.getNameByAreaCode(companyBill.getAreaCode());
-        companyBill.setAreaName(areaName);
+        if (Objects.nonNull(companyBill.getAreaCode())) {
+            // 根据城市编码获取城市名称
+            String areaName = sysCityService.getNameByAreaCode(companyBill.getAreaCode());
+            companyBill.setAreaName(areaName);
+        }
+
         if (Objects.isNull(dto.getId())) {
             // 保存
             ReflectUtil.setCreateInfo(companyBill, FCompanyBill.class);
@@ -116,7 +119,7 @@ public class FCompanyBillController extends BaseController {
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("费用类别", new String[]{"feeCategoryName"});
         fieldNameMap.put("费用科目", new String[]{"feeSubjectName"});
-        fieldNameMap.put("进货产地", new String[]{"areaName", Constant.COLUMN_WIDTH_40});
+        fieldNameMap.put("进货产地", new String[]{"address", Constant.COLUMN_WIDTH_40});
         fieldNameMap.put("日期", new String[]{"billDate"});
         fieldNameMap.put("单价", new String[]{"price"});
         fieldNameMap.put("数量", new String[]{"num"});

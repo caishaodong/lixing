@@ -49,9 +49,9 @@ public class FCompanyBill extends Model<FCompanyBill> {
     private String areaName;
 
     /**
-     * 详细地址
+     * 进货产地详细地址
      */
-    private String adress;
+    private String address;
 
     /**
      * 账单日期
