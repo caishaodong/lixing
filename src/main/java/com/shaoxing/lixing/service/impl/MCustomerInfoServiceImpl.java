@@ -120,9 +120,9 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     @Override
     public ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto) {
         // 客户信息校验
-        List<Long> custormerIdList = dto.getCustomerIdList();
-        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, custormerIdList));
-        if (count != custormerIdList.size()) {
+        List<Long> customerIdList = dto.getCustomerIdList();
+        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, customerIdList));
+        if (count != customerIdList.size()) {
             return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);
         }
         // 价目信息校验
@@ -132,7 +132,7 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
         }
         // 获取已经绑定过该价目的客户关系
         List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
-                .in(MCustomerPriceCategoryRel::getCustomerId, custormerIdList)
+                .in(MCustomerPriceCategoryRel::getCustomerId, customerIdList)
                 .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategory.getId())
                 .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
         List<Long> existCustomerIds = new ArrayList<>();
@@ -142,7 +142,7 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
 
         // 客户绑定价目
         List<MCustomerPriceCategoryRel> list = new ArrayList<>();
-        for (Long customerId : custormerIdList) {
+        for (Long customerId : customerIdList) {
             if (!existCustomerIds.contains(customerId)) {
                 MCustomerPriceCategoryRel rel = new MCustomerPriceCategoryRel();
                 rel.setCustomerId(customerId);
