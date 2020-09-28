@@ -15,7 +15,6 @@ import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.LocalDateTimeUtil;
-import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
@@ -172,7 +171,7 @@ public class IndexController extends BaseController {
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
 
-        String title = "绍兴市立兴农产品有限公司配送清单";
+        String title = "绍兴市立兴农产品有限公司销售统计";
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
@@ -232,13 +231,16 @@ public class IndexController extends BaseController {
                 customerInfoExportVO.setDetail(StringUtil.concatString(detail, "、", varietiesName, num.toString(), unit, remark));
             }
         }
+
+        String title = "绍兴市立兴农产品有限公司配送清单";
+
         List<CustomerInfoExportVO> customerInfoExportVOList = new ArrayList<>(map.values());
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("配送明细", new String[]{"detail", Constant.COLUMN_WIDTH_200});
         try {
             LOGGER.info("开始准备导出配送清单");
-            ExcelDataUtil.export(null, fieldNameMap, customerInfoExportVOList, "配送清单", response);
+            ExcelDataUtil.export(title, fieldNameMap, customerInfoExportVOList, "配送清单", response);
             LOGGER.info("配送清单导出完成");
         } catch (Exception e) {
             LOGGER.error("配送清单导出失败", e);
