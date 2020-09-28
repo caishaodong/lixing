@@ -11,6 +11,7 @@ import com.shaoxing.lixing.domain.entity.MPriceCategory;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
+import com.shaoxing.lixing.global.util.ListUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.mapper.MCustomerInfoMapper;
 import com.shaoxing.lixing.service.MCustomerDistributionCompanyRelService;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -130,31 +132,39 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
         if (Objects.isNull(priceCategory)) {
             return ResponseResult.error(BusinessEnum.PRICE_CATEGORY_INFO_ERROR);
         }
-        // 获取已经绑定过该价目的客户关系
+
+        // 获取该价目下已经绑定的所有的用户id
         List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
-                .in(MCustomerPriceCategoryRel::getCustomerId, customerIdList)
                 .eq(MCustomerPriceCategoryRel::getPriceCategoryId, priceCategory.getId())
                 .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
-        List<Long> existCustomerIds = new ArrayList<>();
+        List<Long> existCustomerIds = Collections.emptyList();
         if (!CollectionUtils.isEmpty(customerPriceCategoryRelList)) {
             existCustomerIds = customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getCustomerId).collect(Collectors.toList());
+            existCustomerIds = CollectionUtils.isEmpty(existCustomerIds) ? Collections.emptyList() : existCustomerIds;
         }
 
-        // 客户绑定价目
-        List<MCustomerPriceCategoryRel> list = new ArrayList<>();
-        for (Long customerId : customerIdList) {
-            if (!existCustomerIds.contains(customerId)) {
+        // 获取已经选中但是还未绑定的用户id
+        List<Long> toBeBindCustomerIdList = ListUtil.getSubtraction(customerIdList, existCustomerIds);
+        // 绑定客户
+        if (!CollectionUtils.isEmpty(toBeBindCustomerIdList)) {
+            List<MCustomerPriceCategoryRel> toBeBindList = new ArrayList<>();
+            for (Long customerId : toBeBindCustomerIdList) {
                 MCustomerPriceCategoryRel rel = new MCustomerPriceCategoryRel();
                 rel.setCustomerId(customerId);
                 rel.setPriceCategoryId(dto.getPriceCategoryId());
                 ReflectUtil.setCreateInfo(rel, MCustomerPriceCategoryRel.class);
-                list.add(rel);
+                toBeBindList.add(rel);
             }
-        }
-        if (!CollectionUtils.isEmpty(list)) {
-            customerPriceCategoryRelService.saveBatch(list);
+            customerPriceCategoryRelService.saveBatch(toBeBindList);
         }
 
+        // 获取未选中但是已经绑定的用户id
+        List<Long> toBeUnBindCustomerIdList = ListUtil.getSubtraction(existCustomerIds, customerIdList);
+        // 解绑客户
+        if (!CollectionUtils.isEmpty(toBeUnBindCustomerIdList)) {
+            customerPriceCategoryRelService.remove(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
+                    .in(MCustomerPriceCategoryRel::getCustomerId, toBeUnBindCustomerIdList));
+        }
         return ResponseResult.success();
     }
 
