@@ -3,8 +3,6 @@ package com.shaoxing.lixing.domain.dto;
 import com.shaoxing.lixing.global.util.PageUtil;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 /**
  * @Author caishaodong
  * @Date 2020-09-11 16:54
@@ -32,4 +30,8 @@ public class IndexStatisticsDTO extends PageUtil {
      * 订单结束日期（格式yyyyMMdd）
      */
     private Long endOrderDate;
+    /**
+     * 订单日期（格式yyyyMMdd）
+     */
+    private Long orderDate;
 }
