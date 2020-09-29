@@ -237,6 +237,9 @@ public class IndexController extends BaseController {
         }
 
         String title = "绍兴市立兴农产品有限公司配送清单";
+        if (Objects.nonNull(orderDate)) {
+            title = title + "(" + orderDate + ")";
+        }
 
         List<CustomerInfoExportVO> customerInfoExportVOList = new ArrayList<>(map.values());
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
