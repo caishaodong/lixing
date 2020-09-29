@@ -120,6 +120,7 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto) {
         // 客户信息校验
         List<Long> customerIdList = dto.getCustomerIdList();
