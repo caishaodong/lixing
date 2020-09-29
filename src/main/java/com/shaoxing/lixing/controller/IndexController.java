@@ -196,18 +196,22 @@ public class IndexController extends BaseController {
     /**
      * 导出配送清单
      *
-     * @param distributionCompanyId
+     * @param distributionCompanyId 配送单位id
+     * @param orderDate             订单日期
      * @param response
      * @return
      */
     @GetMapping("/distributionCompany/export/{distributionCompanyId}")
-    public ResponseResult distributionCompanyExport(@PathVariable("distributionCompanyId") Long distributionCompanyId, HttpServletResponse response) {
+    public ResponseResult distributionCompanyExport(@PathVariable("distributionCompanyId") Long distributionCompanyId,
+                                                    @RequestParam(value = "orderDate", required = false) Long orderDate,
+                                                    HttpServletResponse response) {
         MDistributionCompany distributionCompany = distributionCompanyService.getOKById(distributionCompanyId);
         if (Objects.isNull(distributionCompany)) {
             return error(BusinessEnum.DISTRIBUTION_COMPANY_NOT_EXIST);
         }
         List<MOrderInfo> list = orderInfoService.list(new LambdaQueryWrapper<MOrderInfo>()
                 .eq(MOrderInfo::getDistributionCompanyId, distributionCompanyId)
+                .eq(Objects.nonNull(orderDate), MOrderInfo::getOrderDate, orderDate)
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
 
