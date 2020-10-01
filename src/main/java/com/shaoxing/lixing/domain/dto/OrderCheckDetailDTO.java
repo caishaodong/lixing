@@ -37,6 +37,6 @@ public class OrderCheckDetailDTO {
     private String title;
 
     public boolean paramCheck() {
-        return Objects.nonNull(orderDate) && Objects.nonNull(distributionCompanyId) && StringUtil.isNotBlank(deliveryUserName) && StringUtil.isNotBlank(checkUserName);
+        return Objects.nonNull(orderDate) && Objects.nonNull(distributionCompanyId);
     }
 }
