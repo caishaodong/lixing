@@ -14,6 +14,7 @@ import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import org.springframework.beans.BeanUtils;
@@ -157,7 +158,7 @@ public class MDistributionCompanyController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出配送管理");
-            ExcelDataUtil.export(null, fieldNameMap, list, "配送管理", response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(null, fieldNameMap, list, "配送管理", Boolean.TRUE), response);
             LOGGER.info("配送管理导出完成");
         } catch (Exception e) {
             LOGGER.error("配送管理导出失败", e);

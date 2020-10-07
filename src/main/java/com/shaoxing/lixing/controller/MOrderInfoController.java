@@ -16,6 +16,7 @@ import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.OrderNoUtils;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelSheetPO;
 import com.shaoxing.lixing.global.util.excel.ExcelUtil;
@@ -225,7 +226,7 @@ public class MOrderInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(title, fieldNameMap, orderInfoList, "订单", response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE), response);
             LOGGER.info("订单导出完成");
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);

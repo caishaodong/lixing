@@ -230,6 +230,8 @@ public class ExcelUtil {
     }
 
     private static void buildSheetData(Workbook wb, Sheet sheet, ExcelSheetPO excelSheetPO, ExcelVersion version) {
+        // 校验是否需要序号列，如果需要，则进行转换
+        setSortColumn(excelSheetPO);
         // 设置行宽
         setColumnWith(sheet, excelSheetPO);
         // 有需要可以自定义title和header
@@ -322,9 +324,9 @@ public class ExcelUtil {
         Iterator<Map.Entry<Integer, Integer>> iterator = columnWithMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> entry = iterator.next();
-            Integer column = entry.getKey();
+            Integer columnIndex = entry.getKey();
             Integer width = entry.getValue();
-            sheet.setColumnWidth(column, width * 256);
+            sheet.setColumnWidth(columnIndex, width * 256);
         }
 
 
@@ -388,4 +390,46 @@ public class ExcelUtil {
         return null;
     }
 
+    private static void setSortColumn(ExcelSheetPO excelSheetPO) {
+        Boolean needSort = excelSheetPO.getNeedSort();
+        if (!needSort) {
+            return;
+        }
+        // headers需要增加“序号”列
+        String[] headers = excelSheetPO.getHeaders();
+        if (headers.length > 0) {
+            String[] newHeaders = new String[headers.length + 1];
+            newHeaders[0] = "序号";
+            for (int i = 0; i < headers.length; i++) {
+                newHeaders[i + 1] = headers[i];
+            }
+            excelSheetPO.setHeaders(newHeaders);
+        }
+
+        // dataList需要给每一行数据其实增加递增序号
+        List<List<Object>> dataList = excelSheetPO.getDataList();
+        if (!CollectionUtils.isEmpty(dataList)) {
+            List<List<Object>> newDataList = new ArrayList<>();
+            for (int i = 0; i < dataList.size(); i++) {
+                List<Object> objList = dataList.get(i);
+                List<Object> newObjList = new ArrayList<>(objList.size() + 1);
+                newObjList.add(0, i + 1);
+                for (int m = 0; m < objList.size(); m++) {
+                    newObjList.add(m + 1, objList.get(m));
+                }
+                newDataList.add(i, newObjList);
+            }
+            excelSheetPO.setDataList(newDataList);
+        }
+
+        // columnWidthMap需要给行宽列递增一个列序号
+        Map<Integer, Integer> columnWidthMap = excelSheetPO.getColumnWidthMap();
+        if (!CollectionUtils.isEmpty(columnWidthMap)) {
+            Map<Integer, Integer> newColumnWidthMap = new HashMap<>(columnWidthMap.size());
+            for (Map.Entry<Integer, Integer> entry : columnWidthMap.entrySet()) {
+                newColumnWidthMap.put(entry.getKey() + 1, entry.getValue());
+            }
+            excelSheetPO.setColumnWidthMap(newColumnWidthMap);
+        }
+    }
 }

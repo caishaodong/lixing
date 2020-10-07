@@ -13,6 +13,7 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.MVarietiesPriceInfoService;
 import org.springframework.beans.BeanUtils;
@@ -142,7 +143,7 @@ public class MVarietiesPriceInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出品种价格");
-            ExcelDataUtil.export(null, fieldNameMap, varietiesPriceInfoList, "品种价格", response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(null, fieldNameMap, varietiesPriceInfoList, "品种价格", Boolean.TRUE), response);
             LOGGER.info("品种价格导出完成");
         } catch (Exception e) {
             LOGGER.error("品种价格导出失败", e);

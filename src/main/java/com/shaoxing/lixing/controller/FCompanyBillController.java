@@ -12,6 +12,7 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.FCompanyBillService;
 import com.shaoxing.lixing.service.SysCityService;
@@ -130,7 +131,7 @@ public class FCompanyBillController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出公司账单");
-            ExcelDataUtil.export(null, fieldNameMap, companyBillList, "账单", response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE), response);
             LOGGER.info("公司账单导出完成");
         } catch (Exception e) {
             LOGGER.error("公司账单导出失败", e);

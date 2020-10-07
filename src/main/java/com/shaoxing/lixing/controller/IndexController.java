@@ -17,6 +17,7 @@ import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.LocalDateTimeUtil;
 import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
+import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import com.shaoxing.lixing.service.MOrderInfoService;
@@ -184,7 +185,7 @@ public class IndexController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出销售统计");
-            ExcelDataUtil.export(title, fieldNameMap, list, "销售统计", response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, list, "销售统计", Boolean.TRUE), response);
             LOGGER.info("销售统计导出完成");
         } catch (Exception e) {
             LOGGER.error("销售统计导出失败", e);
@@ -257,7 +258,7 @@ public class IndexController extends BaseController {
         fieldNameMap.put("配送明细", new String[]{"detail", Constant.COLUMN_WIDTH_200});
         try {
             LOGGER.info("开始准备导出配送清单");
-            ExcelDataUtil.export(title, fieldNameMap, customerInfoExportVOList, "配送清单", response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, customerInfoExportVOList, "配送清单", Boolean.TRUE), response);
             LOGGER.info("配送清单导出完成");
         } catch (Exception e) {
             LOGGER.error("配送清单导出失败", e);
