@@ -39,6 +39,10 @@ public class ExcelSheetPO {
      * 是否需要序号
      */
     private Boolean needSort = Boolean.FALSE;
+    /**
+     * 追加行
+     */
+    private List<Map<Integer, Object>> tailList;
 
 
 }

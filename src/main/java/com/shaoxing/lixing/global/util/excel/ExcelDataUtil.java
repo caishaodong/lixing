@@ -76,7 +76,7 @@ public class ExcelDataUtil {
                 } else if (value instanceof Date) {
                     value = new SimpleDateFormat(PATTERN).format(value);
                 } else if (value instanceof BigDecimal) {
-                    value = DecimalFormatUtil.format("#.00", new BigDecimal(String.valueOf(value)));
+                    value = new BigDecimal(DecimalFormatUtil.format("#.00", new BigDecimal(String.valueOf(value))));
                 }
 
                 rowData.add(value);
@@ -92,6 +92,7 @@ public class ExcelDataUtil {
         excelSheetPO.setHeaders(headers);
         excelSheetPO.setColumnWidthMap(Objects.isNull(columnWidth) ? new HashMap<>(16) : columnWidth);
         excelSheetPO.setNeedSort(excelDataDTO.getNeedSort());
+        excelSheetPO.setTailList(excelDataDTO.getTailList());
         list.add(excelSheetPO);
 
         // 导出

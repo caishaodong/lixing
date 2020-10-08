@@ -21,10 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 公司账单管理
@@ -131,13 +130,26 @@ public class FCompanyBillController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出公司账单");
-            ExcelDataUtil.export(new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE), response);
+
+            ExcelDataDTO<FCompanyBill> excelDataDTO = new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE, null);
+
+            ExcelDataUtil.export(excelDataDTO, response);
             LOGGER.info("公司账单导出完成");
         } catch (Exception e) {
             LOGGER.error("公司账单导出失败", e);
             return error();
         }
         return success();
+    }
+
+    private static List<Map<Integer, Object>> getTailMap() {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        List<Map<Integer, Object>> tailMap = new ArrayList<>();
+        Map<Integer, Object> map = new HashMap<>(16);
+        map.put(0, "总计");
+        map.put(8, totalAmount);
+        tailMap.add(map);
+        return tailMap;
     }
 
 }

@@ -31,10 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 订单管理
@@ -215,24 +212,42 @@ public class MOrderInfoController extends BaseController {
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("订单日期", new String[]{"orderDate"});
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
-        fieldNameMap.put("客户", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
+        fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("价目", new String[]{"priceCategoryName"});
         fieldNameMap.put("品种", new String[]{"varietiesName"});
         fieldNameMap.put("单位", new String[]{"unit"});
         fieldNameMap.put("数量", new String[]{"num"});
         fieldNameMap.put("单价(元)", new String[]{"price"});
-        fieldNameMap.put("总价(元)", new String[]{"totalPrice"});
+        fieldNameMap.put("金额(元)", new String[]{"totalPrice"});
         fieldNameMap.put("备注", new String[]{"remark", Constant.COLUMN_WIDTH_80});
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE), response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE, null), response);
             LOGGER.info("订单导出完成");
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);
             return error();
         }
         return success();
+    }
+
+    private static List<Map<Integer, Object>> getTailMap() {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        String deliveryUserName = "";
+        String checkUserName = "";
+        List<Map<Integer, Object>> tailMap = new ArrayList<>();
+        Map<Integer, Object> map1 = new HashMap<>(16);
+        map1.put(0, "总计");
+        map1.put(9, totalAmount);
+        tailMap.add(map1);
+        Map<Integer, Object> map2 = new HashMap<>(16);
+        map2.put(1, "送货人：");
+        map2.put(2, deliveryUserName);
+        map2.put(5, "验收人：");
+        map2.put(6, checkUserName);
+        tailMap.add(map2);
+        return tailMap;
     }
 
     /**

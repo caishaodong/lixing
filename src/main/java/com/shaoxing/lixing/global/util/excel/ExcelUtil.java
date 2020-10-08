@@ -2,6 +2,7 @@ package com.shaoxing.lixing.global.util.excel;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.shaoxing.lixing.global.util.StringUtil;
+import com.shaoxing.lixing.global.util.decimal.DecimalFormatUtil;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -207,10 +209,22 @@ public class ExcelUtil {
      */
     public static void exportToBrowser(List<ExcelSheetPO> excelSheets, String fileName, HttpServletResponse response) throws IOException {
         fileName = URLEncoder.encode(fileName, "UTF-8");
-        response.setHeader("Content-Disposition", "attachment;Filename=" + fileName + ".xlsx");
+        Workbook wb = null;
+
+        if (false) {
+            response.setHeader("Content-Disposition", "attachment;Filename=" + fileName + ".xls");
+            wb = createWorkBook(ExcelVersion.V2003, excelSheets);
+        } else {
+            response.setHeader("Content-Disposition", "attachment;Filename=" + fileName + ".xlsx");
+            response.addHeader("Pargam", "no-cache");
+            response.addHeader("Cache-Control", "no-cache");
+            wb = createWorkBook(ExcelVersion.V2007, excelSheets);
+        }
+
         OutputStream outputStream = response.getOutputStream();
-        Workbook wb = createWorkBook(ExcelVersion.V2007, excelSheets);
+//        wb.setForceFormulaRecalculation(true);// 执行公式
         wb.write(outputStream);
+        outputStream.flush();
         outputStream.close();
     }
 
@@ -238,6 +252,8 @@ public class ExcelUtil {
         createTitle(sheet, excelSheetPO, wb, version);
         createHeader(sheet, excelSheetPO, wb, version);
         createBody(sheet, excelSheetPO, wb, version);
+        // 求和
+        createSumCell(sheet, excelSheetPO, wb, version);
     }
 
     /**
@@ -256,8 +272,15 @@ public class ExcelUtil {
 //            Row row = sheet.createRow(i);
             for (int j = 0; j < values.size() && j < version.getMaxColumn(); j++) {
                 Cell cell = row.createCell(j);
-                cell.setCellStyle(getStyle(STYLE_DATA, wb));
+                CellStyle style = getStyle(STYLE_DATA, wb);
+                cell.setCellStyle(style);
                 cell.setCellValue(values.get(j).toString());
+//                if (values.get(j) instanceof Number) {
+//                    cell.setCellValue(new Double(values.get(j).toString()));
+//                } else {
+//                    cell.setCellValue(values.get(j).toString());
+//
+//                }
             }
         }
 
@@ -353,6 +376,7 @@ public class ExcelUtil {
         style.setBorderTop(BorderStyle.THIN);
         style.setWrapText(true);
         style.setLocked(false);
+//        style.setDataFormat(wb.createDataFormat().getFormat("@"));
 
         if (STYLE_TITLE.equals(type)) {
             style.setAlignment(HorizontalAlignment.CENTER);
@@ -390,6 +414,11 @@ public class ExcelUtil {
         return null;
     }
 
+    /**
+     * 增加序号列
+     *
+     * @param excelSheetPO
+     */
     private static void setSortColumn(ExcelSheetPO excelSheetPO) {
         Boolean needSort = excelSheetPO.getNeedSort();
         if (!needSort) {
@@ -431,5 +460,53 @@ public class ExcelUtil {
             }
             excelSheetPO.setColumnWidthMap(newColumnWidthMap);
         }
+    }
+
+    /**
+     * 求和
+     *
+     * @param sheet
+     * @param excelSheetPO
+     * @param wb
+     * @param version
+     */
+    private static void createSumCell(Sheet sheet, ExcelSheetPO excelSheetPO, Workbook wb, ExcelVersion version) {
+        List<Map<Integer, Object>> tailList = excelSheetPO.getTailList();
+        if (CollectionUtils.isEmpty(tailList)) {
+            return;
+        }
+
+        List<List<Object>> dataList = excelSheetPO.getDataList();
+        int size = dataList.size();
+
+        for (int i = 0; i < tailList.size(); i++) {
+            // 创建行
+            Row row = sheet.createRow(2 + i + size);
+            for (int k = 0; k < dataList.get(0).size() && k < version.getMaxColumn(); k++) {
+                // 创建格子
+                Cell cell = row.createCell(k);
+                cell.setCellStyle(getStyle(STYLE_DATA, wb));
+                // 获取需要填充值的列
+                Map<Integer, Object> columnIndexValueMap = tailList.get(i);
+                Set<Integer> keySet = columnIndexValueMap.keySet();
+                if (keySet.contains(k)) {
+                    Object value = columnIndexValueMap.get(k);
+                    if (value instanceof Number) {
+                        cell.setCellValue(DecimalFormatUtil.format("#.00", new BigDecimal(String.valueOf(value))));
+                    } else {
+                        cell.setCellValue(value.toString());
+                    }
+                } else {
+                    cell.setCellValue("");
+                }
+            }
+        }
+
+//        // 长度转成ABC列
+//        String colString = CellReference.convertNumToColString(column);
+//        // 求和公式
+//        String sumResult = "SUM(" + colString + "3:" + colString + (2 + size) + ")";
+//        row.getCell(column).setCellFormula(sumResult);
+//        row.getCell(column).setCellFormula(row.getCell(column).getCellFormula());
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author caishaodong
@@ -34,4 +35,8 @@ public class ExcelDataDTO<T> {
      * 是否需要序号列
      */
     private Boolean needSort;
+    /**
+     * 追加行
+     */
+    private List<Map<Integer, Object>> tailList;
 }
