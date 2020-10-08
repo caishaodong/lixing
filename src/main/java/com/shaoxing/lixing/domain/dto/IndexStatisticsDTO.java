@@ -1,6 +1,7 @@
 package com.shaoxing.lixing.domain.dto;
 
 import com.shaoxing.lixing.global.util.PageUtil;
+import io.github.yedaxia.apidocs.Ignore;
 import lombok.Data;
 
 /**
@@ -21,6 +22,7 @@ public class IndexStatisticsDTO extends PageUtil {
     /**
      * 价目id（jsonArray字符串，如：[1,2,3,4]）
      */
+    @Ignore
     private String priceCategoryIds;
     /**
      * 品种价格id（jsonArray字符串，如：[1,2,3,4]）
