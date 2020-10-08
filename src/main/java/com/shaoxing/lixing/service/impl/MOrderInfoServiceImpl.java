@@ -52,7 +52,10 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
     @Override
     public IPage<MOrderInfo> getListPage(OrderInfoSearchDTO dto) {
 
-        IPage<MOrderInfo> page = this.page(dto, new LambdaQueryWrapper<MOrderInfo>().eq(MOrderInfo::getOrderDate, dto.getOrderDate())
+        IPage<MOrderInfo> page = this.page(dto, new LambdaQueryWrapper<MOrderInfo>()
+                .eq(Objects.nonNull(dto.getOrderDate()), MOrderInfo::getOrderDate, dto.getOrderDate())
+                .ge(Objects.nonNull(dto.getStartOrderDate()), MOrderInfo::getOrderDate, dto.getStartOrderDate())
+                .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
                 .eq(MOrderInfo::getDistributionCompanyId, dto.getDistributionCompanyId())
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
@@ -110,7 +113,10 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
      */
     @Override
     public List<MOrderInfo> getList(OrderInfoExportDTO dto) {
-        return this.baseMapper.selectList(new LambdaQueryWrapper<MOrderInfo>().eq(MOrderInfo::getOrderDate, dto.getOrderDate())
+        return this.baseMapper.selectList(new LambdaQueryWrapper<MOrderInfo>()
+                .eq(Objects.nonNull(dto.getOrderDate()), MOrderInfo::getOrderDate, dto.getOrderDate())
+                .ge(Objects.nonNull(dto.getStartOrderDate()), MOrderInfo::getOrderDate, dto.getStartOrderDate())
+                .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
                 .eq(MOrderInfo::getDistributionCompanyId, dto.getDistributionCompanyId())
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));

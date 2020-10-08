@@ -13,6 +13,14 @@ import java.util.Objects;
 @Data
 public class OrderInfoSearchDTO extends PageUtil {
     /**
+     * 订单开始日期（格式yyyyMMdd）
+     */
+    private Long startOrderDate;
+    /**
+     * 订单结束日期（格式yyyyMMdd）
+     */
+    private Long endOrderDate;
+    /**
      * 订单日期（格式yyyyMMdd）
      */
     private Long orderDate;
@@ -22,6 +30,6 @@ public class OrderInfoSearchDTO extends PageUtil {
     private Long distributionCompanyId;
 
     public boolean paramCheck() {
-        return Objects.nonNull(this.orderDate) && Objects.nonNull(this.distributionCompanyId);
+        return (Objects.nonNull(this.orderDate) || (Objects.nonNull(startOrderDate) || Objects.nonNull(endOrderDate))) && Objects.nonNull(this.distributionCompanyId);
     }
 }

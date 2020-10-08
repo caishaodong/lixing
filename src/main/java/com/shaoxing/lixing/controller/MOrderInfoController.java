@@ -70,7 +70,10 @@ public class MOrderInfoController extends BaseController {
         IPage<MOrderInfo> page = orderInfoService.getListPage(dto);
 
         // 获取标题
-        String title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+        String title = Constant.COMPANY_NAME;
+        if (Objects.nonNull(dto.getOrderDate())) {
+            title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+        }
 
         // 封装返回值
         OrderInfoSearchVO orderInfoSearchVO = new OrderInfoSearchVO();
@@ -204,7 +207,10 @@ public class MOrderInfoController extends BaseController {
         }
 
         // 获取订单标题
-        String title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+        String title = Constant.COMPANY_NAME;
+        if (Objects.nonNull(dto.getOrderDate())) {
+            title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+        }
 
         // 获取需要导出的订单列表
         List<MOrderInfo> orderInfoList = orderInfoService.getList(dto);

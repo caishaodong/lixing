@@ -60,9 +60,21 @@ public class MVarietiesPriceInfoController extends BaseController {
      * @return
      */
     @GetMapping("/getListByPriceCategoryId/{priceCategoryId}")
-    public ResponseResult<List<MVarietiesPriceInfo>> getList(@PathVariable("priceCategoryId") Long priceCategoryId) {
+    public ResponseResult<List<MVarietiesPriceInfo>> getListByPriceCategoryId(@PathVariable("priceCategoryId") Long priceCategoryId) {
         // 根据价目id获取品种价格信息
         List<MVarietiesPriceInfo> list = varietiesPriceInfoService.getListByPriceCategoryId(priceCategoryId);
+        return success(list);
+    }
+
+    /**
+     * 获取所有的价格品种列表（不分页）
+     *
+     * @return
+     */
+    @GetMapping("/getList")
+    public ResponseResult<List<MVarietiesPriceInfo>> getList() {
+        // 根据价目id获取品种价格信息
+        List<MVarietiesPriceInfo> list = varietiesPriceInfoService.getList();
         return success(list);
     }
 

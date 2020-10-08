@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.dto.VarietiesPriceInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MVarietiesPriceInfo;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
-import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.mapper.MVarietiesPriceInfoMapper;
 import com.shaoxing.lixing.service.MVarietiesPriceInfoService;
 import org.springframework.stereotype.Service;
@@ -56,7 +55,20 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
     public List<MVarietiesPriceInfo> getListByPriceCategoryId(Long priceCategoryId) {
         return this.baseMapper.selectList(new LambdaQueryWrapper<MVarietiesPriceInfo>()
                 .eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategoryId)
-                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MVarietiesPriceInfo::getGmtCreate));
+    }
+
+    /**
+     * 获取所有的价格品种
+     *
+     * @return
+     */
+    @Override
+    public List<MVarietiesPriceInfo> getList() {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<MVarietiesPriceInfo>()
+                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MVarietiesPriceInfo::getGmtCreate));
     }
 
     /**

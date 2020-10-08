@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class IndexStatisticsDTO extends PageUtil {
     /**
+     * 配送公司id（jsonArray字符串，如：[1,2,3,4]）
+     */
+    private String distributionCompanyIds;
+    /**
      * 客户id（jsonArray字符串，如：[1,2,3,4]）
      */
     private String customerIds;

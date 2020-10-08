@@ -120,15 +120,15 @@ public class IndexController extends BaseController {
      */
     @PostMapping("/statistics")
     public ResponseResult<IndexStatisticsVO<MOrderInfo>> statistics(@RequestBody IndexStatisticsDTO dto) {
+        List<Long> distributionCompanyIdList = StringUtil.jsonArrayToLongList(dto.getDistributionCompanyIds());
         List<Long> customerIdList = StringUtil.jsonArrayToLongList(dto.getCustomerIds());
-        List<Long> priceCategoryIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getPriceCategoryIds());
         List<Long> varietiesPriceIdList = StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
 
         IPage<MOrderInfo> page = orderInfoService.page(dto, new LambdaQueryWrapper<MOrderInfo>()
                 .ge(Objects.nonNull(dto.getStartOrderDate()), MOrderInfo::getOrderDate, dto.getStartOrderDate())
                 .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
+                .in(!CollectionUtils.isEmpty(distributionCompanyIdList), MOrderInfo::getDistributionCompanyId, distributionCompanyIdList)
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
-                .in(CollectionUtils.isEmpty(varietiesPriceIdList) && !CollectionUtils.isEmpty(priceCategoryIdList), MOrderInfo::getPriceCategoryId, priceCategoryIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue()));
 
@@ -136,6 +136,7 @@ public class IndexController extends BaseController {
         QueryWrapper<MOrderInfo> totalAmountQueryWrapper = new QueryWrapper<MOrderInfo>()
                 .ge(Objects.nonNull(dto.getStartOrderDate()), "order_date", dto.getStartOrderDate())
                 .le(Objects.nonNull(dto.getEndOrderDate()), "order_date", dto.getEndOrderDate())
+                .in(!CollectionUtils.isEmpty(distributionCompanyIdList), "distribution_company_id", distributionCompanyIdList)
                 .in(!CollectionUtils.isEmpty(customerIdList), "customer_id", customerIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), "varieties_price_id", varietiesPriceIdList)
                 .eq("is_deleted", YesNoEnum.NO.getValue())
