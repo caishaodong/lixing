@@ -1,6 +1,7 @@
 package com.shaoxing.lixing.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.OrderInfoDTO;
 import com.shaoxing.lixing.domain.dto.OrderInfoExportDTO;
@@ -15,6 +16,7 @@ import com.shaoxing.lixing.global.enums.OrderSourceEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.OrderNoUtils;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.business.BusinessUtil;
 import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
@@ -75,7 +77,7 @@ public class MOrderInfoController extends BaseController {
             title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
         }
         // 数据统计（总价和总数量）
-        Map<String, Object> totalMap = orderInfoService.getTotalMap(dto);
+        Map<String, Object> totalMap = orderInfoService.getTotalMap(dto.getOrderDate(), dto.getStartOrderDate(), dto.getEndOrderDate(), dto.getDistributionCompanyId());
 
         // 封装返回值
         OrderInfoSearchVO orderInfoSearchVO = new OrderInfoSearchVO();
@@ -210,11 +212,24 @@ public class MOrderInfoController extends BaseController {
             return error(BusinessEnum.PARAM_ERROR);
         }
 
-        // 获取订单标题
         String title = Constant.COMPANY_NAME;
+        String deliveryUserName = "";
+        String checkUserName = "";
         if (Objects.nonNull(dto.getOrderDate())) {
+            // 获取订单标题
             title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
+            // 获取送货人、验收人
+            MOrderCheckDetail orderCheckDetail = orderCheckDetailService.getOne(new LambdaQueryWrapper<MOrderCheckDetail>()
+                    .eq(MOrderCheckDetail::getOrderDate, dto.getOrderDate())
+                    .eq(MOrderCheckDetail::getDistributionCompanyId, dto.getDistributionCompanyId())
+                    .eq(MOrderCheckDetail::getIsDeleted, YesNoEnum.NO.getValue()));
+            deliveryUserName = orderCheckDetail.getDeliveryUserName();
+            checkUserName = orderCheckDetail.getCheckUserName();
         }
+        // 数据统计（总价和总数量）
+        Map<String, Object> totalMap = orderInfoService.getTotalMap(dto.getOrderDate(), dto.getStartOrderDate(), dto.getEndOrderDate(), dto.getDistributionCompanyId());
+        BigDecimal totalMoney = new BigDecimal(String.valueOf(totalMap.get("totalPrice")));
+
 
         // 获取需要导出的订单列表
         List<MOrderInfo> orderInfoList = orderInfoService.getList(dto);
@@ -233,31 +248,13 @@ public class MOrderInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE, null), response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE, BusinessUtil.getOrderInfoExportTailMapList(deliveryUserName, checkUserName, totalMoney)), response);
             LOGGER.info("订单导出完成");
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);
             return error();
         }
         return success();
-    }
-
-    private static List<Map<Integer, Object>> getTailMap() {
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        String deliveryUserName = "";
-        String checkUserName = "";
-        List<Map<Integer, Object>> tailMap = new ArrayList<>();
-        Map<Integer, Object> map1 = new HashMap<>(16);
-        map1.put(0, "总计");
-        map1.put(9, totalAmount);
-        tailMap.add(map1);
-        Map<Integer, Object> map2 = new HashMap<>(16);
-        map2.put(1, "送货人：");
-        map2.put(2, deliveryUserName);
-        map2.put(5, "验收人：");
-        map2.put(6, checkUserName);
-        tailMap.add(map2);
-        return tailMap;
     }
 
     /**

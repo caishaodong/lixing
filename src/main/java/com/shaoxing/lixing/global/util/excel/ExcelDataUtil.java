@@ -92,7 +92,7 @@ public class ExcelDataUtil {
         excelSheetPO.setHeaders(headers);
         excelSheetPO.setColumnWidthMap(Objects.isNull(columnWidth) ? new HashMap<>(16) : columnWidth);
         excelSheetPO.setNeedSort(excelDataDTO.getNeedSort());
-        excelSheetPO.setTailList(excelDataDTO.getTailList());
+        excelSheetPO.setTailMapList(excelDataDTO.getTailMapList());
         list.add(excelSheetPO);
 
         // 导出

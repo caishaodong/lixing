@@ -42,7 +42,7 @@ public class ExcelSheetPO {
     /**
      * 追加行
      */
-    private List<Map<Integer, Object>> tailList;
+    private List<Map<Integer, Object>> tailMapList;
 
 
 }

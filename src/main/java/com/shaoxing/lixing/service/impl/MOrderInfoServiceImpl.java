@@ -125,19 +125,22 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
     }
 
     /**
-     * 计算总价
+     * 数据统计（总价和总数量）
      *
-     * @param dto
+     * @param orderDate
+     * @param startOrderDate
+     * @param endOrderDate
+     * @param distributionCompanyId
      * @return
      */
     @Override
-    public Map<String, Object> getTotalMap(OrderInfoSearchDTO dto) {
+    public Map<String, Object> getTotalMap(Long orderDate, Long startOrderDate, Long endOrderDate, Long distributionCompanyId) {
         // 计算总价
         QueryWrapper<MOrderInfo> queryWrapper = new QueryWrapper<MOrderInfo>()
-                .eq(Objects.nonNull(dto.getOrderDate()), "order_date", dto.getOrderDate())
-                .ge(Objects.nonNull(dto.getStartOrderDate()), "order_date", dto.getStartOrderDate())
-                .le(Objects.nonNull(dto.getEndOrderDate()), "order_date", dto.getEndOrderDate())
-                .eq("distribution_company_id", dto.getDistributionCompanyId())
+                .eq(Objects.nonNull(orderDate), "order_date", orderDate)
+                .ge(Objects.nonNull(startOrderDate), "order_date", startOrderDate)
+                .le(Objects.nonNull(endOrderDate), "order_date", endOrderDate)
+                .eq("distribution_company_id", distributionCompanyId)
                 .eq("is_deleted", YesNoEnum.NO.getValue())
                 .select("IFNULL(SUM(IFNULL(total_price, 0)),0) AS totalPrice, IFNULL(SUM(IFNULL(num, 0)),0) AS totalNum");
         Map<String, Object> map = this.getMap(queryWrapper);

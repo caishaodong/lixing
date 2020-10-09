@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.shaoxing.lixing.domain.dto.CompanyBillSearchDTO;
 import com.shaoxing.lixing.domain.dto.FCompanyBillDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
+import com.shaoxing.lixing.domain.entity.MOrderInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.constant.Constant;
@@ -12,12 +13,14 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
+import com.shaoxing.lixing.global.util.business.BusinessUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
 import com.shaoxing.lixing.service.FCompanyBillService;
 import com.shaoxing.lixing.service.SysCityService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -116,6 +119,9 @@ public class FCompanyBillController extends BaseController {
         // 获取需要导出的账单列表
         List<FCompanyBill> companyBillList = companyBillService.getList();
 
+        // 获取总金额
+        BigDecimal totalMoney = CollectionUtils.isEmpty(companyBillList) ? BigDecimal.ZERO : companyBillList.stream().map(FCompanyBill::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("费用类别", new String[]{"feeCategoryName"});
         fieldNameMap.put("费用科目", new String[]{"feeSubjectName"});
@@ -131,7 +137,7 @@ public class FCompanyBillController extends BaseController {
         try {
             LOGGER.info("开始准备导出公司账单");
 
-            ExcelDataDTO<FCompanyBill> excelDataDTO = new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE, null);
+            ExcelDataDTO<FCompanyBill> excelDataDTO = new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE, BusinessUtil.getCompanyBillExportTailMapList(totalMoney));
 
             ExcelDataUtil.export(excelDataDTO, response);
             LOGGER.info("公司账单导出完成");

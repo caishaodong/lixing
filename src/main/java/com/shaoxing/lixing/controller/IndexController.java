@@ -16,6 +16,7 @@ import com.shaoxing.lixing.global.enums.BusinessEnum;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.LocalDateTimeUtil;
 import com.shaoxing.lixing.global.util.StringUtil;
+import com.shaoxing.lixing.global.util.business.BusinessUtil;
 import com.shaoxing.lixing.global.util.decimal.DecimalUtil;
 import com.shaoxing.lixing.global.util.excel.ExcelDataDTO;
 import com.shaoxing.lixing.global.util.excel.ExcelDataUtil;
@@ -173,7 +174,10 @@ public class IndexController extends BaseController {
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
 
+        // 标题
         String title = "绍兴市立兴农产品有限公司销售统计";
+        // 获取总金额
+        BigDecimal totalMoney = CollectionUtils.isEmpty(list) ? BigDecimal.ZERO : list.stream().map(MOrderInfo::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
@@ -186,7 +190,7 @@ public class IndexController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出销售统计");
-            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, list, "销售统计", Boolean.TRUE, null), response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, list, "销售统计", Boolean.TRUE, BusinessUtil.getIndexStatisticsExportTailMapList(totalMoney)), response);
             LOGGER.info("销售统计导出完成");
         } catch (Exception e) {
             LOGGER.error("销售统计导出失败", e);
@@ -194,6 +198,7 @@ public class IndexController extends BaseController {
         }
         return success();
     }
+
 
     /**
      * 导出配送清单

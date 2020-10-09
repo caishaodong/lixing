@@ -471,7 +471,7 @@ public class ExcelUtil {
      * @param version
      */
     private static void createSumCell(Sheet sheet, ExcelSheetPO excelSheetPO, Workbook wb, ExcelVersion version) {
-        List<Map<Integer, Object>> tailList = excelSheetPO.getTailList();
+        List<Map<Integer, Object>> tailList = excelSheetPO.getTailMapList();
         if (CollectionUtils.isEmpty(tailList)) {
             return;
         }
