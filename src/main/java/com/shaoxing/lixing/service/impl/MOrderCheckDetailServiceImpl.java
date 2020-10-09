@@ -27,11 +27,25 @@ public class MOrderCheckDetailServiceImpl extends ServiceImpl<MOrderCheckDetailM
 
     @Override
     public MOrderCheckDetail getOKByOrderDateAndDistributionCompanyId(Long orderDate, Long distributionCompanyId) {
-        MOrderCheckDetail orderCheckDetail = this.baseMapper.selectOne(new LambdaQueryWrapper<MOrderCheckDetail>()
+        MOrderCheckDetail existsOrderCheckDetail = this.baseMapper.selectOne(new LambdaQueryWrapper<MOrderCheckDetail>()
                 .eq(MOrderCheckDetail::getOrderDate, orderDate)
                 .eq(MOrderCheckDetail::getDistributionCompanyId, distributionCompanyId)
                 .eq(MOrderCheckDetail::getIsDeleted, YesNoEnum.NO.getValue()));
-        return orderCheckDetail;
+
+        if (Objects.isNull(existsOrderCheckDetail)) {
+            // 新增
+            existsOrderCheckDetail = new MOrderCheckDetail();
+            existsOrderCheckDetail.setOrderDate(orderDate);
+            existsOrderCheckDetail.setDistributionCompanyId(distributionCompanyId);
+            existsOrderCheckDetail.setTitle(Constant.COMPANY_NAME);
+            ReflectUtil.setCreateInfo(existsOrderCheckDetail, MOrderCheckDetail.class);
+            this.save(existsOrderCheckDetail);
+        } else if (StringUtil.isBlank(existsOrderCheckDetail.getTitle())) {
+            existsOrderCheckDetail.setTitle(Constant.COMPANY_NAME);
+            existsOrderCheckDetail.setGmtModified(LocalDateTime.now());
+            this.updateById(existsOrderCheckDetail);
+        }
+        return existsOrderCheckDetail;
     }
 
     /**
@@ -43,28 +57,8 @@ public class MOrderCheckDetailServiceImpl extends ServiceImpl<MOrderCheckDetailM
      */
     @Override
     public String getTitle(Long orderDate, Long distributionCompanyId) {
-        String title = Constant.COMPANY_NAME;
         MOrderCheckDetail existsOrderCheckDetail = this.getOKByOrderDateAndDistributionCompanyId(orderDate, distributionCompanyId);
-        if (Objects.isNull(existsOrderCheckDetail)) {
-            // 新增
-            existsOrderCheckDetail = new MOrderCheckDetail();
-            existsOrderCheckDetail.setOrderDate(orderDate);
-            existsOrderCheckDetail.setDistributionCompanyId(distributionCompanyId);
-            existsOrderCheckDetail.setTitle(title);
-            ReflectUtil.setCreateInfo(existsOrderCheckDetail, MOrderCheckDetail.class);
-            this.save(existsOrderCheckDetail);
-        } else {
-            // 修改
-            String existTitle = existsOrderCheckDetail.getTitle();
-            if (StringUtil.isBlank(existTitle)) {
-                existsOrderCheckDetail.setTitle(title);
-                existsOrderCheckDetail.setGmtModified(LocalDateTime.now());
-                this.updateById(existsOrderCheckDetail);
-            } else {
-                title = existTitle;
-            }
-        }
-        return title;
+        return existsOrderCheckDetail.getTitle();
     }
 
 

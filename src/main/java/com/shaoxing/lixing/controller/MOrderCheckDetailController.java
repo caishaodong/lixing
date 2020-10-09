@@ -1,29 +1,22 @@
 package com.shaoxing.lixing.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shaoxing.lixing.domain.dto.OrderCheckDetailDTO;
 import com.shaoxing.lixing.domain.entity.MDistributionCompany;
 import com.shaoxing.lixing.domain.entity.MOrderCheckDetail;
-import com.shaoxing.lixing.domain.entity.MOrderInfo;
-import com.shaoxing.lixing.domain.vo.OrderCheckDetailVO;
 import com.shaoxing.lixing.global.ResponseResult;
 import com.shaoxing.lixing.global.base.BaseController;
 import com.shaoxing.lixing.global.constant.Constant;
 import com.shaoxing.lixing.global.enums.BusinessEnum;
-import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.ReflectUtil;
 import com.shaoxing.lixing.global.util.StringUtil;
 import com.shaoxing.lixing.service.MDistributionCompanyService;
 import com.shaoxing.lixing.service.MOrderCheckDetailService;
-import com.shaoxing.lixing.service.MOrderInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -37,8 +30,6 @@ import java.util.Objects;
 public class MOrderCheckDetailController extends BaseController {
     @Autowired
     private MOrderCheckDetailService orderCheckDetailService;
-    @Autowired
-    private MOrderInfoService orderInfoService;
     @Autowired
     private MDistributionCompanyService distributionCompanyService;
 
@@ -88,7 +79,7 @@ public class MOrderCheckDetailController extends BaseController {
      * @return
      */
     @GetMapping("/getInfo/{orderDate}/{distributionCompanyId}")
-    public ResponseResult<OrderCheckDetailVO> getInfo(@PathVariable("orderDate") Long orderDate, @PathVariable("distributionCompanyId") Long distributionCompanyId) {
+    public ResponseResult<MOrderCheckDetail> getInfo(@PathVariable("orderDate") Long orderDate, @PathVariable("distributionCompanyId") Long distributionCompanyId) {
 
         // 校验配送公司是否存在
         MDistributionCompany distributionCompany = distributionCompanyService.getOKById(distributionCompanyId);
@@ -98,23 +89,7 @@ public class MOrderCheckDetailController extends BaseController {
 
         // 获取送货验收信息
         MOrderCheckDetail orderCheckDetail = orderCheckDetailService.getOKByOrderDateAndDistributionCompanyId(orderDate, distributionCompanyId);
-
-        OrderCheckDetailVO orderCheckDetailVO = new OrderCheckDetailVO();
-        orderCheckDetailVO.setTotalMoney(BigDecimal.ZERO);
-        if (Objects.nonNull(orderCheckDetail)) {
-            // 计算总价
-            QueryWrapper<MOrderInfo> queryWrapper = new QueryWrapper<MOrderInfo>()
-                    .eq("order_date", orderDate)
-                    .eq("distribution_company_id", distributionCompanyId)
-                    .eq("is_deleted", YesNoEnum.NO.getValue())
-                    .select("IFNULL(SUM(IFNULL(total_price, 0)),0) AS totalPrice");
-            Map<String, Object> map = orderInfoService.getMap(queryWrapper);
-
-            // 封装返回信息
-            BeanUtils.copyProperties(orderCheckDetail, orderCheckDetailVO);
-            orderCheckDetailVO.setTotalMoney(new BigDecimal(String.valueOf(map.get("totalPrice"))));
-        }
-        return success(orderCheckDetailVO);
+        return success(orderCheckDetail);
     }
 
 }
