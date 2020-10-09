@@ -83,7 +83,7 @@ public class MOrderInfoController extends BaseController {
         OrderInfoSearchVO orderInfoSearchVO = new OrderInfoSearchVO();
         BeanUtils.copyProperties(page, orderInfoSearchVO);
         orderInfoSearchVO.setTitle(title);
-        orderInfoSearchVO.setTotalMoney(new BigDecimal(String.valueOf(totalMap.get("totalPrice"))));
+        orderInfoSearchVO.setTotalAmount(new BigDecimal(String.valueOf(totalMap.get("totalAmount"))));
         orderInfoSearchVO.setTotalNum(new BigDecimal(String.valueOf(totalMap.get("totalNum"))));
         return success(orderInfoSearchVO);
     }
@@ -228,7 +228,7 @@ public class MOrderInfoController extends BaseController {
         }
         // 数据统计（总价和总数量）
         Map<String, Object> totalMap = orderInfoService.getTotalMap(dto.getOrderDate(), dto.getStartOrderDate(), dto.getEndOrderDate(), dto.getDistributionCompanyId());
-        BigDecimal totalMoney = new BigDecimal(String.valueOf(totalMap.get("totalPrice")));
+        BigDecimal totalAmount = new BigDecimal(String.valueOf(totalMap.get("totalAmount")));
 
 
         // 获取需要导出的订单列表
@@ -248,7 +248,7 @@ public class MOrderInfoController extends BaseController {
 
         try {
             LOGGER.info("开始准备导出订单");
-            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE, BusinessUtil.getOrderInfoExportTailMapList(deliveryUserName, checkUserName, totalMoney)), response);
+            ExcelDataUtil.export(new ExcelDataDTO<>(title, fieldNameMap, orderInfoList, "订单", Boolean.TRUE, BusinessUtil.getOrderInfoExportTailMapList(deliveryUserName, checkUserName, totalAmount)), response);
             LOGGER.info("订单导出完成");
         } catch (Exception e) {
             LOGGER.error("订单导出失败", e);

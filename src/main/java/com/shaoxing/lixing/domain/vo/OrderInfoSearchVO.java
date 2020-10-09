@@ -19,7 +19,7 @@ public class OrderInfoSearchVO<T> extends PageUtil<T> {
     /**
      * 总价
      */
-    private BigDecimal totalMoney;
+    private BigDecimal totalAmount;
     /**
      * 总数量
      */

@@ -142,7 +142,7 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
                 .le(Objects.nonNull(endOrderDate), "order_date", endOrderDate)
                 .eq("distribution_company_id", distributionCompanyId)
                 .eq("is_deleted", YesNoEnum.NO.getValue())
-                .select("IFNULL(SUM(IFNULL(total_price, 0)),0) AS totalPrice, IFNULL(SUM(IFNULL(num, 0)),0) AS totalNum");
+                .select("IFNULL(SUM(IFNULL(total_price, 0)),0) AS totalAmount, IFNULL(SUM(IFNULL(num, 0)),0) AS totalNum");
         Map<String, Object> map = this.getMap(queryWrapper);
 
         return map;

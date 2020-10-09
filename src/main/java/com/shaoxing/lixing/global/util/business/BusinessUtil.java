@@ -14,14 +14,14 @@ import java.util.Map;
 public class BusinessUtil {
     /**
      * 获取首页销售统计导出Excel的追加行
-     * @param totalMoney
+     * @param totalAmount
      * @return
      */
-    public static List<Map<Integer, Object>> getIndexStatisticsExportTailMapList(BigDecimal totalMoney) {
+    public static List<Map<Integer, Object>> getIndexStatisticsExportTailMapList(BigDecimal totalAmount) {
         List<Map<Integer, Object>> tailMapList = new ArrayList<>();
         Map<Integer, Object> map = new HashMap<>(16);
         map.put(0, "总计");
-        map.put(7, totalMoney);
+        map.put(7, totalAmount);
         tailMapList.add(map);
         return tailMapList;
     }
@@ -30,14 +30,14 @@ public class BusinessUtil {
      * 获取订单列表导出Excel的追加行
      * @param deliveryUserName
      * @param checkUserName
-     * @param totalMoney
+     * @param totalAmount
      * @return
      */
-    public static List<Map<Integer, Object>> getOrderInfoExportTailMapList(String deliveryUserName, String checkUserName, BigDecimal totalMoney) {
+    public static List<Map<Integer, Object>> getOrderInfoExportTailMapList(String deliveryUserName, String checkUserName, BigDecimal totalAmount) {
         List<Map<Integer, Object>> tailMapList = new ArrayList<>();
         Map<Integer, Object> map1 = new HashMap<>(16);
         map1.put(0, "总计");
-        map1.put(9, totalMoney);
+        map1.put(9, totalAmount);
         tailMapList.add(map1);
         Map<Integer, Object> map2 = new HashMap<>(16);
         map2.put(1, "送货人：");
@@ -50,14 +50,14 @@ public class BusinessUtil {
 
     /**
      * 获取公司账单导出Excel的追加行
-     * @param totalMoney
+     * @param totalAmount
      * @return
      */
-    public static List<Map<Integer, Object>> getCompanyBillExportTailMapList(BigDecimal totalMoney) {
+    public static List<Map<Integer, Object>> getCompanyBillExportTailMapList(BigDecimal totalAmount) {
         List<Map<Integer, Object>> tailMapList = new ArrayList<>();
         Map<Integer, Object> map = new HashMap<>(16);
         map.put(0, "总计");
-        map.put(8, totalMoney);
+        map.put(8, totalAmount);
         tailMapList.add(map);
         return tailMapList;
     }

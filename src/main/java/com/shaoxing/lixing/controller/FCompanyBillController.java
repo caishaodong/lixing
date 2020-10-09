@@ -120,7 +120,7 @@ public class FCompanyBillController extends BaseController {
         List<FCompanyBill> companyBillList = companyBillService.getList();
 
         // 获取总金额
-        BigDecimal totalMoney = CollectionUtils.isEmpty(companyBillList) ? BigDecimal.ZERO : companyBillList.stream().map(FCompanyBill::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalAmount = CollectionUtils.isEmpty(companyBillList) ? BigDecimal.ZERO : companyBillList.stream().map(FCompanyBill::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("费用类别", new String[]{"feeCategoryName"});
@@ -137,7 +137,7 @@ public class FCompanyBillController extends BaseController {
         try {
             LOGGER.info("开始准备导出公司账单");
 
-            ExcelDataDTO<FCompanyBill> excelDataDTO = new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE, BusinessUtil.getCompanyBillExportTailMapList(totalMoney));
+            ExcelDataDTO<FCompanyBill> excelDataDTO = new ExcelDataDTO<>(null, fieldNameMap, companyBillList, "账单", Boolean.TRUE, BusinessUtil.getCompanyBillExportTailMapList(totalAmount));
 
             ExcelDataUtil.export(excelDataDTO, response);
             LOGGER.info("公司账单导出完成");
@@ -146,16 +146,6 @@ public class FCompanyBillController extends BaseController {
             return error();
         }
         return success();
-    }
-
-    private static List<Map<Integer, Object>> getTailMap() {
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        List<Map<Integer, Object>> tailMap = new ArrayList<>();
-        Map<Integer, Object> map = new HashMap<>(16);
-        map.put(0, "总计");
-        map.put(8, totalAmount);
-        tailMap.add(map);
-        return tailMap;
     }
 
 }
