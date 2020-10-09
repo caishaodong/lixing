@@ -60,18 +60,6 @@ public class MVarietiesPriceInfoServiceImpl extends ServiceImpl<MVarietiesPriceI
     }
 
     /**
-     * 获取所有的价格品种
-     *
-     * @return
-     */
-    @Override
-    public List<MVarietiesPriceInfo> getList() {
-        return this.baseMapper.selectList(new LambdaQueryWrapper<MVarietiesPriceInfo>()
-                .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue())
-                .orderByAsc(MVarietiesPriceInfo::getGmtCreate));
-    }
-
-    /**
      * 根据价目id和品种名称获取品种
      *
      * @param priceCategoryId

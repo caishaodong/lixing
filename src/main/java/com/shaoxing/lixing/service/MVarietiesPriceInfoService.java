@@ -36,13 +36,6 @@ public interface MVarietiesPriceInfoService extends IService<MVarietiesPriceInfo
     List<MVarietiesPriceInfo> getListByPriceCategoryId(Long priceCategoryId);
 
     /**
-     * 获取所有的价格品种
-     *
-     * @return
-     */
-    List<MVarietiesPriceInfo> getList();
-
-    /**
      * 根据价目id和品种名称获取品种
      *
      * @param priceCategoryId

@@ -67,19 +67,6 @@ public class MVarietiesPriceInfoController extends BaseController {
     }
 
     /**
-     * 获取所有的价格品种列表（不分页）
-     *
-     * @return
-     */
-    @GetMapping("/getList")
-    public ResponseResult<List<MVarietiesPriceInfo>> getList() {
-        // 根据价目id获取品种价格信息
-        List<MVarietiesPriceInfo> list = varietiesPriceInfoService.getList();
-        return success(list);
-    }
-
-
-    /**
      * 保存（修改）品种价格
      *
      * @param dto
