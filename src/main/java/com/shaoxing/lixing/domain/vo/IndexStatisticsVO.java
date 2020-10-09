@@ -16,4 +16,8 @@ public class IndexStatisticsVO<T> extends PageUtil<T> {
      * 总价
      */
     private BigDecimal totalAmount;
+    /**
+     * 总数量
+     */
+    private BigDecimal totalNum;
 }

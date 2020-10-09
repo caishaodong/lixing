@@ -140,14 +140,14 @@ public class IndexController extends BaseController {
                 .in(!CollectionUtils.isEmpty(customerIdList), "customer_id", customerIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), "varieties_price_id", varietiesPriceIdList)
                 .eq("is_deleted", YesNoEnum.NO.getValue())
-                .select("IFNULL(sum(IFNULL(total_price,0)),0) AS totalAmount");
-        Map<String, Object> totalAmountMap = orderInfoService.getMap(totalAmountQueryWrapper);
-        BigDecimal totalAmount = new BigDecimal(String.valueOf(totalAmountMap.get("totalAmount")));
+                .select("IFNULL(sum(IFNULL(total_price,0)),0) AS totalAmount, IFNULL(SUM(IFNULL(num, 0)),0) AS totalNum");
+        Map<String, Object> totalMap = orderInfoService.getMap(totalAmountQueryWrapper);
 
         // 封装返回值
         IndexStatisticsVO indexStatisticsVO = new IndexStatisticsVO();
         BeanUtils.copyProperties(page, indexStatisticsVO);
-        indexStatisticsVO.setTotalAmount(totalAmount);
+        indexStatisticsVO.setTotalAmount(new BigDecimal(String.valueOf(totalMap.get("totalAmount"))));
+        indexStatisticsVO.setTotalNum(new BigDecimal(String.valueOf(totalMap.get("totalNum"))));
         return success(indexStatisticsVO);
     }
 
@@ -160,15 +160,15 @@ public class IndexController extends BaseController {
      */
     @GetMapping("/statistics/export")
     public ResponseResult statisticsExport(IndexStatisticsDTO dto, HttpServletResponse response) {
+        List<Long> distributionCompanyIdList = StringUtil.jsonArrayToLongList(dto.getDistributionCompanyIds());
         List<Long> customerIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getCustomerIds());
-        List<Long> priceCategoryIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getPriceCategoryIds());
         List<Long> varietiesPriceIdList = Objects.isNull(dto) ? new ArrayList<>() : StringUtil.jsonArrayToLongList(dto.getVarietiesPriceIds());
 
         List<MOrderInfo> list = orderInfoService.list(new LambdaQueryWrapper<MOrderInfo>()
                 .ge(Objects.nonNull(dto.getStartOrderDate()), MOrderInfo::getOrderDate, dto.getStartOrderDate())
                 .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
+                .in(!CollectionUtils.isEmpty(distributionCompanyIdList), MOrderInfo::getDistributionCompanyId, distributionCompanyIdList)
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
-                .in(CollectionUtils.isEmpty(varietiesPriceIdList) && !CollectionUtils.isEmpty(priceCategoryIdList), MOrderInfo::getPriceCategoryId, priceCategoryIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
@@ -177,7 +177,7 @@ public class IndexController extends BaseController {
 
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
-        fieldNameMap.put("客户", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
+        fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("品种", new String[]{"varietiesName"});
         fieldNameMap.put("单位", new String[]{"unit"});
         fieldNameMap.put("数量", new String[]{"num"});

@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.dto.DistributionCompanySearchDTO;
 import com.shaoxing.lixing.domain.entity.*;
-import com.shaoxing.lixing.domain.vo.*;
+import com.shaoxing.lixing.domain.vo.CustomerInfoVO;
+import com.shaoxing.lixing.domain.vo.DistributionCompanyExportVO;
+import com.shaoxing.lixing.domain.vo.DistributionCompanyVO;
+import com.shaoxing.lixing.domain.vo.PriceCategoryVO;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
 import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.global.util.ReflectUtil;
@@ -235,21 +238,6 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
                                     PriceCategoryVO priceCategoryVO = new PriceCategoryVO();
                                     BeanUtils.copyProperties(priceCategory, priceCategoryVO);
                                     priceCategoryVOList.add(priceCategoryVO);
-                                    List<VarietiesPriceInfoVO> varietiesPriceInfoVOList = new ArrayList<>();
-                                    priceCategoryVO.setVarietiesPriceInfoVOList(varietiesPriceInfoVOList);
-
-
-                                    // 根据价目id， 获取价目下面的价格信息
-                                    List<MVarietiesPriceInfo> varietiesPriceInfoList = varietiesPriceInfoService.list(new LambdaQueryWrapper<MVarietiesPriceInfo>().eq(MVarietiesPriceInfo::getPriceCategoryId, priceCategory.getId())
-                                            .eq(MVarietiesPriceInfo::getIsDeleted, YesNoEnum.NO.getValue()));
-                                    if (!CollectionUtils.isEmpty(varietiesPriceInfoList)) {
-                                        for (MVarietiesPriceInfo varietiesPriceInfo : varietiesPriceInfoList) {
-                                            // 封装价目下面的价格信息
-                                            VarietiesPriceInfoVO varietiesPriceInfoVO = new VarietiesPriceInfoVO();
-                                            BeanUtils.copyProperties(varietiesPriceInfo, varietiesPriceInfoVO);
-                                            varietiesPriceInfoVOList.add(varietiesPriceInfoVO);
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -281,16 +269,10 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
                     continue;
                 }
                 for (PriceCategoryVO priceCategoryVO : priceCategoryVOList) {
-                    List<VarietiesPriceInfoVO> varietiesPriceInfoVOList = priceCategoryVO.getVarietiesPriceInfoVOList();
-                    if (CollectionUtils.isEmpty(varietiesPriceInfoVOList)) {
-                        continue;
-                    }
-                    for (VarietiesPriceInfoVO varietiesPriceInfoVO : varietiesPriceInfoVOList) {
-                        DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
-                        // 数组重组
-                        assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO, varietiesPriceInfoVO, distributionCompanyExportVO);
-                        list.add(distributionCompanyExportVO);
-                    }
+                    DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+                    // 数组重组
+                    assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO, distributionCompanyExportVO);
+                    list.add(distributionCompanyExportVO);
                 }
             }
         }
@@ -303,11 +285,9 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
      * @param distributionCompanyVO
      * @param customerInfoVO
      * @param priceCategoryVO
-     * @param varietiesPriceInfoVO
      * @param distributionCompanyExportVO
      */
-    private void assemble(DistributionCompanyVO distributionCompanyVO, CustomerInfoVO customerInfoVO, PriceCategoryVO priceCategoryVO,
-                          VarietiesPriceInfoVO varietiesPriceInfoVO, DistributionCompanyExportVO distributionCompanyExportVO) {
+    private void assemble(DistributionCompanyVO distributionCompanyVO, CustomerInfoVO customerInfoVO, PriceCategoryVO priceCategoryVO, DistributionCompanyExportVO distributionCompanyExportVO) {
         // 配送公司信息
         distributionCompanyExportVO.setDistributionCompanyId(distributionCompanyVO.getId());
         distributionCompanyExportVO.setDistributionCompanyName(distributionCompanyVO.getName());
@@ -333,10 +313,6 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         // 价目信息
         distributionCompanyExportVO.setPriceCategoryId(priceCategoryVO.getId());
         distributionCompanyExportVO.setPriceCategoryName(priceCategoryVO.getName());
-
-        // 品种价格信息
-        distributionCompanyExportVO.setVarietiesPriceId(varietiesPriceInfoVO.getId());
-        distributionCompanyExportVO.setVarietiesPriceName(varietiesPriceInfoVO.getName());
 
     }
 }

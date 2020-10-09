@@ -19,8 +19,4 @@ public class PriceCategoryVO {
      * 所属价目表名称
      */
     private String name;
-    /**
-     * 价目详情
-     */
-    private List<VarietiesPriceInfoVO> varietiesPriceInfoVOList;
 }

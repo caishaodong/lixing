@@ -74,12 +74,16 @@ public class MOrderInfoController extends BaseController {
         if (Objects.nonNull(dto.getOrderDate())) {
             title = orderCheckDetailService.getTitle(dto.getOrderDate(), dto.getDistributionCompanyId());
         }
+        // 数据统计（总价和总数量）
+        Map<String, Object> totalMap = orderInfoService.getTotalMap(dto);
 
         // 封装返回值
         OrderInfoSearchVO orderInfoSearchVO = new OrderInfoSearchVO();
         BeanUtils.copyProperties(page, orderInfoSearchVO);
         orderInfoSearchVO.setTitle(title);
-        return success(page);
+        orderInfoSearchVO.setTotalMoney(new BigDecimal(String.valueOf(totalMap.get("totalPrice"))));
+        orderInfoSearchVO.setTotalNum(new BigDecimal(String.valueOf(totalMap.get("totalNum"))));
+        return success(orderInfoSearchVO);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.shaoxing.lixing.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.dto.OrderInfoExportDTO;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -120,5 +122,26 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
                 .eq(MOrderInfo::getDistributionCompanyId, dto.getDistributionCompanyId())
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
                 .orderByDesc(MOrderInfo::getGmtModified));
+    }
+
+    /**
+     * 计算总价
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public Map<String, Object> getTotalMap(OrderInfoSearchDTO dto) {
+        // 计算总价
+        QueryWrapper<MOrderInfo> queryWrapper = new QueryWrapper<MOrderInfo>()
+                .eq(Objects.nonNull(dto.getOrderDate()), "order_date", dto.getOrderDate())
+                .ge(Objects.nonNull(dto.getStartOrderDate()), "order_date", dto.getStartOrderDate())
+                .le(Objects.nonNull(dto.getEndOrderDate()), "order_date", dto.getEndOrderDate())
+                .eq("distribution_company_id", dto.getDistributionCompanyId())
+                .eq("is_deleted", YesNoEnum.NO.getValue())
+                .select("IFNULL(SUM(IFNULL(total_price, 0)),0) AS totalPrice, IFNULL(SUM(IFNULL(num, 0)),0) AS totalNum");
+        Map<String, Object> map = this.getMap(queryWrapper);
+
+        return map;
     }
 }

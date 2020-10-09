@@ -142,7 +142,6 @@ public class MDistributionCompanyController extends BaseController {
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
         fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
-        fieldNameMap.put("商品类别", new String[]{"varietiesPriceName"});
         fieldNameMap.put("价目", new String[]{"priceCategoryName"});
         fieldNameMap.put("结算扣率", new String[]{"settlementDeductionRate"});
         fieldNameMap.put("联系地址", new String[]{"address", Constant.COLUMN_WIDTH_40});

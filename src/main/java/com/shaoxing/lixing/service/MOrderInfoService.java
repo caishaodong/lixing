@@ -7,7 +7,9 @@ import com.shaoxing.lixing.domain.dto.OrderInfoSearchDTO;
 import com.shaoxing.lixing.domain.entity.MOrderInfo;
 import com.shaoxing.lixing.global.ResponseResult;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -44,4 +46,12 @@ public interface MOrderInfoService extends IService<MOrderInfo> {
      * @return
      */
     List<MOrderInfo> getList(OrderInfoExportDTO dto);
+
+    /**
+     * 数据统计（总价和总数量）
+     *
+     * @param dto
+     * @return
+     */
+    Map<String, Object> getTotalMap(OrderInfoSearchDTO dto);
 }

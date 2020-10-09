@@ -100,12 +100,4 @@ public class DistributionCompanyExportVO {
      * 所属价目表名称
      */
     private String priceCategoryName;
-    /**
-     * 商品类别id
-     */
-    private Long varietiesPriceId;
-    /**
-     * 商品类别名称
-     */
-    private String varietiesPriceName;
 }

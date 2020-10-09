@@ -15,7 +15,6 @@ public class CustomerInfoVO {
      * 客户id
      */
     private Long id;
-
     /**
      * 客户名称
      */

@@ -103,7 +103,8 @@ public class MOrderCheckDetailController extends BaseController {
         orderCheckDetailVO.setTotalMoney(BigDecimal.ZERO);
         if (Objects.nonNull(orderCheckDetail)) {
             // 计算总价
-            QueryWrapper<MOrderInfo> queryWrapper = new QueryWrapper<MOrderInfo>().eq("order_date", orderDate)
+            QueryWrapper<MOrderInfo> queryWrapper = new QueryWrapper<MOrderInfo>()
+                    .eq("order_date", orderDate)
                     .eq("distribution_company_id", distributionCompanyId)
                     .eq("is_deleted", YesNoEnum.NO.getValue())
                     .select("IFNULL(SUM(IFNULL(total_price, 0)),0) AS totalPrice");
