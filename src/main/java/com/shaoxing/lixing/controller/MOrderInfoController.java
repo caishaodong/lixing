@@ -279,7 +279,7 @@ public class MOrderInfoController extends BaseController {
             List<MOrderInfo> list = new ArrayList<>();
 
             // 从第二行开始获取每一行的数据
-            for (int i = 1; i < dataList.size(); i++) {
+            for (int i = 2; i < dataList.size(); i++) {
                 List<Object> rowData = dataList.get(i);
                 MOrderInfo orderInfo = new MOrderInfo();
                 int j = 0;
