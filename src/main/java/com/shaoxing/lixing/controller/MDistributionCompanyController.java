@@ -143,7 +143,7 @@ public class MDistributionCompanyController extends BaseController {
         fieldNameMap.put("配送单位", new String[]{"distributionCompanyName", Constant.COLUMN_WIDTH_40});
         fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("价目", new String[]{"priceCategoryName"});
-        fieldNameMap.put("结算扣率", new String[]{"settlementDeductionRate"});
+        fieldNameMap.put("结算扣率(%)", new String[]{"settlementDeductionRate"});
         fieldNameMap.put("联系地址", new String[]{"address", Constant.COLUMN_WIDTH_40});
         fieldNameMap.put("联系人", new String[]{"contactUserName"});
         fieldNameMap.put("联系方式", new String[]{"contactUserMobile"});
