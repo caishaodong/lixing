@@ -37,6 +37,8 @@ INSERT INTO `m_price_category` VALUES (1, '越城区', 0, '2020-09-07 17:42:37',
 INSERT INTO `m_price_category` VALUES (2, '市直', 0, '2020-09-07 17:42:49', '2020-09-07 17:42:49');
 INSERT INTO `m_price_category` VALUES (3, '柯桥区', 0, '2020-09-07 17:42:56', '2020-09-07 17:42:56');
 INSERT INTO `m_price_category` VALUES (4, '文理学院', 0, '2020-09-07 17:43:04', '2020-09-07 17:43:04');
-INSERT INTO `m_price_category` VALUES (5, '冷冻品', 0, '2020-09-07 17:43:09', '2020-09-07 17:43:09');
+INSERT INTO `m_price_category` VALUES (5, '上虞', 0, '2020-10-12 19:37:04', '2020-10-12 19:37:04');
+INSERT INTO `m_price_category` VALUES (6, '其他', 0, '2020-09-07 17:43:09', '2020-09-07 17:43:09');
+
 
 SET FOREIGN_KEY_CHECKS = 1;
