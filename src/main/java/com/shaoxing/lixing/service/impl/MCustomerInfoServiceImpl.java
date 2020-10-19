@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,11 +82,20 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
 
     /**
      * 解绑客户和配送公司关系
+     * 同时删除客户信息
      *
      * @param customerInfoDTO
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void unBindDistribution(CustomerInfoDTO customerInfoDTO) {
+        // 删除客户信息
+        MCustomerInfo customerInfo = customerInfoService.getOKById(customerInfoDTO.getCustomerId());
+        customerInfo.setIsDeleted(YesNoEnum.YES.getValue());
+        customerInfo.setGmtModified(LocalDateTime.now());
+        customerInfoService.updateById(customerInfo);
+
+        // 解绑客户
         customerDistributionCompanyRelService.remove(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
                 .eq(MCustomerDistributionCompanyRel::getCustomerId, customerInfoDTO.getCustomerId())
                 .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, customerInfoDTO.getDistributionCompanyId()));
@@ -124,7 +134,9 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     public ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto) {
         // 客户信息校验
         List<Long> customerIdList = dto.getCustomerIdList();
-        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, customerIdList));
+        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>()
+                .in(MCustomerInfo::getId, customerIdList)
+                .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
         if (count != customerIdList.size()) {
             return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);
         }

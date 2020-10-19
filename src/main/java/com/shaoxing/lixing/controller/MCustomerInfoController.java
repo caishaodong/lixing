@@ -60,7 +60,9 @@ public class MCustomerInfoController extends BaseController {
             return error(BusinessEnum.PARAM_ERROR);
         }
         // 校验客户名称是否重复
-        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>().eq(MCustomerInfo::getName, dto.getName()));
+        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>()
+                .eq(MCustomerInfo::getName, dto.getName())
+                .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
         if (count > 0) {
             return error(BusinessEnum.CUSTOMER_NAME_REPEAT);
         }
