@@ -147,9 +147,23 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         distributionCompany.setIsDeleted(YesNoEnum.YES.getValue());
         distributionCompany.setGmtModified(LocalDateTime.now());
         this.baseMapper.updateById(distributionCompany);
-        // 解绑客户和配送公司关系
-        customerDistributionCompanyRelService.remove(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
-                .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId()));
+        // 获取配送公司绑定的客户
+        List<MCustomerDistributionCompanyRel> customerDistributionCompanyRelList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
+                .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId())
+                .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue()));
+        if (!CollectionUtils.isEmpty(customerDistributionCompanyRelList)) {
+            // 解绑客户和配送公司关系
+            customerDistributionCompanyRelService.remove(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
+                    .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId()));
+            // 删除客户
+            List<MCustomerInfo> customerInfoList = customerDistributionCompanyRelList.stream().map(mCustomerDistributionCompanyRel -> {
+                MCustomerInfo customerInfo = new MCustomerInfo();
+                customerInfo.setId(mCustomerDistributionCompanyRel.getCustomerId());
+                customerInfo.setIsDeleted(YesNoEnum.YES.getValue());
+                return customerInfo;
+            }).collect(Collectors.toList());
+            customerInfoService.updateBatchById(customerInfoList);
+        }
     }
 
     /**
