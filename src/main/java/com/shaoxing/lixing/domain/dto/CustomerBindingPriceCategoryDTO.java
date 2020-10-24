@@ -33,9 +33,6 @@ public class CustomerBindingPriceCategoryDTO {
             return false;
         }
         List<Long> customerIdList = StringUtil.jsonArrayToLongList(customerIds);
-        if (Objects.isNull(customerIdList) || customerIdList.isEmpty()) {
-            return false;
-        }
         this.customerIdList = customerIdList;
         return true;
     }

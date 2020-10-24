@@ -32,8 +32,7 @@ public class ListUtil {
 
     public static void main(String[] args) {
         List<String> list1 = new ArrayList<String>() {{
-            add("A");
-            add("B");
+
         }};
         List<String> list2 = new ArrayList<String>() {{
             add("B");

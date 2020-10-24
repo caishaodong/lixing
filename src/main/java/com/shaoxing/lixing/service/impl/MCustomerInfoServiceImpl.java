@@ -140,6 +140,7 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
         if (count != customerIdList.size()) {
             return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);
         }
+
         // 价目信息校验
         MPriceCategory priceCategory = priceCategoryService.getOKById(dto.getPriceCategoryId());
         if (Objects.isNull(priceCategory)) {
