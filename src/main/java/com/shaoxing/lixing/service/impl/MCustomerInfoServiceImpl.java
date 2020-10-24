@@ -134,12 +134,15 @@ public class MCustomerInfoServiceImpl extends ServiceImpl<MCustomerInfoMapper, M
     public ResponseResult customersBindingPriceCategory(CustomerBindingPriceCategoryDTO dto) {
         // 客户信息校验
         List<Long> customerIdList = dto.getCustomerIdList();
-        int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>()
-                .in(MCustomerInfo::getId, customerIdList)
-                .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
-        if (count != customerIdList.size()) {
-            return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);
+        if (!CollectionUtils.isEmpty(customerIdList)) {
+            int count = customerInfoService.count(new LambdaQueryWrapper<MCustomerInfo>()
+                    .in(MCustomerInfo::getId, customerIdList)
+                    .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+            if (count != customerIdList.size()) {
+                return ResponseResult.error(BusinessEnum.CUSTOMER_INFO_ERROR);
+            }
         }
+
 
         // 价目信息校验
         MPriceCategory priceCategory = priceCategoryService.getOKById(dto.getPriceCategoryId());
