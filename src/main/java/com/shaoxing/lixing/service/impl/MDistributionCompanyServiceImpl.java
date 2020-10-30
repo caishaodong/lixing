@@ -273,20 +273,26 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         List<DistributionCompanyExportVO> list = new ArrayList<>();
 
         for (DistributionCompanyVO distributionCompanyVO : distributionCompanyVOList) {
+            DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+            list.add(distributionCompanyExportVO);
+
             List<CustomerInfoVO> customerInfoVoList = distributionCompanyVO.getCustomerInfoVoList();
             if (CollectionUtils.isEmpty(customerInfoVoList)) {
+                // 数组重组
+                assemble(distributionCompanyVO, null, null, distributionCompanyExportVO);
                 continue;
             }
             for (CustomerInfoVO customerInfoVO : customerInfoVoList) {
                 List<PriceCategoryVO> priceCategoryVOList = customerInfoVO.getPriceCategoryVOList();
                 if (CollectionUtils.isEmpty(priceCategoryVOList)) {
+                    // 数组重组
+                    assemble(distributionCompanyVO, customerInfoVO, null, distributionCompanyExportVO);
                     continue;
                 }
                 for (PriceCategoryVO priceCategoryVO : priceCategoryVOList) {
-                    DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
                     // 数组重组
                     assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO, distributionCompanyExportVO);
-                    list.add(distributionCompanyExportVO);
+
                 }
             }
         }
@@ -302,31 +308,37 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
      * @param distributionCompanyExportVO
      */
     private void assemble(DistributionCompanyVO distributionCompanyVO, CustomerInfoVO customerInfoVO, PriceCategoryVO priceCategoryVO, DistributionCompanyExportVO distributionCompanyExportVO) {
-        // 配送公司信息
-        distributionCompanyExportVO.setDistributionCompanyId(distributionCompanyVO.getId());
-        distributionCompanyExportVO.setDistributionCompanyName(distributionCompanyVO.getName());
-        distributionCompanyExportVO.setSettlementDeductionRate(distributionCompanyVO.getSettlementDeductionRate());
-        distributionCompanyExportVO.setAreaCode(distributionCompanyVO.getAreaCode());
-        distributionCompanyExportVO.setAreaName(distributionCompanyVO.getAreaName());
-        distributionCompanyExportVO.setAddress(StringUtil.concatString(distributionCompanyVO.getAreaName(), distributionCompanyExportVO.getAddress()));
-        distributionCompanyExportVO.setContactUserName(distributionCompanyVO.getContactUserName());
-        distributionCompanyExportVO.setContactUserMobile(distributionCompanyVO.getContactUserMobile());
-        distributionCompanyExportVO.setOrderManagerName(distributionCompanyVO.getOrderManagerName());
-        distributionCompanyExportVO.setOrderManagerMobile(distributionCompanyVO.getOrderManagerMobile());
-        distributionCompanyExportVO.setFinancialContactName(distributionCompanyVO.getFinancialContactName());
-        distributionCompanyExportVO.setFinancialContactMobile(distributionCompanyVO.getFinancialContactMobile());
-        distributionCompanyExportVO.setNeedInvoice(distributionCompanyVO.getNeedInvoice());
-        distributionCompanyExportVO.setNeedInvoiceStr(Objects.isNull(distributionCompanyVO.getNeedInvoice()) ? "否" :
-                (YesNoEnum.YES.getValue().equals(distributionCompanyVO.getNeedInvoice()) ? "是" : "否"));
-        distributionCompanyExportVO.setRemark(distributionCompanyVO.getRemark());
+        if (Objects.nonNull(distributionCompanyExportVO)) {
+            // 配送公司信息
+            distributionCompanyExportVO.setDistributionCompanyId(distributionCompanyVO.getId());
+            distributionCompanyExportVO.setDistributionCompanyName(distributionCompanyVO.getName());
+            distributionCompanyExportVO.setSettlementDeductionRate(distributionCompanyVO.getSettlementDeductionRate());
+            distributionCompanyExportVO.setAreaCode(distributionCompanyVO.getAreaCode());
+            distributionCompanyExportVO.setAreaName(distributionCompanyVO.getAreaName());
+            distributionCompanyExportVO.setAddress(StringUtil.concatString(distributionCompanyVO.getAreaName(), distributionCompanyExportVO.getAddress()));
+            distributionCompanyExportVO.setContactUserName(distributionCompanyVO.getContactUserName());
+            distributionCompanyExportVO.setContactUserMobile(distributionCompanyVO.getContactUserMobile());
+            distributionCompanyExportVO.setOrderManagerName(distributionCompanyVO.getOrderManagerName());
+            distributionCompanyExportVO.setOrderManagerMobile(distributionCompanyVO.getOrderManagerMobile());
+            distributionCompanyExportVO.setFinancialContactName(distributionCompanyVO.getFinancialContactName());
+            distributionCompanyExportVO.setFinancialContactMobile(distributionCompanyVO.getFinancialContactMobile());
+            distributionCompanyExportVO.setNeedInvoice(distributionCompanyVO.getNeedInvoice());
+            distributionCompanyExportVO.setNeedInvoiceStr(Objects.isNull(distributionCompanyVO.getNeedInvoice()) ? "否" :
+                    (YesNoEnum.YES.getValue().equals(distributionCompanyVO.getNeedInvoice()) ? "是" : "否"));
+            distributionCompanyExportVO.setRemark(distributionCompanyVO.getRemark());
+        }
 
-        // 客户信息
-        distributionCompanyExportVO.setCustomerId(customerInfoVO.getId());
-        distributionCompanyExportVO.setCustomerName(customerInfoVO.getName());
+        if (Objects.nonNull(customerInfoVO)) {
+            // 客户信息
+            distributionCompanyExportVO.setCustomerId(customerInfoVO.getId());
+            distributionCompanyExportVO.setCustomerName(customerInfoVO.getName());
+        }
 
-        // 价目信息
-        distributionCompanyExportVO.setPriceCategoryId(priceCategoryVO.getId());
-        distributionCompanyExportVO.setPriceCategoryName(priceCategoryVO.getName());
+        if (Objects.nonNull(priceCategoryVO)) {
+            // 价目信息
+            distributionCompanyExportVO.setPriceCategoryId(priceCategoryVO.getId());
+            distributionCompanyExportVO.setPriceCategoryName(priceCategoryVO.getName());
+        }
 
     }
 }
