@@ -273,11 +273,13 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         List<DistributionCompanyExportVO> list = new ArrayList<>();
 
         for (DistributionCompanyVO distributionCompanyVO : distributionCompanyVOList) {
-            DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
-            list.add(distributionCompanyExportVO);
+
+
 
             List<CustomerInfoVO> customerInfoVoList = distributionCompanyVO.getCustomerInfoVoList();
             if (CollectionUtils.isEmpty(customerInfoVoList)) {
+                DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+                list.add(distributionCompanyExportVO);
                 // 数组重组
                 assemble(distributionCompanyVO, null, null, distributionCompanyExportVO);
                 continue;
@@ -285,11 +287,15 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
             for (CustomerInfoVO customerInfoVO : customerInfoVoList) {
                 List<PriceCategoryVO> priceCategoryVOList = customerInfoVO.getPriceCategoryVOList();
                 if (CollectionUtils.isEmpty(priceCategoryVOList)) {
+                    DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+                    list.add(distributionCompanyExportVO);
                     // 数组重组
                     assemble(distributionCompanyVO, customerInfoVO, null, distributionCompanyExportVO);
                     continue;
                 }
                 for (PriceCategoryVO priceCategoryVO : priceCategoryVOList) {
+                    DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+                    list.add(distributionCompanyExportVO);
                     // 数组重组
                     assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO, distributionCompanyExportVO);
 
