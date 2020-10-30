@@ -217,7 +217,6 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
             List<CustomerInfoVO> customerInfoVOList = new ArrayList<>();
             distributionCompanyVO.setCustomerInfoVoList(customerInfoVOList);
 
-
             // 根据配送公司id，获取绑定的用户列表
             List<MCustomerDistributionCompanyRel> customerDistributionCompanyRelList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>().eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId())
                     .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue()));
@@ -274,31 +273,22 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
 
         for (DistributionCompanyVO distributionCompanyVO : distributionCompanyVOList) {
 
-
-
             List<CustomerInfoVO> customerInfoVoList = distributionCompanyVO.getCustomerInfoVoList();
             if (CollectionUtils.isEmpty(customerInfoVoList)) {
-                DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
-                list.add(distributionCompanyExportVO);
                 // 数组重组
-                assemble(distributionCompanyVO, null, null, distributionCompanyExportVO);
+                list.add(assemble(distributionCompanyVO, null, null));
                 continue;
             }
             for (CustomerInfoVO customerInfoVO : customerInfoVoList) {
                 List<PriceCategoryVO> priceCategoryVOList = customerInfoVO.getPriceCategoryVOList();
                 if (CollectionUtils.isEmpty(priceCategoryVOList)) {
-                    DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
-                    list.add(distributionCompanyExportVO);
                     // 数组重组
-                    assemble(distributionCompanyVO, customerInfoVO, null, distributionCompanyExportVO);
+                    list.add(assemble(distributionCompanyVO, customerInfoVO, null));
                     continue;
                 }
                 for (PriceCategoryVO priceCategoryVO : priceCategoryVOList) {
-                    DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
-                    list.add(distributionCompanyExportVO);
                     // 数组重组
-                    assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO, distributionCompanyExportVO);
-
+                    list.add(assemble(distributionCompanyVO, customerInfoVO, priceCategoryVO));
                 }
             }
         }
@@ -311,10 +301,10 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
      * @param distributionCompanyVO
      * @param customerInfoVO
      * @param priceCategoryVO
-     * @param distributionCompanyExportVO
      */
-    private void assemble(DistributionCompanyVO distributionCompanyVO, CustomerInfoVO customerInfoVO, PriceCategoryVO priceCategoryVO, DistributionCompanyExportVO distributionCompanyExportVO) {
-        if (Objects.nonNull(distributionCompanyExportVO)) {
+    private DistributionCompanyExportVO assemble(DistributionCompanyVO distributionCompanyVO, CustomerInfoVO customerInfoVO, PriceCategoryVO priceCategoryVO) {
+        DistributionCompanyExportVO distributionCompanyExportVO = new DistributionCompanyExportVO();
+        if (Objects.nonNull(distributionCompanyVO)) {
             // 配送公司信息
             distributionCompanyExportVO.setDistributionCompanyId(distributionCompanyVO.getId());
             distributionCompanyExportVO.setDistributionCompanyName(distributionCompanyVO.getName());
@@ -346,5 +336,6 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
             distributionCompanyExportVO.setPriceCategoryName(priceCategoryVO.getName());
         }
 
+        return distributionCompanyExportVO;
     }
 }
