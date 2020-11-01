@@ -60,6 +60,7 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
                 .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
                 .eq(MOrderInfo::getDistributionCompanyId, dto.getDistributionCompanyId())
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MOrderInfo::getCustomerId)
                 .orderByDesc(MOrderInfo::getGmtModified));
         return page;
     }
@@ -121,6 +122,7 @@ public class MOrderInfoServiceImpl extends ServiceImpl<MOrderInfoMapper, MOrderI
                 .le(Objects.nonNull(dto.getEndOrderDate()), MOrderInfo::getOrderDate, dto.getEndOrderDate())
                 .eq(MOrderInfo::getDistributionCompanyId, dto.getDistributionCompanyId())
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MOrderInfo::getCustomerId)
                 .orderByDesc(MOrderInfo::getGmtModified));
     }
 

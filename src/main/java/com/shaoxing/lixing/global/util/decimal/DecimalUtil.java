@@ -14,8 +14,10 @@ import java.text.DecimalFormat;
 public class DecimalUtil {
 
 
-    private static final String FORMAT_1 = "#.00";
-    public final static String FORMAT_2 = "0.00";
+    private static final String FORMAT_11 = "#.0";
+    private static final String FORMAT_12 = "#.00";
+    private final static String FORMAT_21 = "0.0";
+    private final static String FORMAT_22 = "0.00";
 
     public static BigDecimal ifNullAS0(BigDecimal bigDecimal) {
         return bigDecimal == null ? BigDecimal.ZERO : bigDecimal;
@@ -80,7 +82,7 @@ public class DecimalUtil {
         if (var1 == null) {
             return "";
         }
-        return new DecimalFormat(FORMAT_2).format(var1);
+        return new DecimalFormat(FORMAT_22).format(var1);
     }
 
 
@@ -102,7 +104,7 @@ public class DecimalUtil {
         if (var1 == null) {
             return "";
         }
-        return new DecimalFormat(FORMAT_2).format(var1);
+        return new DecimalFormat(FORMAT_22).format(var1);
     }
 
     private static String fillZero(int scale) {
@@ -215,12 +217,14 @@ public class DecimalUtil {
         }
     }
 
-    public static String formatPretty(BigDecimal bigDecimal) {
-       return new DecimalFormat((bigDecimal.compareTo(BigDecimal.ZERO) >= 0 && bigDecimal.compareTo(BigDecimal.ONE) < 1) ? FORMAT_2 : FORMAT_1)
+    public static String formatPretty(BigDecimal bigDecimal, int scale) {
+        String format1 = scale == 1 ? FORMAT_11 : FORMAT_12;
+        String format2 = scale == 1 ? FORMAT_21 : FORMAT_22;
+       return new DecimalFormat((bigDecimal.compareTo(BigDecimal.ZERO) >= 0 && bigDecimal.compareTo(BigDecimal.ONE) < 1) ? format2 : format1)
                 .format(bigDecimal);
     }
 
     public static void main(String[] args) {
-        System.out.println(formatPretty(new BigDecimal("2")));
+        System.out.println(formatPretty(new BigDecimal("2"), 1));
     }
 }
