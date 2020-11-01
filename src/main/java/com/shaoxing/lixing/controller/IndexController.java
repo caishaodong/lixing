@@ -244,7 +244,7 @@ public class IndexController extends BaseController {
                 CustomerInfoExportVO customerInfoExportVO = new CustomerInfoExportVO();
                 customerInfoExportVO.setCustomerId(customerId);
                 customerInfoExportVO.setCustomerName(customerName);
-                customerInfoExportVO.setDetail(StringUtil.concatString(varietiesName, num.toString(), unit, remark));
+                customerInfoExportVO.setDetail(StringUtil.concatString(varietiesName, DecimalUtil.formatPretty(num), unit, remark));
                 map.put(String.valueOf(customerId), customerInfoExportVO);
             } else {
                 CustomerInfoExportVO customerInfoExportVO = map.get(String.valueOf(customerId));

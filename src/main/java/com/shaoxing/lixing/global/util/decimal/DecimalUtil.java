@@ -14,8 +14,8 @@ import java.text.DecimalFormat;
 public class DecimalUtil {
 
 
-    public final static String PATTERN_0 = "0";
-    public final static String PATTERN_0_2 = "0.00";
+    private static final String FORMAT_1 = "#.00";
+    public final static String FORMAT_2 = "0.00";
 
     public static BigDecimal ifNullAS0(BigDecimal bigDecimal) {
         return bigDecimal == null ? BigDecimal.ZERO : bigDecimal;
@@ -80,7 +80,7 @@ public class DecimalUtil {
         if (var1 == null) {
             return "";
         }
-        return new DecimalFormat(PATTERN_0_2).format(var1);
+        return new DecimalFormat(FORMAT_2).format(var1);
     }
 
 
@@ -102,7 +102,7 @@ public class DecimalUtil {
         if (var1 == null) {
             return "";
         }
-        return new DecimalFormat(PATTERN_0_2).format(var1);
+        return new DecimalFormat(FORMAT_2).format(var1);
     }
 
     private static String fillZero(int scale) {
@@ -215,5 +215,12 @@ public class DecimalUtil {
         }
     }
 
+    public static String formatPretty(BigDecimal bigDecimal) {
+       return new DecimalFormat((bigDecimal.compareTo(BigDecimal.ZERO) >= 0 && bigDecimal.compareTo(BigDecimal.ONE) < 1) ? FORMAT_2 : FORMAT_1)
+                .format(bigDecimal);
+    }
 
+    public static void main(String[] args) {
+        System.out.println(formatPretty(new BigDecimal("2")));
+    }
 }
