@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoxing.lixing.domain.dto.CompanyBillSearchDTO;
 import com.shaoxing.lixing.domain.entity.FCompanyBill;
 import com.shaoxing.lixing.global.enums.YesNoEnum;
-import com.shaoxing.lixing.global.util.PageUtil;
 import com.shaoxing.lixing.mapper.FCompanyBillMapper;
 import com.shaoxing.lixing.service.FCompanyBillService;
 import org.springframework.stereotype.Service;
@@ -52,6 +51,7 @@ public class FCompanyBillServiceImpl extends ServiceImpl<FCompanyBillMapper, FCo
     @Override
     public List<FCompanyBill> getList() {
         return this.baseMapper.selectList(new LambdaQueryWrapper<FCompanyBill>()
-                .eq(FCompanyBill::getIsDeleted, YesNoEnum.NO.getValue()));
+                .eq(FCompanyBill::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByDesc(FCompanyBill::getGmtCreate));
     }
 }

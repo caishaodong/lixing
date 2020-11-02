@@ -154,7 +154,6 @@ public class MDistributionCompanyController extends BaseController {
         fieldNameMap.put("是否需要开机打发票", new String[]{"needInvoiceStr", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("其他备注", new String[]{"remark", Constant.COLUMN_WIDTH_80});
 
-
         try {
             LOGGER.info("开始准备导出配送管理");
             ExcelDataUtil.export(new ExcelDataDTO<>(null, fieldNameMap, list, "配送管理", Boolean.TRUE, null), response);

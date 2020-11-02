@@ -68,7 +68,7 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
 
         IPage<MDistributionCompany> page = this.page(dto, new LambdaQueryWrapper<MDistributionCompany>()
                 .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue())
-                .orderByDesc(MDistributionCompany::getGmtModified));
+                .orderByAsc(MDistributionCompany::getId));
 
         List<DistributionCompanyVO> distributionCompanyVOList = getMDistributionCompanyVOList(page.getRecords());
         PageUtil<DistributionCompanyVO> pageUtil2 = new PageUtil<>();
@@ -188,7 +188,7 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
         // 获取配送公司信息
         List<MDistributionCompany> distributionCompanyList = this.baseMapper.selectList(new LambdaQueryWrapper<MDistributionCompany>()
                 .eq(MDistributionCompany::getIsDeleted, YesNoEnum.NO.getValue())
-                .orderByDesc(MDistributionCompany::getGmtModified));
+                .orderByAsc(MDistributionCompany::getId));
 
         // 获取配送公司对应的客户信息
         List<DistributionCompanyVO> distributionCompanyVOList = getMDistributionCompanyVOList(distributionCompanyList);
@@ -218,14 +218,17 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
             distributionCompanyVO.setCustomerInfoVoList(customerInfoVOList);
 
             // 根据配送公司id，获取绑定的用户列表
-            List<MCustomerDistributionCompanyRel> customerDistributionCompanyRelList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>().eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId())
-                    .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue()));
+            List<MCustomerDistributionCompanyRel> customerDistributionCompanyRelList = customerDistributionCompanyRelService.list(new LambdaQueryWrapper<MCustomerDistributionCompanyRel>()
+                    .eq(MCustomerDistributionCompanyRel::getDistributionCompanyId, distributionCompany.getId())
+                    .eq(MCustomerDistributionCompanyRel::getIsDeleted, YesNoEnum.NO.getValue())
+            );
             if (!CollectionUtils.isEmpty(customerDistributionCompanyRelList)) {
                 // 获取客户id
                 List<Long> customerIdList = customerDistributionCompanyRelList.stream().map(MCustomerDistributionCompanyRel::getCustomerId).collect(Collectors.toList());
                 // 获取客户信息
                 List<MCustomerInfo> customerInfoList = customerInfoService.list(new LambdaQueryWrapper<MCustomerInfo>().in(MCustomerInfo::getId, customerIdList)
-                        .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+                        .eq(MCustomerInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                        .orderByAsc(MCustomerInfo::getId));
                 if (!CollectionUtils.isEmpty(customerInfoList)) {
                     for (MCustomerInfo mCustomerInfo : customerInfoList) {
                         // 封装客户信息
@@ -237,15 +240,17 @@ public class MDistributionCompanyServiceImpl extends ServiceImpl<MDistributionCo
 
 
                         // 根据客户id，获取绑定的价目列表
-                        List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>().eq(MCustomerPriceCategoryRel::getCustomerId, mCustomerInfo.getId())
+                        List<MCustomerPriceCategoryRel> customerPriceCategoryRelList = customerPriceCategoryRelService.list(new LambdaQueryWrapper<MCustomerPriceCategoryRel>()
+                                .eq(MCustomerPriceCategoryRel::getCustomerId, mCustomerInfo.getId())
                                 .eq(MCustomerPriceCategoryRel::getIsDeleted, YesNoEnum.NO.getValue()));
                         if (!CollectionUtils.isEmpty(customerPriceCategoryRelList)) {
                             // 获取价目id
                             List<Long> priceCategoryIdList = customerPriceCategoryRelList.stream().map(MCustomerPriceCategoryRel::getPriceCategoryId).collect(Collectors.toList());
                             // 获取价目信息
                             List<MPriceCategory> priceCategoryList = priceCategoryService.list(new LambdaQueryWrapper<MPriceCategory>().in(MPriceCategory::getId, priceCategoryIdList)
-                                    .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO.getValue()));
-                            if (!CollectionUtils.isEmpty(priceCategoryIdList)) {
+                                    .eq(MPriceCategory::getIsDeleted, YesNoEnum.NO.getValue())
+                                    .orderByAsc(MPriceCategory::getId));
+                            if (!CollectionUtils.isEmpty(priceCategoryList)) {
                                 for (MPriceCategory priceCategory : priceCategoryList) {
                                     // 封装价目信息
                                     PriceCategoryVO priceCategoryVO = new PriceCategoryVO();
