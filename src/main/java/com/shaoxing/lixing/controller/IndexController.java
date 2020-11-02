@@ -232,9 +232,7 @@ public class IndexController extends BaseController {
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
                 .in(CollectionUtils.isEmpty(varietiesPriceIdList) && !CollectionUtils.isEmpty(priceCategoryIdList), MOrderInfo::getPriceCategoryId, priceCategoryIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
-                .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
-                .orderByAsc(MOrderInfo::getCustomerId)
-                .orderByDesc(MOrderInfo::getGmtModified));
+                .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue()));
 
         Map<String, CustomerInfoExportVO> map = new HashMap<>();
         for (MOrderInfo orderInfo : list) {
@@ -263,6 +261,7 @@ public class IndexController extends BaseController {
         }
 
         List<CustomerInfoExportVO> customerInfoExportVOList = new ArrayList<>(map.values());
+        Collections.sort(customerInfoExportVOList, (customerInfoExportVO1, customerInfoExportVO2) -> (int)(customerInfoExportVO1.getCustomerId() - customerInfoExportVO2.getCustomerId()));
         LinkedHashMap<String, String[]> fieldNameMap = new LinkedHashMap();
         fieldNameMap.put("客户名称", new String[]{"customerName", Constant.COLUMN_WIDTH_27});
         fieldNameMap.put("配送明细", new String[]{"detail", Constant.COLUMN_WIDTH_200});
