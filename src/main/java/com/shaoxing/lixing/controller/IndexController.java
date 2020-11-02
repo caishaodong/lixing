@@ -131,7 +131,9 @@ public class IndexController extends BaseController {
                 .in(!CollectionUtils.isEmpty(distributionCompanyIdList), MOrderInfo::getDistributionCompanyId, distributionCompanyIdList)
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
-                .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue()));
+                .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MOrderInfo::getCustomerId)
+                .orderByDesc(MOrderInfo::getGmtModified));
 
         // 获取总价
         QueryWrapper<MOrderInfo> totalAmountQueryWrapper = new QueryWrapper<MOrderInfo>()
@@ -172,6 +174,7 @@ public class IndexController extends BaseController {
                 .in(!CollectionUtils.isEmpty(customerIdList), MOrderInfo::getCustomerId, customerIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MOrderInfo::getCustomerId)
                 .orderByDesc(MOrderInfo::getGmtModified));
 
         // 标题
@@ -230,6 +233,7 @@ public class IndexController extends BaseController {
                 .in(CollectionUtils.isEmpty(varietiesPriceIdList) && !CollectionUtils.isEmpty(priceCategoryIdList), MOrderInfo::getPriceCategoryId, priceCategoryIdList)
                 .in(!CollectionUtils.isEmpty(varietiesPriceIdList), MOrderInfo::getVarietiesPriceId, varietiesPriceIdList)
                 .eq(MOrderInfo::getIsDeleted, YesNoEnum.NO.getValue())
+                .orderByAsc(MOrderInfo::getCustomerId)
                 .orderByDesc(MOrderInfo::getGmtModified));
 
         Map<String, CustomerInfoExportVO> map = new HashMap<>();
