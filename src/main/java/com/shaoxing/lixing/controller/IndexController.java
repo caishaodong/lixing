@@ -190,6 +190,7 @@ public class IndexController extends BaseController {
         fieldNameMap.put("数量", new String[]{"num"});
         fieldNameMap.put("单价(元)", new String[]{"price"});
         fieldNameMap.put("金额(元)", new String[]{"totalPrice"});
+        fieldNameMap.put("备注", new String[]{"remark"});
 
         try {
             LOGGER.info("开始准备导出销售统计");
